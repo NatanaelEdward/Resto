@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import json
 # Create your views here.
-def Login(request):
+def login(request):
     return render(request, 'Login.html')
 
 def index(request):
