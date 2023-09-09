@@ -9,16 +9,17 @@
     <title>Resto</title>
 </head>
 <body>
-    <form class="form">
+    <form method="post" class="form" action="{% url 'login_view' %}">
+      {% csrf_token %}
         <p>Login</p>
         <div class="group">
-          <input required="true" class="main-input" type="text">
+          <input name="username" required="true" class="main-input" type="text">
           <span class="highlight-span"></span>
-          <label class="lebal-email">Email</label>
+          <label class="lebal-email">Username</label>
         </div>
         <div class="container-1">
           <div class="group">
-            <input required="true" class="main-input" type="text">
+            <input name="password" required="true" class="main-input" type="text">
             <span class="highlight-span"></span>
             <label class="lebal-email">password</label>
           </div>
