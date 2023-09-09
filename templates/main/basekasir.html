@@ -1,0 +1,19 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <title>Kasiran</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <!-- coba add user name di side bar-->
+        <h3>{{ request.username }}</h3>
+        <a href="" class=""><span>Kasiran</span></a>
+        <a href="" class=""><span>Pesanan</span></a>
+        <a href="{% url 'logout_view' %}">Logout >></a>
+    </div>
+</html>

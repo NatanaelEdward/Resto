@@ -1,0 +1,207 @@
+
+
+.sidebar{
+    z-index: 1;
+    top: -80px;
+    background: #000000;
+    margin: 70px;
+    padding-top: 40px;
+    position: fixed;
+    left: -70px;
+    width: 225px;
+    height: calc(100% - -50%);
+    transition: 0.5s;
+    transition-property: left;
+    overflow-y: auto;
+}
+
+.profile_info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar .profile_info .profile_image{
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+}
+
+.sidebar .profile_info h4{
+    color: #ccc;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.sidebar a{
+    display: block;
+    width: 100%;
+    line-height: 60px;
+    padding-left: 40px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    text-decoration: none;
+    align-items: center;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-decoration: none;
+    text-transform: uppercase;
+    outline: 0;
+    border: 0;
+    padding: 1rem;
+
+}
+
+.sidebar a::before{
+  background-color: #fff;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  margin-right: 10px;
+  transition: all .42s cubic-bezier(.25,.8,.25,1);
+  width: 0;
+}
+
+.sidebar a:hover:before {
+  background-color: #fff;
+  width: 3rem;
+}
+.sidebar i{
+    padding-right: 10px;
+}
+
+label #sidebar_btn{
+    z-index: 1;
+    color: #F6F1F1;
+    position: fixed;
+    cursor: pointer;
+    left: 250px;
+    font-size: 20px;
+    margin: 5px 0;
+    transition-property: color;
+}
+
+label #sidebar_btn:hover{
+    color: #19A7CE;
+}
+
+.container {
+  width: (100% - 250px);
+  position: relative;
+  font-family: sans-serif;
+  float: right;
+  transition: 0.5s;
+}
+
+.container::before, .container::after {
+  content: "";
+  background-color: #fab5704c;
+  position: absolute;
+}
+
+.container::before {
+  border-radius: 50%;
+  width: 6rem;
+  height: 6rem;
+  top: 30%;
+  right: 7%;
+}
+
+.container .box {
+  width: 78em;
+  margin-top: 25px;
+  height: 30em;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.074);
+  border: 1px solid rgba(255, 255, 255, 0.222);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-radius: .7rem;
+  transition: all ease .3s;
+}
+
+.container .box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.5s;
+}
+
+.container .box .title {
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: .1em
+}
+
+.container .box div strong {
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.container .box div p {
+  margin: 0;
+  font-size: .9em;
+  font-weight: 300;
+  letter-spacing: .1em;
+}
+
+.container .box div span {
+  font-size: .7rem;
+  font-weight: 300;
+}
+
+.container .box div span:nth-child(3) {
+  font-weight: 500;
+  margin-right: .2rem;
+}
+
+#check:checked ~ .container{
+  margin-left: 50px;
+}
+
+#check:checked ~ .sidebar{
+    left: -200px;
+}
+
+#check:checked ~ .sidebar a span{
+    display: none;
+}
+
+#check:checked ~ .sidebar h4{
+  display: none;
+}
+
+#check:checked ~.sidebar a{
+    display: none;
+    font-size: 20px;
+    margin: 165px;
+    width: 100%;
+}
+
+.content{
+    margin-left: 90px;
+    width: (100% - 250px);
+    margin-top: 60px;
+    padding: 20px;
+    background: url(https://i.pinimg.com/564x/7a/f0/71/7af07153f7aad04ae37b68537a6f693b.jpg);
+    background-position: center;
+    background-size: cover;
+    height: 86.4vh;
+    transition: 0.5s;
+}
+
+#check:checked ~ .content{
+    margin-left: 30px;
+}
+
+#check{
+    display: none;
+}
