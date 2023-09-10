@@ -11,10 +11,10 @@
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
-        <h3>{{ request.username }}</h3>
-        <a href="" class=""><span>Kasiran</span></a>
-        <a href="" class=""><span>Pesanan</span></a>
-        <a href="" class=""><span>Table</span></a>
+        <h3 style="color: white;">{{ user.username }}</h3>
+        <a href="#" class=""><span>Kasiran</span></a>
+        <a href="#" class=""><span>Pesanan</span></a>
+        <a href="#" class=""><span>Table</span></a>
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 </html>
