@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 
 Roles = (
     ('manajer', 'manajer'),
-    ('kasir', 'KASIR')
+    ('kasir', 'KASIR'),
+    ('user', 'USER')
 )
 
 class UserProfile(models.Model):

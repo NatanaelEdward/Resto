@@ -23,17 +23,24 @@ def login_view(request):
 
     else:
         return render(request , 'Login.html')
-    
+
 def logout_view(request):
     logout(request)
     return redirect('login_view')
 
+@login_required
 def indexKasir(request):
-    return render(request, 'Kasir/index.html')
+        if request.user.userprofile.role != 'kasir':
+            return redirect('login_view')
+        return render(request, 'Kasir/index.html')
 
+@login_required
 def indexUser(request):
     return render(request, 'User/index.html')
 
+@login_required
 def indexAdmin(request):
-    return render(request, 'Admin/index.html')
+        if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
+        return render(request, 'Admin/index.html')
 
