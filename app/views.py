@@ -12,7 +12,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return render(request,'Kasir/index.html')
         else:
             return render(request, 'login.html', {'error': 'Invalid login credentials.'})
     else:
@@ -22,5 +22,12 @@ def logout_view(request):
     logout(request)
     return redirect('login_view')
 
-def index(request):
-    return render(request, 'index.html')
+def indexKasir(request):
+    return render(request, 'Kasir/index.html')
+
+def indexUser(request):
+    return render(request, 'User/index.html')
+
+def indexAdmin(request):
+    return render(request, 'Admin/index.html')
+
