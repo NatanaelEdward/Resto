@@ -34,6 +34,15 @@ def indexKasir(request):
             return redirect('login_view')
         return render(request, 'Kasir/index.html')
 
+def tambahMenu(request):
+     return render(request, 'Admin/tambahMenu.html')
+
+def editMenu(request):
+     return render(request, 'Admin/editMenu.html')
+
+def hapusMenu(request):
+     return render(request, 'Admin/hapusMenu.html')
+
 @login_required
 def indexUser(request):
     return render(request, 'User/index.html')
