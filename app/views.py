@@ -28,7 +28,7 @@ def logout_view(request):
     logout(request)
     return redirect('login_view')
 
-@login_required
+# @login_required
 def indexKasir(request):
         if request.user.userprofile.role != 'kasir':
             return redirect('login_view')

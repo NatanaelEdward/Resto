@@ -11,7 +11,9 @@
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
-        <h3 style="color: white;">{{ user.username }}</h3>
+        <p>
+            <h3>{{ user.username }}</h3>
+        </p>
         <a href="#" class=""><span>Laporan</span></a>
         <a href="#" class=""><span>Edit Profile</span></a>
         <a href="{% url 'tambahMenu' %}" class=""><span>Tambah Menu</span></a>
@@ -20,8 +22,10 @@
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 
-<div class="#">
-    {% block content %}
-    {% endblock %}
-</div>
+ <div class="content">
+        <div class="card">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
 </html>

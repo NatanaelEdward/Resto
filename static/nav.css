@@ -35,6 +35,15 @@
     margin-bottom: 20px;
 }
 
+.sidebar p{
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  padding-left: 20px;
+}
+
 .sidebar a{
     display: block;
     width: 100%;
@@ -186,22 +195,23 @@ label #sidebar_btn:hover{
     width: 100%;
 }
 
+.card {
+  margin-left: 150px;
+  width: 1190px;
+  height: 630px;
+  background: rgb(236, 236, 236);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+}
+
 .content{
     margin-left: 90px;
     width: (100% - 250px);
-    margin-top: 60px;
+    margin-top: -10px;
+    margin-bottom: -10px;
     padding: 20px;
-    background: url(https://i.pinimg.com/564x/7a/f0/71/7af07153f7aad04ae37b68537a6f693b.jpg);
     background-position: center;
     background-size: cover;
     height: 86.4vh;
     transition: 0.5s;
-}
-
-#check:checked ~ .content{
-    margin-left: 30px;
-}
-
-#check{
-    display: none;
 }
