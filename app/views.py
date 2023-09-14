@@ -27,11 +27,14 @@ def logout_view(request):
     logout(request)
     return redirect('login_view')
 
-# @login_required
-def indexKasir(request):
-        if request.user.userprofile.role != 'kasir':
-            return redirect('login_view')
-        return render(request, 'Kasir/index.html')
+#admin
+
+@login_required
+def indexAdmin(request):
+        if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
+        return render(request, 'Admin/index.html')
+
 
 def tambahMenu(request):
      return render(request, 'Admin/tambahMenu.html')
@@ -43,18 +46,29 @@ def hapusMenu(request):
      return render(request, 'Admin/hapusMenu.html')
 
 @login_required
-def indexUser(request):
-    return render(request, 'User/index.html')
-
-@login_required
-def indexAdmin(request):
-        if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-        return render(request, 'Admin/index.html')
-
-@login_required
 def laporanAdmin(request):
         if request.user.userprofile.role != 'admin':
              return redirect('login_view')
         return render(request, 'Admin/laporanAdmin.html')
 
+
+#Kasir
+@login_required
+def indexKasir(request):
+        if request.user.userprofile.role != 'kasir':
+            return redirect('login_view')
+        return render(request, 'Kasir/index.html')
+
+def kasiran(request):
+     return render(request, 'Kasir/kasiran.html')
+
+def pesanan(request):
+     return render(request, 'kasir/pesanan.html')
+
+def tabelKasir(request):
+     return render(request, 'kasir/tabelKasir.html')
+
+#User
+@login_required
+def indexUser(request):
+    return render(request, 'User/index.html')
