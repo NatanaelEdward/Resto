@@ -15,12 +15,11 @@ def login_view(request):
             if user.is_active:
                 login(request, user)
                 if user.userprofile.role == 'kasir':
-                    return render(request, 'Kasir/index.html', {'user': user})
+                    return redirect('indexKasir')
                 elif user.userprofile.role == 'admin':
-                     return render(request, 'Admin/index.html', {'user': user})
+                     return redirect('indexAdmin')
         else:
             return render(request , 'Login.html')
-
     else:
         return render(request , 'Login.html')
 
