@@ -1,4 +1,30 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
-tambah menu success
+<h1>Tambah Menu</h1>
+        <form method="POST" action="#">
+             {% csrf_token %}
+            <div class="form-group">
+                <label for="">Nama Menu</label>
+                <input class="form-control " value="" type="text"
+                    name="nomor_kamar" id="nomor_kamar" />
+            </div> 
+            <div class="form-group">
+                <label for="">Nama Menu Singkat</label>
+                <input class="form-control " value="" type="text"
+                    name="nomor_kamar" id="nomor_kamar" />
+            </div> 
+            <div class="form-group">
+                <label for="">Gambar Menu</label>
+                <input class="form-control " value="" type="file"
+                    name="nomor_kamar" id="nomor_kamar" />
+            </div> 
+            <div class="form-group">
+                <label for="">Keterangan Menu</label>
+                <input class="form-control " value="" type="text"
+                    name="nomor_kamar" id="nomor_kamar" />
+            </div> 
+            <button class="btn btn-success" type="submit">
+                <i class="fa fa-save"></i> Simpan
+            </button>
+        </form>
 {% endblock %}

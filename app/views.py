@@ -52,3 +52,9 @@ def indexAdmin(request):
              return redirect('login_view')
         return render(request, 'Admin/index.html')
 
+@login_required
+def laporanAdmin(request):
+        if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
+        return render(request, 'Admin/laporanAdmin.html')
+
