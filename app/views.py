@@ -18,6 +18,8 @@ def login_view(request):
                     return redirect('indexKasir')
                 elif user.userprofile.role == 'admin':
                      return redirect('indexAdmin')
+                elif user.userprofile.role == 'user':
+                     return redirect('indexUser')
         else:
             return render(request , 'Login.html')
     else:
