@@ -1,0 +1,207 @@
+button{
+    margin-top: 40px;
+    margin-right: 38px;
+    margin-bottom: 50px;
+}
+
+.btn-maknan {
+    font-size: 30px;
+    width: 700px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.7em 2em;
+    border: 3px solid #D21312;
+    border-radius: 2px;
+    position: relative;
+    color: #D21312;
+    text-decoration: none;
+    transition: 0.3s ease all;
+    z-index: 1;
+}
+
+.btn-maknan:before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #ED2B2A;
+    z-index: -1;
+}
+
+.btn-maknan:hover,
+.btn-maknan:focus {
+    color: white;
+}
+
+.btn-maknan:hover:before,
+.btn-maknan:focus:before {
+    transition: 0.5s all ease;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.btn-maknan:active {
+    transform: scale(0.9);
+}
+
+.btn-dessert {
+    font-size: 30px;
+    width: 700px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.7em 2em;
+    border: 3px solid #5B0888;
+    border-radius: 2px;
+    position: relative;
+    color: #5B0888;
+    text-decoration: none;
+    transition: 0.3s ease all;
+    z-index: 1;
+}
+
+.btn-dessert:before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #713ABE;
+    z-index: -1;
+}
+
+.btn-dessert:hover,
+.btn-dessert:focus {
+    color: #E5CFF7;
+}
+
+.btn-dessert:hover:before,
+.btn-dessert:focus:before {
+    transition: 0.5s all ease;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.btn-dessert:active {
+    transform: scale(0.9);
+}
+
+.btn-snack {
+    font-size: 30px;
+    width: 700px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.7em 2em;
+    border: 3px solid #A0C49D;
+    border-radius: 2px;
+    position: relative;
+    color: #A0C49D;
+    text-decoration: none;
+    transition: 0.3s ease all;
+    z-index: 1;
+}
+
+.btn-snack:before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #C4D7B2;
+    z-index: -1;
+}
+
+.btn-snack:hover,
+.btn-snack:focus {
+    color: #F7FFE5;
+}
+
+.btn-snack:hover:before,
+.btn-snack:focus:before {
+    transition: 0.5s all ease;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.btn-snack:active {
+    transform: scale(0.9);
+}
+
+.btn-minum {
+    font-size: 30px;
+    width: 700px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    padding: 0.7em 2em;
+    border: 3px solid #5CD2E6;
+    border-radius: 2px;
+    position: relative;
+    color: #5CD2E6;
+    text-decoration: none;
+    transition: 0.3s ease all;
+    z-index: 1;
+}
+
+.btn-minum:before {
+    transition: 0.5s all ease;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 50%;
+    bottom: 0;
+    opacity: 0;
+    content: '';
+    background-color: #3085C3;
+    z-index: -1;
+}
+
+.btn-minum:hover,
+.btn-minum:focus {
+    color: white;
+}
+
+.btn-minum:hover:before,
+.btn-minum:focus:before {
+    transition: 0.5s all ease;
+    left: 0;
+    right: 0;
+    opacity: 1;
+}
+
+.btn-minum:active {
+    transform: scale(0.9);
+}
+
+
+.content {
+    width: (100% - 270px);
+    margin-top: -10px;
+    margin-bottom: -20px;
+    padding: 20px;
+    height: 86.4vh;
+    transition: 0.5s;
+}
