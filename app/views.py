@@ -37,14 +37,19 @@ def indexAdmin(request):
              return redirect('login_view')
         return render(request, 'Admin/index.html')
 
-
 def tambahMenu(request):
+     if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
      return render(request, 'Admin/tambahMenu.html')
 
 def editMenu(request):
+     if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
      return render(request, 'Admin/editMenu.html')
 
 def hapusMenu(request):
+     if request.user.userprofile.role != 'admin':
+             return redirect('login_view')
      return render(request, 'Admin/hapusMenu.html')
 
 @login_required
@@ -61,16 +66,27 @@ def indexKasir(request):
             return redirect('login_view')
         return render(request, 'Kasir/index.html')
 
+@login_required
 def kasiran(request):
+     if request.user.userprofile.role != 'kasir':
+            return redirect('login_view')
      return render(request, 'Kasir/kasiran.html')
 
+@login_required
 def pesanan(request):
+     if request.user.userprofile.role != 'kasir':
+            return redirect('login_view')
      return render(request, 'kasir/pesanan.html')
 
+@login_required
 def tabelKasir(request):
+     if request.user.userprofile.role != 'kasir':
+            return redirect('login_view')
      return render(request, 'kasir/tabelKasir.html')
 
 #User
 @login_required
 def indexUser(request):
+    if request.user.userprofile.role != 'user':
+            return redirect('login_view')
     return render(request, 'User/index.html')
