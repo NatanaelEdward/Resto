@@ -90,3 +90,23 @@ def indexUser(request):
     if request.user.userprofile.role != 'user':
             return redirect('login_view')
     return render(request, 'User/index.html')
+
+def indexMakanan(request):
+     if request.user.userprofile.role != 'user':
+            return redirect('login_view')
+     return render(request, 'User/indexMakanan.html')
+
+def indexMinuman(request):
+     if request.user.userprofile.role != 'user':
+            return redirect('login_view')
+     return render(request, 'User/indexMinuman.html')
+
+def indexDessert(request):
+     if request.user.userprofile.role != 'user':
+            return redirect('login_view')
+     return render(request, 'User/indexDessert.html')
+
+def indexSnack(request):
+     if request.user.userprofile.role != 'user':
+            return redirect('login_view')
+     return render(request, 'User/indexSnack.html')

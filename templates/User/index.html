@@ -12,16 +12,16 @@
 <body>
     <div class="content">
         <div class="card col-6">
-            <a href="#">
+            <a href="{% url 'indexMakanan' %}">
                 <button class="btn-maknan">Makanan</button>
             </a>
-            <a href="#">
-                <button class="btn-minum"> Minunman</button>
+            <a href="{% url 'indexMinuman' %}">
+                <button class="btn-minum"> Minuman</button>
             </a>
-            <a href="#">
+            <a href="{% url 'indexDessert' %}">
                 <button class="btn-dessert">Dessert</button>
             </a>
-            <a href="#">
+            <a href="{% url 'indexSnack' %}">
                 <button class="btn-snack">Snack</button>
             </a>
         </div>
