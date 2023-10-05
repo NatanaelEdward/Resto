@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-import json
+import requests
+from django.http import JsonResponse
 
 
 def login_view(request):
@@ -110,3 +111,14 @@ def indexSnack(request):
      if request.user.userprofile.role != 'user':
             return redirect('login_view')
      return render(request, 'User/indexSnack.html')
+
+def get_categories(request):
+    url = 'https://www.themealdb.com/api/json/v1/1/categories.php'
+    
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        return JsonResponse(data)
+    else:
+        return JsonResponse({'error': 'Gagal mengambil data'}, status=500)

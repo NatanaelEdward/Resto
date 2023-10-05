@@ -1,0 +1,32 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <title>Makanan</title>
+</head>
+
+<body>
+    <div class="sidebar">
+        <!-- coba add user name di side bar-->
+        <p>{{ user.username }}</p>
+        <a href="{% url 'kasiran' %}" class=""><span>Seafood</span></a>
+        <a href="{% url 'pesanan' %}"class=""><span>Asian</span></a>
+        <a href="{% url 'tabelKasir' %}" class=""><span>Western</span></a>
+        <a href="{% url 'tabelKasir' %}" class=""><span>Home Made</span></a>
+        <a href="{% url 'tabelKasir' %}" class=""><span>Jawir Pride</span></a>
+        <a href="{% url 'tabelKasir' %}" class=""><span>Vegetables</span></a>
+        <a href="{% url 'tabelKasir' %}" class=""><span>Meat</span></a>
+        <a href="{% url 'logout_view' %}">Logout >></a>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</html>
