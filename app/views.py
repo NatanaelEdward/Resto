@@ -92,10 +92,6 @@ def indexUser(request):
             return redirect('login_view')
     return render(request, 'User/index.html')
 
-def indexMakanan(request):
-     if request.user.userprofile.role != 'user':
-            return redirect('login_view')
-     return render(request, 'User/indexMakanan.html')
 
 def indexMinuman(request):
      if request.user.userprofile.role != 'user':

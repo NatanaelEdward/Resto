@@ -1,30 +1,6 @@
-{% extends 'main/baseadmin.html' %}
-{% block content %}
-<div class="form-container">
-    <p>Tambah Menu</p>
-    <form class="form" method="POST" action="#">
-        {% csrf_token %}
-            <label for="">Nama Menu</label>
-            <input class="form-control " value="" type="text" name="nomor_kamar" id="nomor_kamar"
-                placeholder="Masukan Nama Menu" />
-
-            <label for="">Nama Menu Singkat</label>
-            <input class="form-control " value="" type="text" name="nomor_kamar" id="nomor_kamar"
-                placeholder="Masukan Nama Menu" />
-
-            <label for="arquivo">Gambar Menu:</label>
-            <input accept=".jpg, .jpeg, .png" class="inpdddut" name="arquivo" id="arquivo" type="file">
-
-            <label for="">Keterangan Menu</label>
-            <input class="form-control " value="" type="text" name="nomor_kamar" id="nomor_kamar"
-                placeholder="Keterangan Menu" />
-
-            <label for="">Harga Menu</label>
-            <input class="form-control " value="" type="text" name="nomor_kamar" id="nomor_kamar"
-                placeholder="Harga Menu" />
-            <button class="btn btn-success" type="submit">
-                <i class="fa fa-save"></i> Simpan
-            </button>
-    </form>
-</div>
-{% endblock %}
+<!-- menuapp/templates/tambah_menu.html -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Tambahkan Menu</button>
+</form>

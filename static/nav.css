@@ -199,6 +199,7 @@ label #sidebar_btn:hover{
   display: flex;
   flex-wrap:wrap; 
   overflow-x: auto; 
+  margin-left : 60px;
 }
 
 .card {

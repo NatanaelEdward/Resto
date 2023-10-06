@@ -1,43 +1,20 @@
 {% extends 'main/basemakanan.html' %}
 {% block content %}
 <main>
-
-<div class="card-menu-container">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        // URL API yang ingin Anda panggil
-        var apiUrl = 'https://www.themealdb.com/api/json/v1/1/categories.php';
-
-        // Panggil API dengan jQuery
-        $.ajax({
-            url: apiUrl,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // Loop melalui setiap kategori dalam data
-                data.categories.forEach(function(category) {
-                    // Buat card untuk setiap kategori
-                    var cardHtml = `
-                    <div class="card-menu">
-                        <div class="card-image-menu"><img src="${category.strCategoryThumb}" alt="Gambar ${category.strCategory}"></div>
-                        <div class="heading-menu">${category.strCategory}
-                            <div class="author-menu">${category.strCategoryDescription}</div>
-                        </div>
-                    </div>
-                    `;
-
-                    // Tambahkan card ke dalam container
-                    $('.card-menu-container').append(cardHtml);
-                });
-            },
-            error: function() {
-                console.log('Gagal mengambil data dari API.');
-            }
-        });
-    });
-    </script>
-</div>
-
+    <div class="card-menu-container">
+        {% for menu in menus %}
+        <div class="card-menu">
+            <div class="card-image-menu">
+                <img src="{{ menu.gambar_menu.url }}" alt="{{ menu.nama_menu_lengkap }}" style="width: 200px; height: 125px;">
+            </div>
+            <div class="heading-menu">
+                {{ menu.nama_menu_lengkap }}
+                <div class="author-menu">{{ menu.keterangan_menu }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Tidak ada menu dalam kategori {{ kategori }}</p>
+        {% endfor %}
+    </div>
 </main>
 {% endblock %}

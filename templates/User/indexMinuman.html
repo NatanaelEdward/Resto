@@ -1,1 +1,20 @@
-minuman
+{% extends 'main/baseminuman.html' %}
+{% block content %}
+<main>
+    <div class="card-menu-container">
+        {% for menu in menus %}
+        <div class="card-menu">
+            <div class="card-image-menu">
+                <img src="{{ menu.gambar_menu.url }}" alt="{{ menu.nama_menu_lengkap }}">
+            </div>
+            <div class="heading-menu">
+                {{ menu.nama_menu_lengkap }}
+                <div class="author-menu">{{ menu.keterangan_menu }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Tidak ada menu dalam kategori {{ kategori }}</p>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

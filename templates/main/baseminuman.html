@@ -5,15 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'nav.css' %}">
-    <title>Makanan</title>
+    <title>Minuman</title>
 </head>
 
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
-        <a href="#" class="menu-link" data-menu-type="Meat"><span>Meat</span></a>
-        <a href="#" class="menu-link" data-menu-type="Vegetables"><span>Vegetables</span></a>
+        <a href="#" class="menu-link" data-menu-type="Alcohol"><span>Alcohol</span></a>
+        <a href="#" class="menu-link" data-menu-type="Hot"><span>Hot</span></a>
+        <a href="#" class="menu-link" data-menu-type="Cold"><span>Cold</span></a>
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 
@@ -36,9 +37,8 @@
                 var menuType = link.getAttribute('data-menu-type');
 
                 // Redirect ke halaman indexMakanan dengan parameter kategori
-                window.location.href = `/indexMakanan/?kategori=${menuType}`;
+                window.location.href = `/indexMinuman/?kategori=${menuType}`;
             });
         });
     });
 </script>
-
