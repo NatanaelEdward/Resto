@@ -11,11 +11,61 @@
                 {{ menu.nama_menu_lengkap }}
                 <div class="author-menu">{{ menu.keterangan_menu }}</div>
             </div>
+            <div class="menu-details">
+                <p>Harga:</p>
+                <ul>
+                    {% for harga_menu in menu.hargamenu_set.all %}
+                        <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
+                    {% endfor %}
+                </ul>
+                <label for="menu-qty-{{ menu.id }}">Qty:</label>
+                <input type="number" name="qty" id="menu-qty-{{ menu.id }}" value="1" min="0">
+                <label for="menu-size-{{ menu.id }}">Pilih Size:</label>
+                <select id="menu-size-{{ menu.id }}">
+                    {% for harga_menu in menu.hargamenu_set.all %}
+                        <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">Add to Cart</button>
         </div>
         {% empty %}
         <p>Tidak ada menu dalam kategori {{ kategori }}</p>
         {% endfor %}
     </div>
+    <button id="checkout-button">Checkout</button>
 </main>
+<script>
+    $(document).ready(function () {
+        $(".add-to-cart").click(function () {
+            var menuId = $(this).data("menu-id");
+            var qty = $("#menu-qty-" + menuId).val();
+            var sizeId = $("#menu-size-" + menuId).val();
+        
+            // Periksa apakah menuId, sizeId, dan qty memiliki nilai yang valid
+            if (menuId && sizeId && qty) {
+                var url = `/add_to_cart/${menuId}/${sizeId}/${qty}/`;
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function (data) {
+                        alert("Menu telah ditambahkan ke keranjang belanja.");
+                    },
+                    error: function (error) {
+                        alert("Terjadi kesalahan saat menambahkan menu ke keranjang belanja.");
+                    }
+                });
+            } else {
+                alert("Harap lengkapi informasi menu sebelum menambahkan ke keranjang belanja.");
+            }
+        });
+    
+        // Event listener untuk tombol "Checkout"
+        $("#checkout-button").click(function () {
+            // Redirect pengguna ke halaman checkout
+            window.location.href = "/checkout/"; // Ganti dengan URL Anda
+        });
+    });
+</script>
 
 {% endblock %}

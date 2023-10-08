@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class KelompokMenu(models.Model):
     kode_kelompok = models.CharField(max_length=10, unique=True)
@@ -43,7 +44,7 @@ class HargaMenu(models.Model):
         return f"{self.menu} - {self.size} - {self.harga_menu}"
 
 class PenjualanDetail(models.Model):
-    nomor_nota_penjualan = models.CharField(max_length=20, primary_key=True)
+    nomor_nota_penjualan = models.CharField(max_length=20)
     kode_menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
     harga_menu = models.DecimalField(max_digits=10, decimal_places=2)
     jumlah_harga = models.DecimalField(max_digits=10, decimal_places=2)
@@ -51,3 +52,9 @@ class PenjualanDetail(models.Model):
 
     def __str__(self):
         return self.nomor_nota_penjualan
+    
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
+    size = models.ForeignKey(JenisSize, on_delete=models.CASCADE)
+    qty = models.PositiveIntegerField(default=1)

@@ -1,0 +1,31 @@
+{% extends 'main/basemakanan.html' %}
+
+{% block content %}
+<main>
+    <h1>Keranjang Belanja</h1>
+    <div class="cart-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama Menu</th>
+                    <th>Jumlah</th>
+                    <th>Harga</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td>{{ item.menu.nama_menu_lengkap }}</td>
+                    <td>{{ item.qty }}</td>
+                    <td>Rp. {{ item.harga }}</td>
+                    <td>Rp. {{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total Belanja: Rp. {{ total_belanja }}</p>
+        <a href="{% url 'checkout' %}" class="btn-checkout">Checkout</a>
+    </div>
+</main>
+{% endblock %}
