@@ -44,9 +44,17 @@ def add_to_cart(request, menu_id, size_id, qty):
     menu = DataMenu.objects.get(pk=menu_id)
     size = JenisSize.objects.get(pk=size_id)
     user = request.user
-    cart_item, created = CartItem.objects.get_or_create(user=user, menu=menu, size=size)
-    cart_item.qty += int(qty)
-    cart_item.save()
+    
+    # Ensure qty is greater than 0 before creating or updating the cart item
+    qty = int(qty)
+    if qty > 0:
+        cart_item, created = CartItem.objects.get_or_create(user=user, menu=menu, size=size)
+        cart_item.qty = qty
+        cart_item.save()
+    else:
+        # Remove the cart item if qty is 0
+        CartItem.objects.filter(user=user, menu=menu, size=size).delete()
+    
     return redirect('index_makanan')
 
 
@@ -89,3 +97,18 @@ def checkout(request):
     else:
         return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu' : total_tiap_menu, 'harga_tiap_menu' : harga_tiap_menu})
 
+def get_cart_items(request):
+    user = request.user
+    cart_items = CartItem.objects.filter(user=user).select_related('menu', 'size')
+
+    # Serialize cart items as JSON data
+    cart_data = [
+        {
+            'menu_name': item.menu.nama_menu_lengkap,
+            'size': item.size.nama_size,
+            'qty': item.qty,
+        }
+        for item in cart_items
+    ]
+
+    return JsonResponse({'cart_items': cart_data})

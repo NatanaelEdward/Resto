@@ -57,4 +57,4 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
     size = models.ForeignKey(JenisSize, on_delete=models.CASCADE)
-    qty = models.PositiveIntegerField(default=1)
+    qty = models.PositiveIntegerField(default=0)

@@ -10,6 +10,7 @@ urlpatterns = [
     path('indexMinuman/', views.index_minuman, name='index_minuman'),
     path('add_to_cart/<int:menu_id>/<int:size_id>/<int:qty>/', views.add_to_cart, name='add_to_cart'),
     path('checkout_success', views.checkout_success, name='checkout_success'),
+    path('get_cart_items/', views.get_cart_items, name='get_cart_items'),
 
     # Tambahkan URL untuk halaman checkout
     path('checkout/', views.checkout, name='checkout'),

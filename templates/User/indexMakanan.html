@@ -19,11 +19,15 @@
                     {% endfor %}
                 </ul>
                 <label for="menu-qty-{{ menu.id }}">Qty:</label>
-                <input type="number" name="qty" id="menu-qty-{{ menu.id }}" value="1" min="0">
+                <div class="quantity-input">
+                    <button class="quantity-button minus" type="button">-</button>
+                    <input style="width: 50px; text-align: center;" class="short-input" type="number" name="qty" id="menu-qty-{{ menu.id }}" value="0" min="0">
+                    <button class="quantity-button plus" type="button">+</button>
+                </div>
                 <label for="menu-size-{{ menu.id }}">Pilih Size:</label>
                 <select id="menu-size-{{ menu.id }}">
                     {% for harga_menu in menu.hargamenu_set.all %}
-                        <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size }}</option>
+                        <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -33,23 +37,76 @@
         <p>Tidak ada menu dalam kategori {{ kategori }}</p>
         {% endfor %}
     </div>
+    <div class="cart-section">
+        <h2>Your Cart</h2>
+        <ul id="cart-items">
+            <!-- Cart items will be added dynamically here -->
+        </ul>
+    </div>
     <button id="checkout-button">Checkout</button>
 </main>
 <script>
     $(document).ready(function () {
+        //function for qty button
+        $(".quantity-input").on("click", ".quantity-button", function () {
+            var inputField = $(this).siblings("input[type='number']");
+            var currentValue = parseInt(inputField.val());
+        
+            if ($(this).hasClass("minus")) {
+                // Decrease the quantity when the minus button is clicked
+                if (currentValue > 0) {
+                    inputField.val(currentValue - 1);
+                }
+            } else if ($(this).hasClass("plus")) {
+                // Increase the quantity when the plus button is clicked
+                inputField.val(currentValue + 1);
+            }
+        });
+        // Function to update the cart section
+        function updateCartSection() {
+            $.ajax({
+                type: "GET",
+                url: "/get_cart_items/",  // Replace with the correct URL to fetch cart items
+                success: function (data) {
+                    var cartItems = data.cart_items;
+                    var cartList = $("#cart-items");
+
+                    // Clear the cart section
+                    cartList.empty();
+
+                    // Append the updated cart items
+                    cartItems.forEach(function (item) {
+                        cartList.append(
+                            "<li>" +
+                                "<span class='cart-menu-name'>Menu: " + item.menu_name + "</span><br>" +
+                                "<span class='cart-menu-size'>Size: " + item.size + "</span><br>" +
+                                "<span class='cart-menu-qty'>Qty: " + item.qty + "</span>" +
+                            "</li>"
+                        );
+                    });
+                },
+                error: function (error) {
+                    console.log("Error fetching cart items.");
+                }
+            });
+        }
+
         $(".add-to-cart").click(function () {
             var menuId = $(this).data("menu-id");
             var qty = $("#menu-qty-" + menuId).val();
             var sizeId = $("#menu-size-" + menuId).val();
         
             // Periksa apakah menuId, sizeId, dan qty memiliki nilai yang valid
-            if (menuId && sizeId && qty) {
+            if (menuId && sizeId && qty >= 0) {  // Ensure qty is non-negative
                 var url = `/add_to_cart/${menuId}/${sizeId}/${qty}/`;
                 $.ajax({
                     type: "GET",
                     url: url,
                     success: function (data) {
                         alert("Menu telah ditambahkan ke keranjang belanja.");
+        
+                        // Update the cart section with the latest items
+                        updateCartSection();
                     },
                     error: function (error) {
                         alert("Terjadi kesalahan saat menambahkan menu ke keranjang belanja.");
@@ -59,12 +116,16 @@
                 alert("Harap lengkapi informasi menu sebelum menambahkan ke keranjang belanja.");
             }
         });
-    
+        
+
         // Event listener untuk tombol "Checkout"
         $("#checkout-button").click(function () {
             // Redirect pengguna ke halaman checkout
             window.location.href = "/checkout/"; // Ganti dengan URL Anda
         });
+
+        // Initial update of cart section
+        updateCartSection();
     });
 </script>
 
