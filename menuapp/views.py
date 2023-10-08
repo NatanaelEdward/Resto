@@ -104,6 +104,8 @@ def get_cart_items(request):
     # Serialize cart items as JSON data
     cart_data = [
         {
+            'menu_id': item.menu.id,
+            'size_id' : item.size.id,
             'menu_name': item.menu.nama_menu_lengkap,
             'size': item.size.nama_size,
             'qty': item.qty,
@@ -112,3 +114,14 @@ def get_cart_items(request):
     ]
 
     return JsonResponse({'cart_items': cart_data})
+
+def remove_from_cart(request, menu_id, size_id):
+    menu = DataMenu.objects.get(pk=menu_id)
+    size = JenisSize.objects.get(pk=size_id)
+    user = request.user
+    
+    # Remove the cart item
+    CartItem.objects.filter(user=user, menu=menu, size=size).delete()
+    
+    return JsonResponse({'message': 'Item removed from the cart.'})
+

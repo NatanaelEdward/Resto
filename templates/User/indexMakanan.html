@@ -5,7 +5,8 @@
         {% for menu in menus %}
         <div class="card-menu">
             <div class="card-image-menu">
-                <img src="{{ menu.gambar_menu.url }}" alt="{{ menu.nama_menu_lengkap }}" style="width: 200px; height: 125px;">
+                <img src="{{ menu.gambar_menu.url }}" alt="{{ menu.nama_menu_lengkap }}"
+                    style="width: 200px; height: 125px;">
             </div>
             <div class="heading-menu">
                 {{ menu.nama_menu_lengkap }}
@@ -15,23 +16,25 @@
                 <p>Harga:</p>
                 <ul>
                     {% for harga_menu in menu.hargamenu_set.all %}
-                        <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
+                    <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
                     {% endfor %}
                 </ul>
                 <label for="menu-qty-{{ menu.id }}">Qty:</label>
                 <div class="quantity-input">
                     <button class="quantity-button minus" type="button">-</button>
-                    <input style="width: 50px; text-align: center;" class="short-input" type="number" name="qty" id="menu-qty-{{ menu.id }}" value="0" min="0">
+                    <input style="width: 50px; text-align: center;" class="short-input" type="number" name="qty"
+                        id="menu-qty-{{ menu.id }}" value="0" min="0">
                     <button class="quantity-button plus" type="button">+</button>
                 </div>
                 <label for="menu-size-{{ menu.id }}">Pilih Size:</label>
                 <select id="menu-size-{{ menu.id }}">
                     {% for harga_menu in menu.hargamenu_set.all %}
-                        <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size}}</option>
+                    <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size}}</option>
                     {% endfor %}
                 </select>
+                <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">Add
+                    to Cart</button>
             </div>
-            <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">Add to Cart</button>
         </div>
         {% empty %}
         <p>Tidak ada menu dalam kategori {{ kategori }}</p>
@@ -51,7 +54,7 @@
         $(".quantity-input").on("click", ".quantity-button", function () {
             var inputField = $(this).siblings("input[type='number']");
             var currentValue = parseInt(inputField.val());
-        
+
             if ($(this).hasClass("minus")) {
                 // Decrease the quantity when the minus button is clicked
                 if (currentValue > 0) {
@@ -62,6 +65,7 @@
                 inputField.val(currentValue + 1);
             }
         });
+
         // Function to update the cart section
         function updateCartSection() {
             $.ajax({
@@ -78,9 +82,10 @@
                     cartItems.forEach(function (item) {
                         cartList.append(
                             "<li>" +
-                                "<span class='cart-menu-name'>Menu: " + item.menu_name + "</span><br>" +
-                                "<span class='cart-menu-size'>Size: " + item.size + "</span><br>" +
-                                "<span class='cart-menu-qty'>Qty: " + item.qty + "</span>" +
+                            "<span class='cart-menu-name'>Menu: " + item.menu_name + "</span><br>" +
+                            "<span class='cart-menu-size'>Size: " + item.size + "</span><br>" +
+                            "<span class='cart-menu-qty'>Qty: " + item.qty + "</span>" +
+                            "<button class='remove-from-cart' data-menu-id='" + item.menu_id + "' data-size-id='" + item.size_id + "'>Remove</button>" +
                             "</li>"
                         );
                     });
@@ -95,7 +100,7 @@
             var menuId = $(this).data("menu-id");
             var qty = $("#menu-qty-" + menuId).val();
             var sizeId = $("#menu-size-" + menuId).val();
-        
+
             // Periksa apakah menuId, sizeId, dan qty memiliki nilai yang valid
             if (menuId && sizeId && qty >= 0) {  // Ensure qty is non-negative
                 var url = `/add_to_cart/${menuId}/${sizeId}/${qty}/`;
@@ -104,7 +109,7 @@
                     url: url,
                     success: function (data) {
                         alert("Menu telah ditambahkan ke keranjang belanja.");
-        
+
                         // Update the cart section with the latest items
                         updateCartSection();
                     },
@@ -116,15 +121,43 @@
                 alert("Harap lengkapi informasi menu sebelum menambahkan ke keranjang belanja.");
             }
         });
-        
 
-        // Event listener untuk tombol "Checkout"
-        $("#checkout-button").click(function () {
-            // Redirect pengguna ke halaman checkout
-            window.location.href = "/checkout/"; // Ganti dengan URL Anda
+        // Event listener for the "Remove" button
+        $("#cart-items").on("click", ".remove-from-cart", function () {
+            var menuId = $(this).data("menu-id");
+            var sizeId = $(this).data("size-id");
+
+            console.log("Clicked Remove button with menuId:", menuId);
+            console.log("Clicked Remove button with sizeId:", sizeId);
+
+            if (menuId !== undefined && sizeId !== undefined) {
+                // Send an AJAX request to remove the item from the cart
+                var url = `/remove_from_cart/${menuId}/${sizeId}/`;
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function (data) {
+                        alert("Menu has been removed from the cart.");
+
+                        // Update the cart section with the latest items
+                        updateCartSection();
+                    },
+                    error: function (error) {
+                        alert("An error occurred while removing the item from the cart.");
+                    }
+                });
+            } else {
+                alert("Unable to remove the item from the cart. Menu ID or Size ID is missing.");
+            }
         });
 
-        // Initial update of cart section
+        // Event listener for the "Checkout" button
+        $("#checkout-button").click(function () {
+            // Redirect the user to the checkout page
+            window.location.href = "/checkout/"; // Replace with your URL
+        });
+
+        // Initial update of the cart section
         updateCartSection();
     });
 </script>
