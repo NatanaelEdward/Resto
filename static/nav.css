@@ -349,3 +349,17 @@ label #sidebar_btn:hover{
 .name-menu:hover {
   cursor: pointer;
 }
+
+/* Style the cart items as horizontal elements with wrapping */
+#cart-items {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  max-width: 100%; /* Ensure it doesn't overflow the parent container */
+}
+
+/* Style individual cart items */
+.cart-item {
+  margin-right: 10px; /* Adjust this value for spacing between items */
+  margin-bottom: 10px; /* Add space below each item */
+}
+

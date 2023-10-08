@@ -42,7 +42,7 @@
     </div>
     <div class="cart-section">
         <h2>Your Cart</h2>
-        <ul id="cart-items">
+        <ul id="cart-items" class="horizontal-cart">
             <!-- Cart items will be added dynamically here -->
         </ul>
     </div>
@@ -73,21 +73,42 @@
                 url: "/get_cart_items/",  // Replace with the correct URL to fetch cart items
                 success: function (data) {
                     var cartItems = data.cart_items;
-                    var cartList = $("#cart-items");
+                    var cartContainer = $("#cart-items");
 
                     // Clear the cart section
-                    cartList.empty();
+                    cartContainer.empty();
 
                     // Append the updated cart items
                     cartItems.forEach(function (item) {
-                        cartList.append(
-                            "<li>" +
+                        // Create a cart item container
+                        var cartItemDiv = $("<div>").addClass("cart-item");
+
+                        // Create an image element for the menu image
+                        var menuImage = $("<img>")
+                            .attr("src", item.menu_image)
+                            .attr("alt", item.menu_name)
+                            .css({
+                                "width": "200px", // Set your preferred maximum width
+                                "height": "125px", // Set your preferred maximum height
+                                "border": "3px solid black" // Add a black border around the image
+                            });
+
+                        // Create a container for menu details
+                        var menuDetailsDiv = $("<div>").addClass("menu-details");
+
+                        // Append menu name, size, qty, and remove button to menu details container
+                        menuDetailsDiv.append(
                             "<span class='cart-menu-name'>Menu: " + item.menu_name + "</span><br>" +
                             "<span class='cart-menu-size'>Size: " + item.size + "</span><br>" +
                             "<span class='cart-menu-qty'>Qty: " + item.qty + "</span>" +
-                            "<button class='remove-from-cart' data-menu-id='" + item.menu_id + "' data-size-id='" + item.size_id + "'>Remove</button>" +
-                            "</li>"
+                            "<button class='remove-from-cart' data-menu-id='" + item.menu_id + "' data-size-id='" + item.size_id + "'>Remove</button>"
                         );
+
+                        // Append menu image and menu details container to the cart item container
+                        cartItemDiv.append(menuImage, menuDetailsDiv);
+
+                        // Append the cart item container to the cart section
+                        cartContainer.append(cartItemDiv);
                     });
                 },
                 error: function (error) {
