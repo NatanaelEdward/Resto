@@ -14,6 +14,7 @@
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
+        <a href="{% url 'index_makanan' %}">All</a>
         <a href="#" class="menu-link" data-menu-type="Meat"><span>Meat</span></a>
         <a href="#" class="menu-link" data-menu-type="Vegetables"><span>Vegetables</span></a>
         <a href="{% url 'logout_view' %}">Logout >></a>

@@ -31,7 +31,9 @@
         {% csrf_token %}
         <!-- Tambahkan input atau field lainnya yang diperlukan untuk proses pembayaran -->
         <input type="submit" value="Checkout">
+        <a href="{% url 'index_makanan' %}">Back</a>
     </form>
+    
 </main>
 {% endblock %}
 

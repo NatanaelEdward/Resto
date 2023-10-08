@@ -10,10 +10,16 @@ from decimal import Decimal
 
 def index_makanan(request):
     kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
-    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori).prefetch_related('hargamenu_set__size')
 
+    # Check if a category was specified
+    if kategori:
+        menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori).prefetch_related('hargamenu_set__size')
+    else:
+        # If no category is specified, retrieve all menus
+        menus = DataMenu.objects.all().prefetch_related('hargamenu_set__size')
 
     return render(request, 'user/indexMakanan.html', {'menus': menus, 'kategori': kategori})
+
 
 def checkout_success(request):
 
