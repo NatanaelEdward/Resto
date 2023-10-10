@@ -8,10 +8,11 @@
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
         Meja: <br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
-        Total Penjualan: {{ order.total_penjualan }}<br>
-        Total Pembayaran : {{order.pembayaran }} <br>
-        Kembalian : {{order.kembalian}} <br>
+        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
+        Total Pembayaran: Rp.{{order.pembayaran }} <br>
+        Kembalian : Rp.{{order.kembalian}} <br>
         Status Lunas : Lunas
+        
         <form method="post" action="{% url 'cancel_order' order.id %}">
             {% csrf_token %}
             <button type="submit">Cancel Order</button>
@@ -19,6 +20,10 @@
         <form method="post" action="{% url 'delete_order' order.id %}">
             {% csrf_token %}
             <button type="submit">Delete Order</button>
+        </form>
+        <form method="post" action="{% url 'generate_pdf' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Print Order</button>
         </form>
         <!-- Add more fields as needed -->
     </li>
@@ -33,7 +38,7 @@
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
         Meja: <br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
-        Total Penjualan: {{ order.total_penjualan }}<br>
+        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
         Status Lunas : Belum lunas
 
         <!-- Form to change the data for the pending order -->
