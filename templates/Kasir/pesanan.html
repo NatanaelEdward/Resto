@@ -5,12 +5,13 @@
 <ul>
     {% for order in completed_orders %}
     <li>
-        Order ID: {{ order.kode_penjualan_faktur }}<br>
+        Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
+        Meja: <br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
         Total Penjualan: {{ order.total_penjualan }}<br>
         Total Pembayaran : {{order.pembayaran }} <br>
         Kembalian : {{order.kembalian}} <br>
-
+        Status Lunas : Lunas
         <form method="post" action="{% url 'cancel_order' order.id %}">
             {% csrf_token %}
             <button type="submit">Cancel Order</button>
@@ -30,9 +31,10 @@
     {% for order in pending_orders %}
     <li>
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
+        Meja: <br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
         Total Penjualan: {{ order.total_penjualan }}<br>
-
+        Status Lunas : Belum lunas
 
         <!-- Form to change the data for the pending order -->
         <form method="post" action="{% url 'update_order' order.id %}">

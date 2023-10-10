@@ -94,7 +94,7 @@ def delete_order(request, order_id):
 
     if request.method == 'POST':
         # Delete associated PenjualanDetail records
-        PenjualanDetail.objects.filter(nomor_nota_penjualan=order.kode_penjualan_faktur).delete()
+        PenjualanDetail.objects.filter(nomor_nota_penjualan=order.nomor_nota_penjualan).delete()
         
         # Delete the PenjualanFaktur (order) instance
         order.delete()
