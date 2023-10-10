@@ -85,3 +85,8 @@ class DataMeja(models.Model):
 
     def __str__(self):
         return self.nomor_meja
+    
+class InvoiceSequence(models.Model):
+    nomor_meja = models.CharField(max_length=10, unique=True)
+    nota_sequence = models.PositiveIntegerField(default=1)
+    faktur_sequence = models.PositiveIntegerField(default=1)

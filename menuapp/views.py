@@ -3,10 +3,13 @@ import json
 import random, string
 from django.shortcuts import render, redirect
 from .forms import DataMenuForm
+from django.db.models import F
+
+from django.utils import timezone
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import transaction
-from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur
+from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence
 from decimal import Decimal
 
 def index_makanan(request):
@@ -72,14 +75,22 @@ def add_to_cart(request, menu_id, size_id, qty):
     return redirect('index_makanan')
 
 
-def generate_random_invoice_number():
-    while True:
-        characters = string.ascii_letters + string.digits
-        invoice_number = ''.join(random.choice(characters) for _ in range(10))
-        
-        # Periksa apakah nomor nota penjualan sudah ada di database
-        if not PenjualanDetail.objects.filter(nomor_nota_penjualan=invoice_number).exists():
-            return invoice_number
+def generate_invoice_number(prefix, nomor_meja):
+    today = timezone.now()
+    date_part = today.strftime("%Y%m%d")  # Get today's date as "YYYYMMDD"
+
+    with transaction.atomic():
+        # Fetch the current sequence number for the given nomor_meja and update it
+        invoice_sequence, created = InvoiceSequence.objects.get_or_create(nomor_meja=nomor_meja)
+        if prefix == 'N':
+            invoice_number = f"{prefix}{nomor_meja}_{date_part}_{invoice_sequence.nota_sequence:04d}"
+            InvoiceSequence.objects.filter(pk=invoice_sequence.pk).update(nota_sequence=F('nota_sequence') + 1)
+        elif prefix == 'F':
+            invoice_number = f"{prefix}{nomor_meja}_{date_part}_{invoice_sequence.faktur_sequence:04d}"
+            InvoiceSequence.objects.filter(pk=invoice_sequence.pk).update(faktur_sequence=F('faktur_sequence') + 1)
+
+    return invoice_number
+
 
 
 def checkout(request):
@@ -93,7 +104,7 @@ def checkout(request):
     nomor_meja = data_meja.nomor_meja
     if request.method == 'POST':
         with transaction.atomic():
-            nomor_nota_penjualan = generate_random_invoice_number()
+            nomor_nota_penjualan = generate_invoice_number('N', nomor_meja)
             
             for cart_item in cart_items:
                 harga_menu = HargaMenu.objects.get(menu=cart_item.menu, size=cart_item.size)
@@ -120,7 +131,7 @@ def checkout(request):
 
             # Create PenjualanFaktur instance
             PenjualanFaktur.objects.create(
-                kode_penjualan_faktur=generate_random_invoice_number(),
+                kode_penjualan_faktur=generate_invoice_number('F', nomor_meja),
                 nomor_nota_penjualan=nomor_nota_penjualan,
                 nomor_meja=nomor_meja,  # You can set this based on cashier input
                 cara_pembayaran="",  # You can set this based on cashier input

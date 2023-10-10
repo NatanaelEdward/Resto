@@ -4,7 +4,7 @@ from django.http import FileResponse
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
-from menuapp.models import PenjualanDetail,PenjualanFaktur
+from menuapp.models import PenjualanDetail,PenjualanFaktur,HargaMenu,DataMenu
 from django.contrib.auth.decorators import login_required
 import requests
 from decimal import Decimal
@@ -31,10 +31,10 @@ def generate_pdf(request, order_id):
         f'FAKTUR PENJUALAN',
         f'Nomor Nota Penjualan: {order.kode_penjualan_faktur}',
         f'Meja: {order.nomor_meja}',
-        f'Tanggal Penjualan: {order.tanggal_penjualan.strftime("%b. %d, %Y, %I:%M %p")}',
-        f'Total Penjualan: {order.total_penjualan}',
-        f'Total Pembayaran : {order.pembayaran}',
-        f'Kembalian : {order.kembalian}',
+        f'Tanggal Penjualan: {order.tanggal_penjualan.strftime("%d %b, %Y %I:%M %p")}',
+        f'Total Penjualan: Rp.{order.total_penjualan}',
+        f'Total Pembayaran : Rp.{order.pembayaran}',
+        f'Kembalian : Rp.{order.kembalian}',
         f'Status Lunas : {"Lunas" if order.status_lunas else "Belum Lunas"}'
     ]
 
@@ -77,11 +77,33 @@ def pesanan(request):
     completed_orders = PenjualanFaktur.objects.filter(status_lunas=True)
     pending_orders = PenjualanFaktur.objects.filter(status_lunas=False)
 
+# Modify the code in your view to access the size correctly
+    for order in completed_orders:
+        order.menu_items = PenjualanDetail.objects.filter(nomor_nota_penjualan=order.nomor_nota_penjualan)
+        for item in order.menu_items:
+            # Get the related HargaMenu based on the harga_menu attribute
+            harga_menu = HargaMenu.objects.get(menu=item.kode_menu, harga_menu=item.harga_menu)
+            # Access the size through the harga_menu relationship
+            item.size = harga_menu.size.nama_size
+
+    for order in pending_orders:
+        order.menu_items = PenjualanDetail.objects.filter(nomor_nota_penjualan=order.nomor_nota_penjualan)
+        for item in order.menu_items:
+            # Get the related HargaMenu based on the harga_menu attribute
+            harga_menu = HargaMenu.objects.get(menu=item.kode_menu, harga_menu=item.harga_menu)
+            # Access the size through the harga_menu relationship
+            item.size = harga_menu.size.nama_size
+
+
+
     context = {
         'completed_orders': completed_orders,
         'pending_orders': pending_orders,
     }
     return render(request, 'kasir/pesanan.html', context)
+
+
+
 
 @login_required
 def tabelKasir(request):

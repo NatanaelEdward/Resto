@@ -8,6 +8,11 @@
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
         Meja: {{ order.nomor_meja }}<br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
+        Menu : <br>
+    {% for item in order.menu_items %}
+        {{ item.qty_menu }}x {{ item.kode_menu.nama_menu_lengkap }} {{ item.harga_menu }}<br>
+        Size: {{ item.size }}<br>
+    {% endfor %}
         Total Penjualan: Rp.{{ order.total_penjualan }}<br>
         Total Pembayaran: Rp.{{order.pembayaran }} <br>
         Kembalian : Rp.{{order.kembalian}} <br>
@@ -38,6 +43,10 @@
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
         Meja: {{ order.nomor_meja }}<br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
+        {% for item in order.menu_items %}
+        {{ item.qty_menu }}x {{ item.kode_menu.nama_menu_lengkap }} {{ item.harga_menu }}<br>
+        Size: {{ item.size }}<br>
+    {% endfor %}
         Total Penjualan: Rp.{{ order.total_penjualan }}<br>
         Status Lunas : Belum lunas
 

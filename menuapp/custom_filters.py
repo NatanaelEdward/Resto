@@ -12,3 +12,7 @@ def get_item(value, index):
         return value[index]
     except (IndexError, KeyError):
         return ""
+    
+@register.filter
+def related_penjualan_details(order):
+    return order.penjualandetail_set.all()
