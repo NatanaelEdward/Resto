@@ -61,8 +61,6 @@ def generate_pdf(request, order_id):
     return response
 
 
-
-
 @login_required
 def kasiran(request):
      if request.user.userprofile.role != 'kasir':
