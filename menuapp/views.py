@@ -84,11 +84,13 @@ def generate_random_invoice_number():
 
 def checkout(request):
     user = request.user
+    user_profile = request.user.userprofile
+    data_meja = user_profile.data_meja
     cart_items = CartItem.objects.filter(user=user)
     harga_tiap_menu = [float(item.menu.hargamenu_set.get(size=item.size).harga_menu) for item in cart_items]
     total_tiap_menu = [float(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty) for item in cart_items]
     total_amount = sum(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty for item in cart_items)
-
+    nomor_meja = data_meja.nomor_meja
     if request.method == 'POST':
         with transaction.atomic():
             nomor_nota_penjualan = generate_random_invoice_number()
@@ -120,7 +122,7 @@ def checkout(request):
             PenjualanFaktur.objects.create(
                 kode_penjualan_faktur=generate_random_invoice_number(),
                 nomor_nota_penjualan=nomor_nota_penjualan,
-                nomor_meja="",  # You can set this based on cashier input
+                nomor_meja=nomor_meja,  # You can set this based on cashier input
                 cara_pembayaran="",  # You can set this based on cashier input
                 status_lunas=False,  # You can set this based on cashier input
                 jenis_pembayaran="",  # You can set this based on cashier input

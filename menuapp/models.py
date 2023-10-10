@@ -75,3 +75,13 @@ class PenjualanFaktur(models.Model):
     
     def __str__(self):
         return self.kode_penjualan_faktur
+
+class DataMeja(models.Model):
+    nomor_meja = models.CharField(max_length=10, unique=True)
+    status_aktif_meja = models.BooleanField(default=True)
+    keterangan_meja = models.TextField()
+    kapasitas_meja = models.PositiveIntegerField()
+    status_terpakai = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nomor_meja

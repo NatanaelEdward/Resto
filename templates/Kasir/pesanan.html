@@ -6,7 +6,7 @@
     {% for order in completed_orders %}
     <li>
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
-        Meja: <br>
+        Meja: {{ order.nomor_meja }}<br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
         Total Penjualan: Rp.{{ order.total_penjualan }}<br>
         Total Pembayaran: Rp.{{order.pembayaran }} <br>
@@ -36,7 +36,7 @@
     {% for order in pending_orders %}
     <li>
         Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
-        Meja: <br>
+        Meja: {{ order.nomor_meja }}<br>
         Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
         Total Penjualan: Rp.{{ order.total_penjualan }}<br>
         Status Lunas : Belum lunas
