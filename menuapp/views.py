@@ -4,8 +4,9 @@ import random, string
 from django.shortcuts import render, redirect
 from .forms import DataMenuForm
 from django.http import JsonResponse
+from django.db.models import Sum
 from django.db import transaction
-from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem
+from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur
 from decimal import Decimal
 
 def index_makanan(request):
@@ -30,6 +31,19 @@ def index_minuman(request):
     menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
 
     return render(request, 'user/indexMinuman.html', {'menus': menus, 'kategori': kategori})
+
+def index_dessert(request):
+    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
+    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
+
+    return render(request, 'user/indexDessert.html', {'menus': menus, 'kategori': kategori})
+
+def index_snack(request):
+    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
+    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
+
+    return render(request, 'user/indexSnack.html', {'menus': menus, 'kategori': kategori})
+
 def tambah_menu(request):
     if request.method == 'POST':
         form = DataMenuForm(request.POST, request.FILES)
@@ -68,7 +82,6 @@ def generate_random_invoice_number():
             return invoice_number
 
 
-
 def checkout(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user)
@@ -77,9 +90,8 @@ def checkout(request):
     total_amount = sum(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty for item in cart_items)
 
     if request.method == 'POST':
-        
         with transaction.atomic():
-            nomor_nota_penjualan = generate_random_invoice_number()  # Buat nomor nota penjualan acak
+            nomor_nota_penjualan = generate_random_invoice_number()
             
             for cart_item in cart_items:
                 harga_menu = HargaMenu.objects.get(menu=cart_item.menu, size=cart_item.size)
@@ -93,9 +105,37 @@ def checkout(request):
                 )
                 cart_item.delete()  # Hapus item dari keranjang belanja setelah berhasil checkout
             
+            # Calculate total_penjualan from PenjualanDetail
+            total_penjualan = PenjualanDetail.objects.filter(nomor_nota_penjualan=nomor_nota_penjualan).aggregate(
+                total_penjualan=Sum('jumlah_harga')
+            )['total_penjualan'] or 0
+
+            # Get the input pembayaran (you can retrieve it from your form or any other method)
+            pembayaran = Decimal(request.POST.get('pembayaran', 0))  # Replace with the actual input field name
+            
+            # Calculate kembalian, set to 0 if pembayaran is zero or None
+            kembalian = total_penjualan - pembayaran if pembayaran is not None and pembayaran != 0 else 0
+
+            # Create PenjualanFaktur instance
+            PenjualanFaktur.objects.create(
+                kode_penjualan_faktur=generate_random_invoice_number(),
+                nomor_nota_penjualan=nomor_nota_penjualan,
+                nomor_meja="",  # You can set this based on cashier input
+                cara_pembayaran="",  # You can set this based on cashier input
+                status_lunas=False,  # You can set this based on cashier input
+                jenis_pembayaran="",  # You can set this based on cashier input
+                total_penjualan=total_penjualan,
+                pembayaran=pembayaran,  # Use the input value
+                kembalian=kembalian,  # Calculate kembalian
+            )
+
             return redirect('index_makanan')
     else:
-        return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu' : total_tiap_menu, 'harga_tiap_menu' : harga_tiap_menu})
+        return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu': total_tiap_menu, 'harga_tiap_menu': harga_tiap_menu})
+
+
+
+
 
 def get_cart_items(request):
     user = request.user

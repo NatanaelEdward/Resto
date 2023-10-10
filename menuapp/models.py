@@ -58,3 +58,20 @@ class CartItem(models.Model):
     menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
     size = models.ForeignKey(JenisSize, on_delete=models.CASCADE)
     qty = models.PositiveIntegerField(default=0)
+
+# models.py
+
+class PenjualanFaktur(models.Model):
+    kode_penjualan_faktur = models.CharField(max_length=20, unique=True)
+    nomor_nota_penjualan = models.CharField(max_length=20)
+    nomor_meja = models.CharField(max_length=10)
+    cara_pembayaran = models.CharField(max_length=50)
+    status_lunas = models.BooleanField(default=False)
+    jenis_pembayaran = models.CharField(max_length=50)
+    tanggal_penjualan = models.DateTimeField(auto_now_add=True)
+    total_penjualan = models.DecimalField(max_digits=10, decimal_places=2)
+    pembayaran = models.DecimalField(max_digits=10, decimal_places=2)
+    kembalian = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return self.kode_penjualan_faktur
