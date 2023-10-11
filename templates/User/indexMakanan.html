@@ -1,5 +1,6 @@
 {% extends 'main/basemakanan.html' %}
 {% block content %}
+<div class="card">
 <main>
     <div class="card-menu-container">
         {% for menu in menus %}
@@ -10,15 +11,17 @@
             </div>
             <div class="heading-menu">
                 {{ menu.nama_menu_lengkap }}
+                <div class="category-menu">
+                    <span class="menu-title">Harga :</span>
+                    <ul class="dropdown-menu">
+                        {% for harga_menu in menu.hargamenu_set.all %}
+                        <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 <div class="author-menu">{{ menu.keterangan_menu }}</div>
             </div>
             <div class="menu-details">
-                <p>Harga:</p>
-                <ul>
-                    {% for harga_menu in menu.hargamenu_set.all %}
-                    <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
-                    {% endfor %}
-                </ul>
                 <label for="menu-qty-{{ menu.id }}">Qty:</label>
                 <div class="quantity-input">
                     <button class="quantity-button minus" type="button">-</button>
@@ -32,22 +35,27 @@
                     <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size}}</option>
                     {% endfor %}
                 </select>
-                <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">Add
-                    to Cart</button>
+                <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">
+                     Add to Cart
+                </button>
             </div>
         </div>
         {% empty %}
         <p>Tidak ada menu dalam kategori {{ kategori }}</p>
         {% endfor %}
     </div>
+    
+</main>
+</div>
+<div class="cart">
     <div class="cart-section">
         <h2>Your Cart</h2>
         <ul id="cart-items" class="horizontal-cart">
             <!-- Cart items will be added dynamically here -->
         </ul>
     </div>
-    <button id="checkout-button">Checkout</button>
-</main>
+    <button class="btn-checkout" id="checkout-button">Checkout <span>⟶</span> </button>
+</div>
 <script>
     $(document).ready(function () {
         //function for qty button
@@ -90,7 +98,9 @@
                             .css({
                                 "width": "200px", // Set your preferred maximum width
                                 "height": "125px", // Set your preferred maximum height
-                                "border": "3px solid black" // Add a black border around the image
+                                "border-radius": "6px 6px 0 0", // Add a black border around the image
+                                "object-fit": "cover" // Add a black border around the image
+                                
                             });
 
                         // Create a container for menu details
