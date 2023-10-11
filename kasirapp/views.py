@@ -61,6 +61,8 @@ def generate_pdf(request, order_id):
     y -= 20
     p.drawString(100, y, f'Total Penjualan: Rp.{order.total_penjualan}')
 
+    y -= 20
+    p.drawString(100, y, f'Kembalian : Rp.{order.kembalian}')
     # Close the PDF object cleanly and finalize the buffer.
     p.showPage()
     p.save()
