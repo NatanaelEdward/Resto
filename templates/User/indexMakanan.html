@@ -47,9 +47,28 @@
             <!-- Cart items will be added dynamically here -->
         </ul>
     </div>
-    <div class="total-cart" >Total</div>
-    <button class="btn-checkout" id="checkout-button">Checkout <span>⟶</span> </button>
+    
+    <button id="show-modal-button">Tampilkan Modal</button>
+    <div class="modal" id="my-modal">
+        <div class="modal-content">
+            <span class="close" id="close-button">&times;</span>
+            <h2>Nomor Meja</h2>
+            <h2>Pesanan Anda</h2>
+            {% for cart_item in cart_items %}
+                        <tr>
+                            <td>{{ cart_item.menu.nama_menu_lengkap }}</td>
+                            <td>{{ cart_item.size.nama_size }}</td>
+                            <td>{{ cart_item.qty }}</td>
+                        </tr>
+                        {% endfor %}
+            <p>kelengkapan makanan</p>
+            <h2>Total</h2>
+            <p></p>
+            <button class="btn-checkout" id="checkout-button">Checkout <span>⟶</span></button>
+        </div>
+    </div>
 </div>
+
 <script>
     $(document).ready(function () {
         //function for qty button
@@ -176,13 +195,31 @@
             }
         });
 
+        // Show the modal when the "Tampilkan Modal" button is clicked
+        document.getElementById("show-modal-button").addEventListener("click", function() {
+        document.getElementById("my-modal").style.display = "block";
+        });
+
+        // Close the modal when the close button is clicked
+        document.getElementById("close-button").addEventListener("click", function() {
+        document.getElementById("my-modal").style.display = "none";
+        });
+
+        // Close the modal if the user clicks outside of it
+        window.addEventListener("click", function(event) {
+        if (event.target == document.getElementById("my-modal")) {
+            document.getElementById("my-modal").style.display = "none";
+        }
+        });
+
+
         // Event listener for the "Checkout" button
         $("#checkout-button").click(function () {
             // Redirect the user to the checkout page
             window.location.href = "/checkout/"; // Replace with your URL
         });
 
-        // Initial update of the cart section
+        // Initial update of the cart sec tion
         updateCartSection();
     });
 </script>

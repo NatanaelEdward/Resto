@@ -102,6 +102,7 @@ def checkout(request):
     total_tiap_menu = [float(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty) for item in cart_items]
     total_amount = sum(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty for item in cart_items)
     nomor_meja = data_meja.nomor_meja
+    # ini untuk mengengetahui jika di post akan terhapus
     if request.method == 'POST':
         with transaction.atomic():
             nomor_nota_penjualan = generate_invoice_number('N', nomor_meja)
