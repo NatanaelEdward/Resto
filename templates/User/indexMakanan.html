@@ -11,30 +11,24 @@
             </div>
             <div class="heading-menu">
                 {{ menu.nama_menu_lengkap }}
-                <div class="category-menu">
-                    <span class="menu-title">Harga :</span>
-                    <ul class="dropdown-menu">
-                        {% for harga_menu in menu.hargamenu_set.all %}
-                        <li>{{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
                 <div class="author-menu">{{ menu.keterangan_menu }}</div>
             </div>
             <div class="menu-details">
-                <label for="menu-qty-{{ menu.id }}">Qty:</label>
                 <div class="quantity-input">
+                    <label for="menu-qty-{{ menu.id }}"></label>
                     <button class="quantity-button minus" type="button">-</button>
                     <input style="width: 50px; text-align: center;" class="short-input" type="number" name="qty"
                         id="menu-qty-{{ menu.id }}" value="0" min="0">
                     <button class="quantity-button plus" type="button">+</button>
                 </div>
-                <label for="menu-size-{{ menu.id }}">Pilih Size:</label>
-                <select id="menu-size-{{ menu.id }}">
+                <label for="menu-size-{{ menu.id }}"></label>
+                <select class="size-select" id="menu-size-{{ menu.id }}">
                     {% for harga_menu in menu.hargamenu_set.all %}
-                    <option value="{{ harga_menu.size.id }}">{{ harga_menu.size.nama_size}}</option>
+                      <option value="{{ harga_menu.size.id }}">
+                        {{ harga_menu.size.nama_size }}: {{ harga_menu.harga_menu }}
+                      </option>
                     {% endfor %}
-                </select>
+                  </select>                  
                 <button class="add-to-cart" data-menu-id="{{ menu.id }}" data-menu-size="{{ harga_menu.size.id }}">
                      Add to Cart
                 </button>

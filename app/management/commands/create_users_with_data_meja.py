@@ -8,10 +8,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Create or retrieve a user (replace 'username' and 'password' with actual values)
-        user = User.objects.create_user(username='meja2', password='meja2')
+        user = User.objects.create_user(username='meja1', password='meja1')
 
         # Create a DataMeja instance for the user (choose a table for the user)
-        data_meja = DataMeja.objects.get(nomor_meja='2')  # Replace 'Table1' with the desired table number
+        data_meja = DataMeja.objects.get(nomor_meja='1')  # Replace 'Table1' with the desired table number
 
         # Create or update the user's UserProfile to associate it with the DataMeja
         user_profile, created = UserProfile.objects.get_or_create(user=user)
