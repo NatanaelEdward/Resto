@@ -16,6 +16,9 @@ def generate_pdf(request, order_id):
     # Get the PenjualanFaktur instance
     order = get_object_or_404(PenjualanFaktur, id=order_id)
 
+    # Fetch related PenjualanDetail items for the order
+    order.menu_items = PenjualanDetail.objects.filter(nomor_nota_penjualan=order.nomor_nota_penjualan)
+
     # Create a BytesIO buffer to receive the PDF data
     buffer = BytesIO()
 
@@ -32,10 +35,7 @@ def generate_pdf(request, order_id):
         f'Nomor Nota Penjualan: {order.kode_penjualan_faktur}',
         f'Meja: {order.nomor_meja}',
         f'Tanggal Penjualan: {order.tanggal_penjualan.strftime("%d %b, %Y %I:%M %p")}',
-        f'Total Penjualan: Rp.{order.total_penjualan}',
-        f'Total Pembayaran : Rp.{order.pembayaran}',
-        f'Kembalian : Rp.{order.kembalian}',
-        f'Status Lunas : {"Lunas" if order.status_lunas else "Belum Lunas"}'
+        f'Menu : '
     ]
 
     # Set the Y-coordinate for the first line of content
@@ -45,6 +45,21 @@ def generate_pdf(request, order_id):
     for line in content:
         p.drawString(100, y, line)
         y -= 20  # Adjust the Y-coordinate for the next line
+
+    # Add menu items to the PDF
+    for item in order.menu_items:
+        # Get the related HargaMenu based on the harga_menu attribute
+        harga_menu = HargaMenu.objects.get(menu=item.kode_menu, harga_menu=item.harga_menu)
+        menu_description = f'{item.qty_menu}x {item.kode_menu.nama_menu_lengkap}, {harga_menu.size.nama_size}'
+        menu_price = f'Price: Rp.{harga_menu.harga_menu}'  # Add this line to display the price
+        p.drawString(100, y, menu_description)
+        y -= 20
+        p.drawString(120, y, menu_price)  # Display the price
+        y -= 20
+
+    # Add the "Total Penjualan" after menu items
+    y -= 20
+    p.drawString(100, y, f'Total Penjualan: Rp.{order.total_penjualan}')
 
     # Close the PDF object cleanly and finalize the buffer.
     p.showPage()
@@ -59,6 +74,8 @@ def generate_pdf(request, order_id):
     response.write(pdf_data)
 
     return response
+
+
 
 
 @login_required
