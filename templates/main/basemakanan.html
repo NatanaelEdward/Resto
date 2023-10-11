@@ -13,7 +13,7 @@
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
-        <p>Nomor Meja : {{ user.userprofile.data_meja.nomor_meja }}</p>
+        <p>{{ user.username }}</p>
         <a href="{% url 'index_makanan' %}">All</a>
         <a href="#" class="menu-link" data-menu-type="Meat"><span>Meat</span></a>
         <a href="#" class="menu-link" data-menu-type="Vegetables"><span>Vegetables</span></a>
@@ -22,11 +22,8 @@
     </div>
 
     <div class="content">
-        <div class="card">
-            {% block content %}
-            {% endblock %}
-        </div>
-        
+        {% block content %}
+        {% endblock %}
     </div>
 
 </html>
@@ -46,5 +43,3 @@
         });
     });
 </script>
-
-
