@@ -13,7 +13,7 @@
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
-        <p>{{ user.username }}</p>
+        <p>Nomor Meja : {{ user.userprofile.data_meja.nomor_meja }}</p>
         <a href="{% url 'index_makanan' %}">All</a>
         <a href="#" class="menu-link" data-menu-type="Meat"><span>Meat</span></a>
         <a href="#" class="menu-link" data-menu-type="Vegetables"><span>Vegetables</span></a>

@@ -3,9 +3,13 @@ import json
 import random, string
 from django.shortcuts import render, redirect
 from .forms import DataMenuForm
+from django.db.models import F
+
+from django.utils import timezone
 from django.http import JsonResponse
+from django.db.models import Sum
 from django.db import transaction
-from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem
+from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence
 from decimal import Decimal
 
 def index_makanan(request):
@@ -30,6 +34,19 @@ def index_minuman(request):
     menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
 
     return render(request, 'user/indexMinuman.html', {'menus': menus, 'kategori': kategori})
+
+def index_dessert(request):
+    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
+    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
+
+    return render(request, 'user/indexDessert.html', {'menus': menus, 'kategori': kategori})
+
+def index_snack(request):
+    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
+    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
+
+    return render(request, 'user/indexSnack.html', {'menus': menus, 'kategori': kategori})
+
 def tambah_menu(request):
     if request.method == 'POST':
         form = DataMenuForm(request.POST, request.FILES)
@@ -58,28 +75,36 @@ def add_to_cart(request, menu_id, size_id, qty):
     return redirect('index_makanan')
 
 
-def generate_random_invoice_number():
-    while True:
-        characters = string.ascii_letters + string.digits
-        invoice_number = ''.join(random.choice(characters) for _ in range(10))
-        
-        # Periksa apakah nomor nota penjualan sudah ada di database
-        if not PenjualanDetail.objects.filter(nomor_nota_penjualan=invoice_number).exists():
-            return invoice_number
+def generate_invoice_number(prefix, nomor_meja):
+    today = timezone.now()
+    date_part = today.strftime("%Y%m%d")  # Get today's date as "YYYYMMDD"
+
+    with transaction.atomic():
+        # Fetch the current sequence number for the given nomor_meja and update it
+        invoice_sequence, created = InvoiceSequence.objects.get_or_create(nomor_meja=nomor_meja)
+        if prefix == 'N':
+            invoice_number = f"{prefix}{nomor_meja}_{date_part}_{invoice_sequence.nota_sequence:04d}"
+            InvoiceSequence.objects.filter(pk=invoice_sequence.pk).update(nota_sequence=F('nota_sequence') + 1)
+        elif prefix == 'F':
+            invoice_number = f"{prefix}{nomor_meja}_{date_part}_{invoice_sequence.faktur_sequence:04d}"
+            InvoiceSequence.objects.filter(pk=invoice_sequence.pk).update(faktur_sequence=F('faktur_sequence') + 1)
+
+    return invoice_number
 
 
 
 def checkout(request):
     user = request.user
+    user_profile = request.user.userprofile
+    data_meja = user_profile.data_meja
     cart_items = CartItem.objects.filter(user=user)
     harga_tiap_menu = [float(item.menu.hargamenu_set.get(size=item.size).harga_menu) for item in cart_items]
     total_tiap_menu = [float(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty) for item in cart_items]
     total_amount = sum(item.menu.hargamenu_set.get(size=item.size).harga_menu * item.qty for item in cart_items)
-
+    nomor_meja = data_meja.nomor_meja
     if request.method == 'POST':
-        
         with transaction.atomic():
-            nomor_nota_penjualan = generate_random_invoice_number()  # Buat nomor nota penjualan acak
+            nomor_nota_penjualan = generate_invoice_number('N', nomor_meja)
             
             for cart_item in cart_items:
                 harga_menu = HargaMenu.objects.get(menu=cart_item.menu, size=cart_item.size)
@@ -93,9 +118,37 @@ def checkout(request):
                 )
                 cart_item.delete()  # Hapus item dari keranjang belanja setelah berhasil checkout
             
+            # Calculate total_penjualan from PenjualanDetail
+            total_penjualan = PenjualanDetail.objects.filter(nomor_nota_penjualan=nomor_nota_penjualan).aggregate(
+                total_penjualan=Sum('jumlah_harga')
+            )['total_penjualan'] or 0
+
+            # Get the input pembayaran (you can retrieve it from your form or any other method)
+            pembayaran = Decimal(request.POST.get('pembayaran', 0))  # Replace with the actual input field name
+            
+            # Calculate kembalian, set to 0 if pembayaran is zero or None
+            kembalian = total_penjualan - pembayaran if pembayaran is not None and pembayaran != 0 else 0
+
+            # Create PenjualanFaktur instance
+            PenjualanFaktur.objects.create(
+                kode_penjualan_faktur=generate_invoice_number('F', nomor_meja),
+                nomor_nota_penjualan=nomor_nota_penjualan,
+                nomor_meja=nomor_meja,  # You can set this based on cashier input
+                cara_pembayaran="",  # You can set this based on cashier input
+                status_lunas=False,  # You can set this based on cashier input
+                jenis_pembayaran="",  # You can set this based on cashier input
+                total_penjualan=total_penjualan,
+                pembayaran=pembayaran,  # Use the input value
+                kembalian=kembalian,  # Calculate kembalian
+            )
+
             return redirect('index_makanan')
     else:
-        return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu' : total_tiap_menu, 'harga_tiap_menu' : harga_tiap_menu})
+        return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu': total_tiap_menu, 'harga_tiap_menu': harga_tiap_menu})
+
+
+
+
 
 def get_cart_items(request):
     user = request.user

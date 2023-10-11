@@ -1,6 +1,65 @@
 {% extends 'main/basekasir.html' %}
 {% block content %}
 <main>
-<h2>ini pesanan</h2>
+    <h2>Completed Orders</h2>
+<ul>
+    {% for order in completed_orders %}
+    <li>
+        Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
+        Meja: {{ order.nomor_meja }}<br>
+        Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
+        Menu : <br>
+    {% for item in order.menu_items %}
+        {{ item.qty_menu }}x {{ item.kode_menu.nama_menu_lengkap }} {{ item.harga_menu }}<br>
+        Size: {{ item.size }}<br>
+    {% endfor %}
+        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
+        Total Pembayaran: Rp.{{order.pembayaran }} <br>
+        Kembalian : Rp.{{order.kembalian}} <br>
+        Status Lunas : Lunas
+        
+        <form method="post" action="{% url 'cancel_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Cancel Order</button>
+        </form>
+        <form method="post" action="{% url 'delete_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete Order</button>
+        </form>
+        <form method="post" action="{% url 'generate_pdf' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Print Order</button>
+        </form>
+        <!-- Add more fields as needed -->
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Display Pending Orders -->
+<h2>Pending Orders</h2>
+<ul>
+    {% for order in pending_orders %}
+    <li>
+        Nota Penjualan: {{ order.kode_penjualan_faktur }}<br>
+        Meja: {{ order.nomor_meja }}<br>
+        Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
+        {% for item in order.menu_items %}
+        {{ item.qty_menu }}x {{ item.kode_menu.nama_menu_lengkap }} {{ item.harga_menu }}<br>
+        Size: {{ item.size }}<br>
+    {% endfor %}
+        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
+        Status Lunas : Belum lunas
+
+        <!-- Form to change the data for the pending order -->
+        <form method="post" action="{% url 'update_order' order.id %}">
+            {% csrf_token %}
+            <label for="pembayaran">Pembayaran:</label>
+            <input type="number" id="pembayaran" name="pembayaran" value="{{ order.pembayaran }}">
+            <!-- Add more fields for other data you want to change -->
+            <button type="submit">Update Order</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
 </main>
 {% endblock %}

@@ -67,23 +67,7 @@ def indexKasir(request):
             return redirect('login_view')
         return render(request, 'Kasir/index.html')
 
-@login_required
-def kasiran(request):
-     if request.user.userprofile.role != 'kasir':
-            return redirect('login_view')
-     return render(request, 'Kasir/kasiran.html')
 
-@login_required
-def pesanan(request):
-     if request.user.userprofile.role != 'kasir':
-            return redirect('login_view')
-     return render(request, 'kasir/pesanan.html')
-
-@login_required
-def tabelKasir(request):
-     if request.user.userprofile.role != 'kasir':
-            return redirect('login_view')
-     return render(request, 'kasir/tabelKasir.html')
 
 #User
 @login_required
@@ -93,20 +77,6 @@ def indexUser(request):
     return render(request, 'User/index.html')
 
 
-def indexMinuman(request):
-     if request.user.userprofile.role != 'user':
-            return redirect('login_view')
-     return render(request, 'User/indexMinuman.html')
-
-def indexDessert(request):
-     if request.user.userprofile.role != 'user':
-            return redirect('login_view')
-     return render(request, 'User/indexDessert.html')
-
-def indexSnack(request):
-     if request.user.userprofile.role != 'user':
-            return redirect('login_view')
-     return render(request, 'User/indexSnack.html')
 
 def get_categories(request):
     url = 'https://www.themealdb.com/api/json/v1/1/categories.php'
