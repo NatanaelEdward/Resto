@@ -1,39 +1,44 @@
 {% extends 'main/basemakanan.html' %}
 {% load custom_filters %}
 {% block content %}
+<div class="card">
 <main>
-    <div class="cart-menu-container">
-        <table>
-            <thead>
-                Nomor Meja : {{ user.userprofile.data_meja.nomor_meja }}
-                <tr>
-                    <th>Menu</th>
-                    <th>Ukuran</th>
-                    <th>Harga</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for cart_item in cart_items %}
-                <tr>
-                    <td>{{ cart_item.menu.nama_menu_lengkap }}</td>
-                    <td>{{ cart_item.size.nama_size }}</td>
-                    <td>{{ harga_tiap_menu|get_item:forloop.counter0 }}0</td>
-                    <td>{{ cart_item.qty }}</td>
-                    <td>{{ total_tiap_menu|get_item:forloop.counter0 }}0</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p>Total Harga: {{ total_amount }}</p>
+    <div class="card-menu-container">
+        <div>
+            <table>
+                <thead>
+                    Nomor Meja : {{ user.userprofile.data_meja.nomor_meja }}
+                    <tr>
+                        <th>Menu</th>
+                        <th>Ukuran</th>
+                        <th>Harga</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cart_item in cart_items %}
+                    <tr>
+                        <td>{{ cart_item.menu.nama_menu_lengkap }}</td>
+                        <td>{{ cart_item.size.nama_size }}</td>
+                        <td>{{ harga_tiap_menu|get_item:forloop.counter0 }}0</td>
+                        <td>{{ cart_item.qty }}</td>
+                        <td>{{ total_tiap_menu|get_item:forloop.counter0 }}0</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>Total Harga: {{ total_amount }}</p>
+
+            <form method="POST">
+                {% csrf_token %}
+                <!-- Tambahkan input atau field lainnya yang diperlukan untuk proses pembayaran -->
+                <input type="submit" value="Checkout">
+                <a href="{% url 'index_makanan' %}">Back</a>
+            </form>
+        </div>
     </div>
-    <form method="POST">
-        {% csrf_token %}
-        <!-- Tambahkan input atau field lainnya yang diperlukan untuk proses pembayaran -->
-        <input type="submit" value="Checkout">
-        <a href="{% url 'index_makanan' %}">Back</a>
-    </form>
+</div>
     
 </main>
 {% endblock %}
