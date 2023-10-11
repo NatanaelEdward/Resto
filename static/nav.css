@@ -207,8 +207,8 @@ display: flex;
 margin-left: 150px;
 overflow: auto; 
 max-height: 500px;
-width: 1190px;
-height: 630px;
+width: 1200px;
+height: 600px;
 background: rgb(236, 236, 236);
 box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
@@ -435,14 +435,15 @@ cursor: pointer;
   transform-origin: bottom left;
 }
 
+
 /* Style the cart items as horizontal elements with wrapping */
 #cart-items {
 display: flex;
-flex-wrap: wrap; /* Allow items to wrap to the next line */
+flex-wrap: inherit; /* Allow items to wrap to the next line */
 max-width: 100%; /* Ensure it doesn't overflow the parent container */
-margin-left: 120PX;
-margin-top: -45px;
 }
+
+
 
 /* Style individual cart items */
 .cart-item {
@@ -470,7 +471,8 @@ margin-bottom: 10px; /* Add space below each item */
 }
 
 .remove-from-cart {
-  padding: 7px 10px;
+  margin-left: 30px;
+  padding: 4px 7px;
   border: 1px solid #bbb;
   color: #222;
   font-weight: 600;
@@ -493,12 +495,18 @@ margin-bottom: 10px; /* Add space below each item */
   margin-left: 150px;
   overflow: auto; 
   max-height: 500px;
-  width: 1190px;
-  height: 250px;
+  width: 970px;
+  height: 210px;
+}
+
+.total-cart{
+  position: absolute;
+  bottom: 400px;
+  right: 200px;
 }
 
 .btn-checkout {
-  width: 170px;
+  width: 200px;
   height: 60px;
   color: #fff;
   background: #000;
@@ -510,7 +518,9 @@ margin-bottom: 10px; /* Add space below each item */
   justify-content: center;
   box-shadow: 0px 0px 0 #000;
   transition: 0.5s;
-  position: relative;
+  position: -webkit-sticky ;
+  bottom: 0px;
+  right: 0px;
 }
 
 .btn-checkout:hover {

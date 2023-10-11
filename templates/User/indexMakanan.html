@@ -43,11 +43,11 @@
 </div>
 <div class="cart">
     <div class="cart-section">
-        <h2>Your Cart</h2>
         <ul id="cart-items" class="horizontal-cart">
             <!-- Cart items will be added dynamically here -->
         </ul>
     </div>
+    <div class="total-cart" >Total</div>
     <button class="btn-checkout" id="checkout-button">Checkout <span>⟶</span> </button>
 </div>
 <script>
@@ -90,8 +90,8 @@
                             .attr("src", item.menu_image)
                             .attr("alt", item.menu_name)
                             .css({
-                                "width": "200px", // Set your preferred maximum width
-                                "height": "125px", // Set your preferred maximum height
+                                "width": "150px", // Set your preferred maximum width
+                                "height": "100px", // Set your preferred maximum height
                                 "border-radius": "6px 6px 0 0", // Add a black border around the image
                                 "object-fit": "cover" // Add a black border around the image
                                 
