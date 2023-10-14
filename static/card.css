@@ -1,0 +1,132 @@
+.card {
+    display: flex;
+    margin-left: 150px;
+    overflow: auto;
+    max-height: 700px;
+    width: 1200px;
+    height: 700px;
+    background: rgb(236, 236, 236);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+}
+
+.content {
+    margin-left: 90px;
+    width: (100% - 250px);
+    margin-top: -10px;
+    margin-bottom: -10px;
+    padding: 20px;
+    height: 86.4vh;
+    transition: 0.5s;
+}
+
+.content .card .form-container {
+    width: 1190px;
+    background: linear-gradient(180deg, rgb(0, 0, 0) 25%, rgb(255, 255, 255) 20%);
+    height: 630px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.content .card .form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+.content .card .form-container p {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: rgb(255, 255, 255);
+}
+
+.content .card .form-container .inpdddut[type="file"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.content .card .form-container label {
+    color: rgb(40, 42, 44);
+    margin-top: 4px;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.content .card .form-container .input {
+    padding: 10px;
+    height: 10px;
+    border: none;
+    background-color: rgb(224, 231, 236);
+}
+
+.content .card .form-container .input:focus {
+    outline: none;
+}
+
+.content .card .form-container button {
+    border: none;
+    height: 35px;
+    margin-top: 30px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+}
+
+
+.cardini {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 20px;
+  }
+  
+  /* Style for the card title/header */
+  .cardini-header {
+    font-weight: bold;
+  }
+  
+  /* Style for the content that is initially visible */
+  .cardini-content {
+    max-height: 100px; /* Adjust the height to control initial visibility */
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  
+  /* Style for the "Show More" button */
+  .show-more-button {
+    cursor: pointer;
+  }
+  
+  /* Style for the label (button text) */
+  .show-more-label {
+    color: blue;
+  }
+  
+  /* Style for the checkbox input to control visibility */
+  .show-more-toggle {
+    display: none;
+  }
+  
+  /* Style for the content to be shown when the checkbox is checked */
+  .show-more-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+  }
+  
+  /* Adjust content max-height when the checkbox is checked */
+  .show-more-toggle:checked ~ .show-more-content {
+    max-height: 200px; /* Adjust the height as needed */
+  }

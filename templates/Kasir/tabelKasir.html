@@ -1,6 +1,23 @@
 {% extends 'main/basekasir.html' %}
 {% block content %}
 <main>
-<h2>ini tabel kasir</h2>
+    <div class="cardini">
+        <div class="cardini-header">
+            Nota Penjualan: {{ order.kode_penjualan_faktur }}
+            Meja: {{ order.nomor_meja }}
+        </div>
+        <div class="cardini-content">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            <!-- Your content here -->
+        </div>
+        <div class="show-more-button">
+            <label for="toggle" class="show-more-label">Show More</label>
+            <input type="checkbox" id="toggle" class="show-more-toggle">
+            <div class="show-more-content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                <!-- Additional content to be shown -->
+            </div>
+        </div>
+    </div>
 </main>
 {% endblock %}
