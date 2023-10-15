@@ -46,8 +46,8 @@
             Meja: {{ order.nomor_meja }}
         </div>
         <div class="show-more-button">
-            <label for="toggle" class="show-more-label">Show More</label>
-            <input type="checkbox" id="toggle" class="show-more-toggle">
+            <label for="toggle{{ order.kode_penjualan_faktur}}" class="show-more-label">Show More</label>
+            <input type="checkbox" id="toggle{{ order.kode_penjualan_faktur}}" class="show-more-toggle">
             <div class="show-more-content">
                 Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
                 {% for item in order.menu_items %}
