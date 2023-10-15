@@ -40,7 +40,7 @@
     {% for order in pending_orders %}
     <div class="cardini">
         <div class="cardini-header">
-            Nota Penjualan: {{ order.kode_penjualan_faktur }}
+            {{ order.kode_penjualan_faktur }}
         </div>
         <div class="cardini-content">
             Meja: {{ order.nomor_meja }}
@@ -49,14 +49,15 @@
             <label for="toggle{{ order.kode_penjualan_faktur}}" class="show-more-label">Show More</label>
             <input type="checkbox" id="toggle{{ order.kode_penjualan_faktur}}" class="show-more-toggle">
             <div class="show-more-content">
-                Tanggal Penjualan: {{ order.tanggal_penjualan }}<br>
                 {% for item in order.menu_items %}
-                {{ item.qty_menu }}x {{ item.kode_menu.nama_menu_lengkap }} {{ item.harga_menu }}<br>
-                Size: {{ item.size }}<br>
+                    <div class="itemmenu">{{ item.qty_menu }} {{ item.kode_menu.nama_menu_lengkap }} Size: {{ item.size }}</div>
+                    <div class="price">{{ item.harga_menu }}</div>
                 {% endfor %}
-                Total Penjualan: Rp.{{ order.total_penjualan }}<br>
-                Status Lunas : Belum lunas
+                <br>
 
+                Total Penjualan: Rp.{{ order.total_penjualan }}<br>
+                Status Lunas : Belum lunas <br>
+                Tanggal Penjualan: {{ order.tanggal_penjualan }}
                 <!-- Form to change the data for the pending order -->
                 <form method="post" action="{% url 'update_order' order.id %}">
                     {% csrf_token %}

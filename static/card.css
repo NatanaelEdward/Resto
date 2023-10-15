@@ -5,7 +5,7 @@
     max-height: 700px;
     width: 1200px;
     height: 700px;
-    background: rgb(236, 236, 236);
+    background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
 }
@@ -85,11 +85,16 @@
     font-size: 16px;
 }
 
-
+/*Scroll Bar*/
 .cardini {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 20px;
+  width: 1125px;
+  background: #dadada;
+  padding: .4em;
+  margin-left: 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  object-fit: cover;;
   }
   
   /* Style for the card title/header */
@@ -120,13 +125,24 @@
   }
   
   /* Style for the content to be shown when the checkbox is checked */
-  .show-more-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
-  }
-  
-  /* Adjust content max-height when the checkbox is checked */
-  .show-more-toggle:checked ~ .show-more-content {
-    max-height: 200px; /* Adjust the height as needed */
-  }
+.show-more-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-in-out; /* Adjust the transition properties as needed */
+}
+
+/* Adjust content max-height when the checkbox is checked */
+.show-more-toggle:checked ~ .show-more-content {
+  max-height: 900px; /* You can adjust the height as needed */
+  transition: max-height 0.5s ease-in-out; /* Adjust the transition properties as needed */
+}
+
+.itemmenu{
+  font-size: large;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.price{
+  font-weight: bold;
+  position: relative;
+}
