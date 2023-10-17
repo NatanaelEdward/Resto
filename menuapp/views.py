@@ -9,43 +9,70 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import transaction
-from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence
+from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence,KelompokMenu
 from decimal import Decimal
 
 def index_makanan(request):
-    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
+    kelompok_makanan = KelompokMenu.objects.get(nama_kelompok="makanan")
+    
+    # Get the 'kategori' parameter from the request
+    kategori = request.GET.get('kategori')
 
-    # Check if a category was specified
+    # Filter menus based on the 'jenis_menu' attribute
     if kategori:
-        menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori).prefetch_related('hargamenu_set__size')
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_makanan, jenis_menu__nama_jenis=kategori)
     else:
-        # If no category is specified, retrieve all menus
-        menus = DataMenu.objects.all().prefetch_related('hargamenu_set__size')
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_makanan)
+    
+    return render(request, 'user/indexMakanan.html', {'menus': menus, 'kategori': 'makanan'})
 
-    return render(request, 'user/indexMakanan.html', {'menus': menus, 'kategori': kategori})
+
+def index_minuman(request):
+    kelompok_minuman = KelompokMenu.objects.get(nama_kelompok="minuman")
+    
+    # Get the 'kategori' parameter from the request
+    kategori = request.GET.get('kategori')
+
+    # Filter menus based on the 'jenis_menu' attribute
+    if kategori:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_minuman, jenis_menu__nama_jenis=kategori)
+    else:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_minuman)
+    
+    return render(request, 'user/indexminuman.html', {'menus': menus, 'kategori': 'makanan'})
+
+def index_dessert(request):
+    kelompok_dessert = KelompokMenu.objects.get(nama_kelompok="dessert")
+    
+    # Get the 'kategori' parameter from the request
+    kategori = request.GET.get('kategori')
+
+    # Filter menus based on the 'jenis_menu' attribute
+    if kategori:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_dessert, jenis_menu__nama_jenis=kategori)
+    else:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_dessert)
+    
+    return render(request, 'user/indexdessert.html', {'menus': menus, 'kategori': 'makanan'})
+
+def index_snack(request):
+    kelompok_snack= KelompokMenu.objects.get(nama_kelompok="snack")
+    
+    # Get the 'kategori' parameter from the request
+    kategori = request.GET.get('kategori')
+
+    # Filter menus based on the 'jenis_menu' attribute
+    if kategori:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_snack, jenis_menu__nama_jenis=kategori)
+    else:
+        menus = DataMenu.objects.filter(jenis_menu__kelompok_menu=kelompok_snack)
+    
+    return render(request, 'user/indexsnack.html', {'menus': menus, 'kategori': 'makanan'})
 
 
 def checkout_success(request):
 
     return render(request, 'user/checkout_success.html')
-
-def index_minuman(request):
-    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
-    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
-
-    return render(request, 'user/indexMinuman.html', {'menus': menus, 'kategori': kategori})
-
-def index_dessert(request):
-    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
-    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
-
-    return render(request, 'user/indexDessert.html', {'menus': menus, 'kategori': kategori})
-
-def index_snack(request):
-    kategori = request.GET.get('kategori', '')  # Mendapatkan nilai parameter kategori dari URL
-    menus = DataMenu.objects.filter(jenis_menu__nama_jenis=kategori)
-
-    return render(request, 'user/indexSnack.html', {'menus': menus, 'kategori': kategori})
 
 def tambah_menu(request):
     if request.method == 'POST':

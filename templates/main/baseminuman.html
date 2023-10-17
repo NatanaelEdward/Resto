@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="styleshX
+    <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'cardmenu.css' %}">
     <title>Minuman</title>
 </head>
 
@@ -15,6 +16,7 @@
         <a href="#" class="menu-link" data-menu-type="Alcohol"><span>Alcohol</span></a>
         <a href="#" class="menu-link" data-menu-type="Hot"><span>Hot</span></a>
         <a href="#" class="menu-link" data-menu-type="Cold"><span>Cold</span></a>
+        <a href="{% url 'indexUser' %}">Back <<</a>
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 
