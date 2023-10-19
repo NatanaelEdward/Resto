@@ -48,19 +48,15 @@
         </ul>
     </div>
     
-    <button id="show-modal-button">Tampilkan Modal</button>
+    <button id="show-modal-button">Show Cart</button>
     <div class="modal" id="my-modal">
         <div class="modal-content">
             <span class="close" id="close-button">&times;</span>
-            <h2>Nomor Meja</h2>
+            <h2>Nomor Meja  {{ user.userprofile.data_meja.nomor_meja }}</h2>
             <h2>Pesanan Anda</h2>
-            {% for cart_item in cart_items %}
-                        <tr>
-                            <td>{{ cart_item.menu.nama_menu_lengkap }}</td>
-                            <td>{{ cart_item.size.nama_size }}</td>
-                            <td>{{ cart_item.qty }}</td>
-                        </tr>
-                        {% endfor %}
+            <div id="cart-modal-content">
+                <!-- Cart items will be displayed here -->
+            </div>
             <p>kelengkapan makanan</p>
             <h2>Total</h2>
             <p></p>
@@ -195,9 +191,63 @@
             }
         });
 
+        function updateCartModalContent() {
+            $.ajax({
+                type: "GET",
+                url: "/get_cart_items/",
+                success: function (data) {
+                    var cartItems = data.cart_items;
+                    var cartModalContent = $("#cart-modal-content");
+        
+                    // Initialize variables to keep track of total price and items count
+                    var totalPrice = 0;
+                    var totalItems = 0;
+        
+                    // Clear the cart modal content
+                    cartModalContent.empty();
+        
+                    // Append the updated cart items and calculate total price
+                    cartItems.forEach(function (item) {
+                        var cartItemDiv = $("<div>").addClass("cart-item");
+                        var itemPrice = parseFloat(item.menu_price) * parseInt(item.qty);
+                        totalPrice += itemPrice;
+                        totalItems += parseInt(item.qty);
+        
+                        // Append the cart item to the cart modal content
+                        cartItemDiv.html(
+                            `<span class='cart-menu-name'>${item.menu_name}</span><br>` +
+                            `<span class='cart-menu-size'>Size: ${item.size}</span><br>` +
+                            `<span class='cart-menu-price'>Price: ${item.menu_price}</span><br>` +
+                            `<span class='cart-menu-qty'>Qty: ${item.qty}</span><br>` +
+                            `<span class='cart-menu-item-price'>Item Price: ${itemPrice.toFixed(2)}</span>`
+                        );
+        
+                        // Append the cart item to the cart modal content
+                        cartModalContent.append(cartItemDiv);
+                    });
+        
+                    // Add the total price and item count to the modal content
+                    cartModalContent.append(
+                        `<p>Total Items: ${totalItems}</p>` +
+                        `<p>Total Price: ${totalPrice.toFixed(2)}</p>`
+                    );
+                },
+                error: function (error) {
+                    console.log("Error fetching cart items for the modal.");
+                }
+            });
+        }
+
         // Show the modal when the "Tampilkan Modal" button is clicked
-        document.getElementById("show-modal-button").addEventListener("click", function() {
-        document.getElementById("my-modal").style.display = "block";
+        document.getElementById("show-modal-button").addEventListener("click", function () {
+            document.getElementById("my-modal").style.display = "block";
+            
+            // Fetch cart items and update the modal content
+            updateCartModalContent();
+        });
+
+        document.getElementById("close-button").addEventListener("click", function () {
+            document.getElementById("my-modal").style.display = "none";
         });
 
         // Close the modal if the user clicks outside of it
@@ -208,10 +258,22 @@
         });
 
 
-        // Event listener for the "Checkout" button
-        $("#checkout-button").click(function () {
-            // Redirect the user to the checkout page
-            window.location.href = "/checkout/"; // Replace with your URL
+        $("#my-modal").on("click", "#checkout-button", function () {
+            $.ajax({
+                type: "POST", // Send a POST request
+                url: "/checkout/", // Replace with the correct URL for your checkout view
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+                },
+                success: function (data) {
+                    alert("Checkout successful!");
+                    window.location.href = "/indexMinuman/";
+                },
+                error: function (error) {
+                    // Handle errors, e.g., display an error message
+                    console.log("Error during checkout:", error);
+                }
+            });
         });
 
         // Initial update of the cart sec tion

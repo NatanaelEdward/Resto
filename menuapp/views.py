@@ -190,6 +190,7 @@ def get_cart_items(request):
             'menu_name': item.menu.nama_menu_lengkap,
             'size': item.size.nama_size,
             'qty': item.qty,
+            'menu_price': item.menu.hargamenu_set.get(size=item.size).harga_menu,
             'menu_image': item.menu.gambar_menu.url,
         }
         for item in cart_items
