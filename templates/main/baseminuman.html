@@ -1,4 +1,5 @@
 {% load static %}
+
 <html lang="en">
 
 <head>
@@ -7,12 +8,14 @@
     <link rel="stylesheet" href="{% static 'nav.css' %}">
     <link rel="stylesheet" href="{% static 'cardmenu.css' %}">
     <title>Minuman</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
+        <a href="{% url 'index_makanan' %}">All</a>
         <a href="#" class="menu-link" data-menu-type="Alcohol"><span>Alcohol</span></a>
         <a href="#" class="menu-link" data-menu-type="Hot"><span>Hot</span></a>
         <a href="#" class="menu-link" data-menu-type="Cold"><span>Cold</span></a>
@@ -21,12 +24,10 @@
     </div>
 
     <div class="content">
-        <div class="card">
-            {% block content %}
-            {% endblock %}
-        </div>
+        {% block content %}
+        {% endblock %}
     </div>
-
+    
 </html>
 
 <script>
@@ -39,7 +40,7 @@
                 var menuType = link.getAttribute('data-menu-type');
 
                 // Redirect ke halaman indexMakanan dengan parameter kategori
-                window.location.href = `/indexMinuman/?kategori=${menuType}`;
+                window.location.href = `/indexMakanan/?kategori=${menuType}`;
             });
         });
     });
