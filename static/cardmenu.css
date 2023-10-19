@@ -313,7 +313,7 @@
       justify-content: center;
       box-shadow: 0px 0px 0 #000;
       transition: 0.5s;
-      position: sticky ;
+      position: relative ;
       bottom: 0px;
       right: 0px;
     }
@@ -341,7 +341,7 @@
     /* Style the modal container */
     .modal {
       display: none;
-      position: absolute;
+      position: fixed;
       z-index: 1;
       left: 0;
       top: 0;
@@ -354,12 +354,13 @@
     /* Style the modal content */
     .modal-content {
       background-color: #fefefe;
-      margin: 15% auto;
+      margin: 5% auto;
       padding: 20px;
       border: 1px solid #888;
       width: 80%;
+      border-radius: 10px;
       max-width: 600px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      box-shadow: 0 3px 1px  rgba(0, 0, 0, 0.2);
     }
     
     /* Style the close button */
@@ -374,3 +375,35 @@
     .close:hover {
       color: black;
     }
+
+    .cart-menu-name{
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    .cart-menu-size{
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    .cart-menu-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+  
+    .cart-menu-info div {
+        flex: 1;
+    }
+    
+    .cart-menu-price-right {
+        text-align: right;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .cart-total-price{
+      font-family: 'Comfortaa', sans-serif;
+      font-weight: bold;
+      font-size: x-large;
+      margin-bottom: 13px;
+    }
+  
