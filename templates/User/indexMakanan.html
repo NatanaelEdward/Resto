@@ -60,7 +60,6 @@
     </ul>
   </div>
 
-  <button id="show-modal-button">Show Cart</button>
   <div class="modal" id="my-modal">
     <div class="modal-content">
       <span class="close" id="close-button">&times;</span>
@@ -75,6 +74,15 @@
       </button>
     </div>
   </div>
+</div>
+
+<div class="cekout">
+  <n id="show-modal-button" class="learn-more">
+    <span class="circle" aria-hidden="true">
+    <span class="icon arrow"></span>
+    </span>
+    <span class="button-text">check out</span>
+  </n>
 </div>
 
 <script>
@@ -266,7 +274,10 @@
           // Add the total price and item count to the modal content
           cartModalContent.append(
             `<div class='cart-total-price'>
-                Total Rp.${totalPrice.toFixed(2)},-
+                Total
+            </div>
+            <div class='cart-total-price'>
+              Rp.${totalPrice.toFixed(2)},-
             </div>`
           );
         },

@@ -36,39 +36,50 @@
     </ul>
 
     <!-- Display Pending Orders -->
-    <h2>Pending Orders</h2>
-    {% for order in pending_orders %}
-    <div class="cardini">
-        <div class="cardini-header">
-            {{ order.kode_penjualan_faktur }}
-        </div>
-        <div class="cardini-content">
-            Meja: {{ order.nomor_meja }}
-        </div>
-        <div class="show-more-button">
-            <label for="toggle{{ order.kode_penjualan_faktur}}" class="show-more-label">Show More</label>
-            <input type="checkbox" id="toggle{{ order.kode_penjualan_faktur}}" class="show-more-toggle">
-            <div class="show-more-content">
-                {% for item in order.menu_items %}
-                    <div class="itemmenu">{{ item.qty_menu }} {{ item.kode_menu.nama_menu_lengkap }} Size: {{ item.size }}</div>
-                    <div class="price">{{ item.harga_menu }}</div>
-                {% endfor %}
-                <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Pending Orders</th>
+            </tr>
+        </thead>
+        <tbody>   
+            {% for order in pending_orders %}
+            <tr>
+                <td>
+            <div class="cardini">
+                <div class="cardini-header">
+                    {{ order.kode_penjualan_faktur }}
+                </div>
+                <div class="cardini-content">
+                    Meja: {{ order.nomor_meja }}
+                </div>
+                <div class="show-more-button">
+                    <label for="toggle{{ order.kode_penjualan_faktur}}" class="show-more-label">Show More</label>
+                    <input type="checkbox" id="toggle{{ order.kode_penjualan_faktur}}" class="show-more-toggle">
+                    <div class="show-more-content">
+                        {% for item in order.menu_items %}
+                            <div class="itemmenu">{{ item.kode_menu.nama_menu_lengkap }}</div>
+                            <div class="descmenu">{{ item.qty_menu }} {{ item.size }}</div>
+                            <div class="price">{{ item.harga_menu }}</div>
+                        {% endfor %}
+                        <br>
 
-                Total Penjualan: Rp.{{ order.total_penjualan }}<br>
-                Status Lunas : Belum lunas <br>
-                Tanggal Penjualan: {{ order.tanggal_penjualan }}
-                <!-- Form to change the data for the pending order -->
-                <form method="post" action="{% url 'update_order' order.id %}">
-                    {% csrf_token %}
-                    <label for="pembayaran">Pembayaran:</label>
-                    <input type="number" id="pembayaran" name="pembayaran" value="{{ order.pembayaran }}">
-                    <!-- Add more fields for other data you want to change -->
-                    <button type="submit">Update Order</button>
-                </form>
+                        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
+                        Status Lunas : Belum lunas <br>
+                        Tanggal Penjualan: {{ order.tanggal_penjualan }}
+                        <!-- Form to change the data for the pending order -->
+                        <form method="post" action="{% url 'update_order' order.id %}">
+                            {% csrf_token %}
+                            <label for="pembayaran">Pembayaran:</label>
+                            <input type="number" id="pembayaran" name="pembayaran" value="{{ order.pembayaran }}">
+                            <!-- Add more fields for other data you want to change -->
+                            <button type="submit">Update Order</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    {% endfor %}
+        </td>
+                </tr>
+            {% endfor %}
 </main>
 {% endblock %}
