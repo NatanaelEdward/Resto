@@ -100,6 +100,7 @@
   /* Style for the card title/header */
   .cardini-header {
     font-weight: bold;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
   
   /* Style for the content that is initially visible */
@@ -107,6 +108,8 @@
     max-height: 100px; /* Adjust the height to control initial visibility */
     overflow: hidden;
     transition: max-height 0.5s ease;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(86, 86, 86);
   }
   
   /* Style for the "Show More" button */
@@ -116,8 +119,34 @@
   
   /* Style for the label (button text) */
   .show-more-label {
-    color: blue;
+  color: #000000;
+  line-height: 2;
+  position: relative;
+  padding-right: 4px;
   }
+  
+  .show-more-label:hover {
+    text-decoration: underline;
+  }
+
+  .show-more-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-top: solid 2px #000000;
+    border-right: solid 2px #000000;
+    border-radius: 2px;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%) rotate(45deg);
+    transition: transform .4s;
+  }
+  
+  .show-more-label:hover::before {
+    transform: translateX(4px) translateY(-50%) rotate(45deg);
+  }
+  
   
   /* Style for the checkbox input to control visibility */
   .show-more-toggle {
@@ -126,6 +155,7 @@
   
   /* Style for the content to be shown when the checkbox is checked */
 .show-more-content {
+  text-align: left;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-in-out; /* Adjust the transition properties as needed */
@@ -138,15 +168,97 @@
 }
 
 .itemmenu{
-  font-size: large;
-  color: black;
-  font-weight: 200;
-  letter-spacing: 0.01em;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-weight: bolder;
+}
+
+.descmenu{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: small;
 }
 
 .price{
-  font-weight: bold;
-  position: relative;
+  text-align: right;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.Total{
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: bold;
+  font-size: larger;
+  margin-bottom: 5px;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; 
+}
+
+.item-details {
+  flex: 1;
+}
+
+/* serch input */
+.search {
+  --input-line: #cccccc;
+  --input-text-color: #808080;
+  --input-text-hover-color: transparent;
+  --input-border-color: #808080;
+  --input-border-hover-color: #999999;
+  --input-bg-color: #333333;
+  --search-max-width: 150px;
+  --search-min-width: 50px;
+  --border-radius: 5px;
+  --transition-cubic-bezier: 150ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.search-box {
+  max-width: var(--search-max-width);
+  min-width: var(--search-min-width);
+  height: 35px;
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--border-radius);
+  padding: 5px 15px;
+  background: var(--input-bg-color);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transition: var(--transition-cubic-bezier);
+}
+
+.search-box:hover {
+  border-color: var(--input-border-hover-color);
+}
+
+/*Section input*/
+.input {
+  margin-left: 15px;
+  width: 100%;
+  max-width: 200px;
+  height: 20px;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1.5px solid lightgrey;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0px 0px 20px -18px;
+}
+
+.input:hover {
+  border: 2px solid lightgrey;
+  box-shadow: 0px 0px 20px -17px;
+}
+
+.input:active {
+  transform: scale(0.95);
+}
+
+.input:focus {
+  border: 2px solid grey;
+}
 

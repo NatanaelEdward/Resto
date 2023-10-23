@@ -36,6 +36,7 @@
     </ul>
 
     <!-- Display Pending Orders -->
+    <input id="searchInput" class="input" name="text" type="text" placeholder="Search Table...">
     <table>
         <thead>
             <tr>
@@ -57,15 +58,19 @@
                     <label for="toggle{{ order.kode_penjualan_faktur}}" class="show-more-label">Show More</label>
                     <input type="checkbox" id="toggle{{ order.kode_penjualan_faktur}}" class="show-more-toggle">
                     <div class="show-more-content">
-                        {% for item in order.menu_items %}
-                            <div class="itemmenu">{{ item.kode_menu.nama_menu_lengkap }}</div>
-                            <div class="descmenu">{{ item.qty_menu }} {{ item.size }}</div>
-                            <div class="price">{{ item.harga_menu }}</div>
-                        {% endfor %}
-                        <br>
-
-                        Total Penjualan: Rp.{{ order.total_penjualan }}<br>
-                        Status Lunas : Belum lunas <br>
+                        <div class="menu-items">
+                            {% for item in order.menu_items %}
+                              <div class="menu-item">
+                                <div class="item-details">
+                                  <div class="itemmenu">{{ item.kode_menu.nama_menu_lengkap }}</div>
+                                  <div class="descmenu">{{ item.qty_menu }} {{ item.size }}</div>
+                                </div>
+                                <div class="price">Rp.{{ item.harga_menu }},-</div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        <div class="Total">Total</div>
+                        <div class="Total">Rp.{{ order.total_penjualan }},-</div>
                         Tanggal Penjualan: {{ order.tanggal_penjualan }}
                         <!-- Form to change the data for the pending order -->
                         <form method="post" action="{% url 'update_order' order.id %}">
@@ -78,8 +83,31 @@
                     </div>
                 </div>
             </div>
-        </td>
-                </tr>
-            {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
 </main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const tableRows = document.querySelectorAll("tbody tr");
+    
+        searchInput.addEventListener("input", function () {
+            const searchTerm = searchInput.value.toLowerCase();
+    
+            tableRows.forEach((row) => {
+                const tableData = row.querySelector(".cardini-content");
+                const tableDataText = tableData.textContent.toLowerCase();
+    
+                if (tableDataText.includes(searchTerm)) {
+                    row.style.display = "table-row";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+    
 {% endblock %}
