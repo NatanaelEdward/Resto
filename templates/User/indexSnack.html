@@ -48,236 +48,277 @@
         </ul>
     </div>
     
-    <button id="show-modal-button">Show Cart</button>
     <div class="modal" id="my-modal">
-        <div class="modal-content">
-            <span class="close" id="close-button">&times;</span>
-            <h2>Nomor Meja  {{ user.userprofile.data_meja.nomor_meja }}</h2>
-            <h2>Pesanan Anda</h2>
-            <div id="cart-modal-content">
-                <!-- Cart items will be displayed here -->
-            </div>
-            <p>kelengkapan makanan</p>
-            <h2>Total</h2>
-            <p></p>
-            <button class="btn-checkout" id="checkout-button">Checkout <span>⟶</span></button>
-        </div>
+    <div class="modal-content">
+      <span class="close" id="close-button">&times;</span>
+      <div class="cart-total-price">Meja {{ user.userprofile.data_meja.nomor_meja }}</div>
+      <div class="cart-total-price">Pesanan Anda</div>
+      <div id="cart-modal-content">
+        <!-- Cart items will be displayed here -->
+      </div>
+      <p></p>
+      <button class="btn-checkout" id="checkout-button">
+        Checkout <span>⟶</span>
+      </button>
     </div>
+  </div>
+</div>
+
+<div class="cekout">
+  <n id="show-modal-button" class="learn-more">
+    <span class="circle" aria-hidden="true">
+    <span class="icon arrow"></span>
+    </span>
+    <span class="button-text">check out</span>
+  </n>
 </div>
 
 <script>
-    $(document).ready(function () {
-        //function for qty button
-        $(".quantity-input").on("click", ".quantity-button", function () {
-            var inputField = $(this).siblings("input[type='number']");
-            var currentValue = parseInt(inputField.val());
+  $(document).ready(function () {
+    //function for qty button
+    $(".quantity-input").on("click", ".quantity-button", function () {
+      var inputField = $(this).siblings("input[type='number']");
+      var currentValue = parseInt(inputField.val());
 
-            if ($(this).hasClass("minus")) {
-                // Decrease the quantity when the minus button is clicked
-                if (currentValue > 0) {
-                    inputField.val(currentValue - 1);
-                }
-            } else if ($(this).hasClass("plus")) {
-                // Increase the quantity when the plus button is clicked
-                inputField.val(currentValue + 1);
-            }
-        });
-
-        // Function to update the cart section
-        function updateCartSection() {
-            $.ajax({
-                type: "GET",
-                url: "/get_cart_items/",  // Replace with the correct URL to fetch cart items
-                success: function (data) {
-                    var cartItems = data.cart_items;
-                    var cartContainer = $("#cart-items");
-
-                    // Clear the cart section
-                    cartContainer.empty();
-
-                    // Append the updated cart items
-                    cartItems.forEach(function (item) {
-                        // Create a cart item container
-                        var cartItemDiv = $("<div>").addClass("cart-item");
-
-                        // Create an image element for the menu image
-                        var menuImage = $("<img>")
-                            .attr("src", item.menu_image)
-                            .attr("alt", item.menu_name)
-                            .css({
-                                "width": "150px", // Set your preferred maximum width
-                                "height": "100px", // Set your preferred maximum height
-                                "border-radius": "6px 6px 0 0", // Add a black border around the image
-                                "object-fit": "cover" // Add a black border around the image
-                                
-                            });
-
-                        // Create a container for menu details
-                        var menuDetailsDiv = $("<div>").addClass("menu-details");
-
-                        // Append menu name, size, qty, and remove button to menu details container
-                        menuDetailsDiv.append(
-                            "<span class='cart-menu-name'>Menu: " + item.menu_name + "</span><br>" +
-                            "<span class='cart-menu-size'>Size: " + item.size + "</span><br>" +
-                            "<span class='cart-menu-qty'>Qty: " + item.qty + "</span>" +
-                            "<button class='remove-from-cart' data-menu-id='" + item.menu_id + "' data-size-id='" + item.size_id + "'>Remove</button>"
-                        );
-
-                        // Append menu image and menu details container to the cart item container
-                        cartItemDiv.append(menuImage, menuDetailsDiv);
-
-                        // Append the cart item container to the cart section
-                        cartContainer.append(cartItemDiv);
-                    });
-                },
-                error: function (error) {
-                    console.log("Error fetching cart items.");
-                }
-            });
+      if ($(this).hasClass("minus")) {
+        // Decrease the quantity when the minus button is clicked
+        if (currentValue > 0) {
+          inputField.val(currentValue - 1);
         }
-
-        $(".add-to-cart").click(function () {
-            var menuId = $(this).data("menu-id");
-            var qty = $("#menu-qty-" + menuId).val();
-            var sizeId = $("#menu-size-" + menuId).val();
-
-            // Periksa apakah menuId, sizeId, dan qty memiliki nilai yang valid
-            if (menuId && sizeId && qty >= 0) {  // Ensure qty is non-negative
-                var url = `/add_to_cart/${menuId}/${sizeId}/${qty}/`;
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    success: function (data) {
-                        alert("Menu telah ditambahkan ke keranjang belanja.");
-
-                        // Update the cart section with the latest items
-                        updateCartSection();
-                    },
-                    error: function (error) {
-                        alert("Terjadi kesalahan saat menambahkan menu ke keranjang belanja.");
-                    }
-                });
-            } else {
-                alert("Harap lengkapi informasi menu sebelum menambahkan ke keranjang belanja.");
-            }
-        });
-
-        // Event listener for the "Remove" button
-        $("#cart-items").on("click", ".remove-from-cart", function () {
-            var menuId = $(this).data("menu-id");
-            var sizeId = $(this).data("size-id");
-
-            console.log("Clicked Remove button with menuId:", menuId);
-            console.log("Clicked Remove button with sizeId:", sizeId);
-
-            if (menuId !== undefined && sizeId !== undefined) {
-                // Send an AJAX request to remove the item from the cart
-                var url = `/remove_from_cart/${menuId}/${sizeId}/`;
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    success: function (data) {
-                        alert("Menu has been removed from the cart.");
-
-                        // Update the cart section with the latest items
-                        updateCartSection();
-                    },
-                    error: function (error) {
-                        alert("An error occurred while removing the item from the cart.");
-                    }
-                });
-            } else {
-                alert("Unable to remove the item from the cart. Menu ID or Size ID is missing.");
-            }
-        });
-
-        function updateCartModalContent() {
-            $.ajax({
-                type: "GET",
-                url: "/get_cart_items/",
-                success: function (data) {
-                    var cartItems = data.cart_items;
-                    var cartModalContent = $("#cart-modal-content");
-        
-                    // Initialize variables to keep track of total price and items count
-                    var totalPrice = 0;
-                    var totalItems = 0;
-        
-                    // Clear the cart modal content
-                    cartModalContent.empty();
-        
-                    // Append the updated cart items and calculate total price
-                    cartItems.forEach(function (item) {
-                        var cartItemDiv = $("<div>").addClass("cart-item");
-                        var itemPrice = parseFloat(item.menu_price) * parseInt(item.qty);
-                        totalPrice += itemPrice;
-                        totalItems += parseInt(item.qty);
-        
-                        // Append the cart item to the cart modal content
-                        cartItemDiv.html(
-                            `<span class='cart-menu-name'>${item.menu_name}</span><br>` +
-                            `<span class='cart-menu-size'>Size: ${item.size}</span><br>` +
-                            `<span class='cart-menu-price'>Price: ${item.menu_price}</span><br>` +
-                            `<span class='cart-menu-qty'>Qty: ${item.qty}</span><br>` +
-                            `<span class='cart-menu-item-price'>Item Price: ${itemPrice.toFixed(2)}</span>`
-                        );
-        
-                        // Append the cart item to the cart modal content
-                        cartModalContent.append(cartItemDiv);
-                    });
-        
-                    // Add the total price and item count to the modal content
-                    cartModalContent.append(
-                        `<p>Total Items: ${totalItems}</p>` +
-                        `<p>Total Price: ${totalPrice.toFixed(2)}</p>`
-                    );
-                },
-                error: function (error) {
-                    console.log("Error fetching cart items for the modal.");
-                }
-            });
-        }
-
-        // Show the modal when the "Tampilkan Modal" button is clicked
-        document.getElementById("show-modal-button").addEventListener("click", function () {
-            document.getElementById("my-modal").style.display = "block";
-            
-            // Fetch cart items and update the modal content
-            updateCartModalContent();
-        });
-
-        document.getElementById("close-button").addEventListener("click", function () {
-            document.getElementById("my-modal").style.display = "none";
-        });
-
-        // Close the modal if the user clicks outside of it
-        window.addEventListener("click", function(event) {
-        if (event.target == document.getElementById("my-modal")) {
-            document.getElementById("my-modal").style.display = "none";
-        }
-        });
-
-        $("#my-modal").on("click", "#checkout-button", function () {
-            $.ajax({
-                type: "POST", // Send a POST request
-                url: "/checkout/", // Replace with the correct URL for your checkout view
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}"
-                },
-                success: function (data) {
-                    alert("Checkout successful!");
-                    window.location.href = "/indexSnack/";
-                },
-                error: function (error) {
-                    // Handle errors, e.g., display an error message
-                    console.log("Error during checkout:", error);
-                }
-            });
-        });
-
-        // Initial update of the cart sec tion
-        updateCartSection();
+      } else if ($(this).hasClass("plus")) {
+        // Increase the quantity when the plus button is clicked
+        inputField.val(currentValue + 1);
+      }
     });
+
+    // Function to update the cart section
+    function updateCartSection() {
+      $.ajax({
+        type: "GET",
+        url: "/get_cart_items/", // Replace with the correct URL to fetch cart items
+        success: function (data) {
+          var cartItems = data.cart_items;
+          var cartContainer = $("#cart-items");
+
+          // Clear the cart section
+          cartContainer.empty();
+
+          // Append the updated cart items
+          cartItems.forEach(function (item) {
+            // Create a cart item container
+            var cartItemDiv = $("<div>").addClass("cart-item");
+
+            // Create an image element for the menu image
+            var menuImage = $("<img>")
+              .attr("src", item.menu_image)
+              .attr("alt", item.menu_name)
+              .css({
+                width: "150px", // Set your preferred maximum width
+                height: "100px", // Set your preferred maximum height
+                "border-radius": "6px 6px 0 0", // Add a black border around the image
+                "object-fit": "cover", // Add a black border around the image
+              });
+
+            // Create a container for menu details
+            var menuDetailsDiv = $("<div>").addClass("menu-details");
+
+            // Append menu name, size, qty, and remove button to menu details container
+            menuDetailsDiv.append(
+              "<span class='cart-menu-name'>Menu: " +
+                item.menu_name +
+                "</span><br>" +
+                "<span class='cart-menu-size'>Size: " +
+                item.size +
+                "</span><br>" +
+                "<span class='cart-menu-qty'>Qty: " +
+                item.qty +
+                "</span>" +
+                "<button class='remove-from-cart' data-menu-id='" +
+                item.menu_id +
+                "' data-size-id='" +
+                item.size_id +
+                "'>Remove</button>"
+            );
+
+            // Append menu image and menu details container to the cart item container
+            cartItemDiv.append(menuImage, menuDetailsDiv);
+
+            // Append the cart item container to the cart section
+            cartContainer.append(cartItemDiv);
+          });
+        },
+        error: function (error) {
+          console.log("Error fetching cart items.");
+        },
+      });
+    }
+
+    $(".add-to-cart").click(function () {
+      var menuId = $(this).data("menu-id");
+      var qty = $("#menu-qty-" + menuId).val();
+      var sizeId = $("#menu-size-" + menuId).val();
+
+      // Periksa apakah menuId, sizeId, dan qty memiliki nilai yang valid
+      if (menuId && sizeId && qty >= 0) {
+        // Ensure qty is non-negative
+        var url = `/add_to_cart/${menuId}/${sizeId}/${qty}/`;
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function (data) {
+            alert("Menu telah ditambahkan ke keranjang belanja.");
+
+            // Update the cart section with the latest items
+            updateCartSection();
+          },
+          error: function (error) {
+            alert(
+              "Terjadi kesalahan saat menambahkan menu ke keranjang belanja."
+            );
+          },
+        });
+      } else {
+        alert(
+          "Harap lengkapi informasi menu sebelum menambahkan ke keranjang belanja."
+        );
+      }
+    });
+
+    // Event listener for the "Remove" button
+    $("#cart-items").on("click", ".remove-from-cart", function () {
+      var menuId = $(this).data("menu-id");
+      var sizeId = $(this).data("size-id");
+
+      console.log("Clicked Remove button with menuId:", menuId);
+      console.log("Clicked Remove button with sizeId:", sizeId);
+
+      if (menuId !== undefined && sizeId !== undefined) {
+        // Send an AJAX request to remove the item from the cart
+        var url = `/remove_from_cart/${menuId}/${sizeId}/`;
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function (data) {
+            alert("Menu has been removed from the cart.");
+
+            // Update the cart section with the latest items
+            updateCartSection();
+          },
+          error: function (error) {
+            alert("An error occurred while removing the item from the cart.");
+          },
+        });
+      } else {
+        alert(
+          "Unable to remove the item from the cart. Menu ID or Size ID is missing."
+        );
+      }
+    });
+
+    function updateCartModalContent() {
+      $.ajax({
+        type: "GET",
+        url: "/get_cart_items/",
+        success: function (data) {
+          var cartItems = data.cart_items;
+          var cartModalContent = $("#cart-modal-content");
+
+          // Initialize variables to keep track of total price and items count
+          var totalPrice = 0;
+          var totalItems = 0;
+
+          // Clear the cart modal content
+          cartModalContent.empty();
+
+          // Append the updated cart items and calculate total price
+          cartItems.forEach(function (item) {
+            var cartItemDiv = $("<div>").addClass("cart-item");
+            var itemPrice = parseFloat(item.menu_price) * parseInt(item.qty);
+            totalPrice += itemPrice;
+            totalItems += parseInt(item.qty);
+
+            // Append the cart item to the cart modal content
+            cartItemDiv.html(
+              `<div class='cart-menu-info'>
+                    <div>
+                        <span class='cart-menu-name'>${
+                          item.menu_name
+                        }</span><br>
+                        <span class='cart-menu-size'>${item.size}</span>
+                        <span class='cart-menu-qty'>${item.qty}</span>
+                    </div>
+                    <div class='cart-menu-price-right'>
+                        <span class='cart-menu-item-price'> Rp.${itemPrice.toFixed(
+                          2
+                        )},-</span>
+                    </div>
+                </div>`
+            );
+
+            // Append the cart item to the cart modal content
+            cartModalContent.append(cartItemDiv);
+          });
+
+          // Add the total price and item count to the modal content
+          cartModalContent.append(
+            `<div class='cart-total-price'>
+                Total
+            </div>
+            <div class='cart-total-price'>
+              Rp.${totalPrice.toFixed(2)},-
+            </div>`
+          );
+        },
+        error: function (error) {
+          console.log("Error fetching cart items for the modal.");
+        },
+      });
+    }
+
+    // Show the modal when the "Tampilkan Modal" button is clicked
+    document
+      .getElementById("show-modal-button")
+      .addEventListener("click", function () {
+        document.getElementById("my-modal").style.display = "block";
+
+        // Fetch cart items and update the modal content
+        updateCartModalContent();
+      });
+
+    document
+      .getElementById("close-button")
+      .addEventListener("click", function () {
+        document.getElementById("my-modal").style.display = "none";
+      });
+
+    // Close the modal if the user clicks outside of it
+    window.addEventListener("click", function (event) {
+      if (event.target == document.getElementById("my-modal")) {
+        document.getElementById("my-modal").style.display = "none";
+      }
+    });
+
+    $("#my-modal").on("click", "#checkout-button", function () {
+      $.ajax({
+        type: "POST", // Send a POST request
+        url: "/checkout/", // Replace with the correct URL for your checkout view
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+        },
+        success: function (data) {
+          alert("Checkout successful!");
+          window.location.href = "/indexMakanan/";
+        },
+        error: function (error) {
+          // Handle errors, e.g., display an error message
+          console.log("Error during checkout:", error);
+        },
+      });
+    });
+
+    // Initial update of the cart sec tion
+    updateCartSection();
+  });
 </script>
 
 {% endblock %}
