@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'nav.css' %}">
     <link rel="stylesheet" href="{% static 'cardmenu.css' %}">
-    <title>Minuman</title>
+    <title>Makanan</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
@@ -15,10 +15,9 @@
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
-        <a href="{% url 'index_makanan' %}">All</a>
-        <a href="#" class="menu-link" data-menu-type="Alcohol"><span>Alcohol</span></a>
-        <a href="#" class="menu-link" data-menu-type="Hot"><span>Hot</span></a>
-        <a href="#" class="menu-link" data-menu-type="Cold"><span>Cold</span></a>
+        <a href="{% url 'index_snack' %}">All</a>
+        <a href="#" class="menu-link" data-menu-type="Chips"><span>Chips</span></a>
+        <a href="#" class="menu-link" data-menu-type="Kacang"><span>Kacang</span></a>
         <a href="{% url 'indexUser' %}">Back <<</a>
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
@@ -40,7 +39,7 @@
                 var menuType = link.getAttribute('data-menu-type');
 
                 // Redirect ke halaman indexMakanan dengan parameter kategori
-                window.location.href = `/indexMakanan/?kategori=${menuType}`;
+                window.location.href = `/indexSnack/?kategori=${menuType}`;
             });
         });
     });
