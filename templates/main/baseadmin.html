@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'nav.css' %}">
+    <link rel="stylesheet" href="{% static 'cardadmin.css' %}">
     <title>Admin</title>
 </head>
 
@@ -20,10 +21,11 @@
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 
- <div class="content">
+    <div class="content">
         <div class="card">
             {% block content %}
             {% endblock %}
         </div>
     </div>
+       
 </html>

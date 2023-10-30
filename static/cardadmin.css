@@ -1,0 +1,185 @@
+.card {
+    display: flex;
+    margin-left: 150px;
+    overflow: auto;
+    width: fit-content;
+    height: 750px;
+
+}
+
+.content {
+    margin-left: 90px;
+    width: (100% - 250px);
+    margin-top: -10px;
+    margin-bottom: -10px;
+    padding: 20px;
+    height: 86.4vh;
+    transition: 0.5s;
+}
+
+.content .card .form-container {
+    width: 1200px;
+    background: linear-gradient(180deg, rgb(0, 0, 0) 25%, rgb(255, 255, 255) 20%);
+    height: 630px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.content .card .form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+}
+
+.content .card .form-container p {
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: rgb(255, 255, 255);
+}
+
+.content .card .form-container .inpdddut[type="file"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.content .card .form-container label {
+    color: rgb(40, 42, 44);
+    margin-top: 4px;
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+.content .card .form-container .input {
+    padding: 10px;
+    height: 10px;
+    border: none;
+    background-color: rgb(224, 231, 236);
+}
+
+.content .card .form-container .input:focus {
+    outline: none;
+}
+
+.content .card .form-container button {
+    border: none;
+    height: 35px;
+    margin-top: 30px;
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-size: 16px;
+}
+
+.crd-img{
+    width: fit-content;
+    height: fit-content;
+}
+
+.crd-food {
+    position: relative; 
+    margin-left: 50 px;
+    margin-top: 25px;
+    background: linear-gradient(to right, #000000, #4d4d4d);
+    border-radius: 0px 15px 0px 15px;
+    width: 400px;
+    height: 150px;
+}
+
+.card-image-food img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 0px 15px 0px 0px;
+    margin-top: 0; /* Ubah menjadi 0 */
+    margin-left: 300; /* Ubah menjadi 0 */
+    width: 150px;
+    height: 150px;
+    position: absolute; /* Ubah menjadi absolute */
+    top: 0;
+    left: 0;
+}
+
+.DescMenu{
+    color: white;
+    font-weight: 400;
+    font-size: 20px;
+    padding-top: 3px;
+}
+
+.Headermenu {
+    font-weight: 600;
+    font-size: 25px;
+    color: white;
+    padding: 7px;
+}
+
+
+.table {
+    position: static;
+    border-radius: 9px 9px 0px 0px;
+    margin-top: 1rem;
+    display: flex;
+    overflow: auto;
+    margin-top: 9rem;
+    max-height: fit-content;
+    width: 1200px;
+    height: 400px;
+    background: rgb(255, 255, 255);
+
+}
+
+
+/* table */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    height: fit-content;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #000000;
+    color: #fff;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background-color: #000000;
+}
+
+tabbody {
+    display: block;
+    overflow-y: auto;
+}
+
+tbody {
+    height: 200px; /* Sesuaikan dengan tinggi yang Anda inginkan */
+}
+
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #95a5a6;
+}
+

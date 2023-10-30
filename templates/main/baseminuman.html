@@ -15,7 +15,7 @@
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
-        <a href="{% url 'index_makanan' %}">All</a>
+        <a href="{% url 'index_minuman' %}">All</a>
         <a href="#" class="menu-link" data-menu-type="Alcohol"><span>Alcohol</span></a>
         <a href="#" class="menu-link" data-menu-type="Hot"><span>Hot</span></a>
         <a href="#" class="menu-link" data-menu-type="Cold"><span>Cold</span></a>
@@ -40,7 +40,7 @@
                 var menuType = link.getAttribute('data-menu-type');
 
                 // Redirect ke halaman indexMakanan dengan parameter kategori
-                window.location.href = `/indexMakanan/?kategori=${menuType}`;
+                window.location.href = `/indexMinuman/?kategori=${menuType}`;
             });
         });
     });
