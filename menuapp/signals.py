@@ -16,16 +16,18 @@ def create_or_update_profit_summary(sender, instance, created, **kwargs):
             total_kotor = instance.jumlah_harga
             total_profit = total_kotor - total_bersih
 
-            ProfitSummary.objects.create(
+            # Create ProfitSummary for the PenjualanDetail
+            profit_summary = ProfitSummary.objects.create(
                 menu=menu,
                 pendapatan_bersih=total_bersih,
                 pendapatan_kotor=total_kotor,
                 profit=total_profit
             )
+            # Link the ProfitSummary to the PenjualanDetail
+            instance.profit_summary = profit_summary
+            instance.save()
 
 @receiver(post_delete, sender=PenjualanDetail)
 def delete_profit_summary(sender, instance, **kwargs):
-    menu = instance.kode_menu
-
-    # Delete the associated ProfitSummary linked to the instance of PenjualanDetail
-    ProfitSummary.objects.filter(menu=menu).delete()
+    if instance.profit_summary:
+        instance.profit_summary.delete()

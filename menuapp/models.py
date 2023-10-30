@@ -86,6 +86,15 @@ class PenjualanFaktur(models.Model):
     
     def __str__(self):
         return self.kode_penjualan_faktur
+    
+class ProfitSummary(models.Model):
+    menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
+    pendapatan_bersih = models.DecimalField(max_digits=10, decimal_places=2)
+    pendapatan_kotor = models.DecimalField(max_digits=10, decimal_places=2)
+    profit = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Profit Summary for {self.menu}"
 class PenjualanDetail(models.Model):
     nomor_nota_penjualan = models.CharField(max_length=20)
     kode_menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
@@ -93,6 +102,7 @@ class PenjualanDetail(models.Model):
     jumlah_harga = models.DecimalField(max_digits=10, decimal_places=2)
     qty_menu = models.PositiveIntegerField()
     faktur = models.ForeignKey(PenjualanFaktur, on_delete=models.CASCADE, null=True, blank=True)
+    profit_summary = models.ForeignKey(ProfitSummary, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.nomor_nota_penjualan
@@ -122,14 +132,7 @@ class BahanMenu(models.Model):
     def __str__(self):
         return self.name
     
-class ProfitSummary(models.Model):
-    menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
-    pendapatan_bersih = models.DecimalField(max_digits=10, decimal_places=2)
-    pendapatan_kotor = models.DecimalField(max_digits=10, decimal_places=2)
-    profit = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def __str__(self):
-        return f"Profit Summary for {self.menu}"
     
 def create_or_update_profit_summary(faktur):
     if faktur.pembayaran != 0:
