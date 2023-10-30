@@ -1,15 +1,16 @@
 # menuapp/views.py
 import json
 import random, string
-from django.shortcuts import render, redirect
-from .forms import DataMenuForm
-from django.db.models import F
+from django.shortcuts import render, redirect,get_object_or_404
+from .forms import DataMenuForm,BahanMenuForm  
+from django.db.models import F,ExpressionWrapper, DecimalField
+
 
 from django.utils import timezone
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import transaction
-from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence,KelompokMenu
+from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence,KelompokMenu,BahanMenu,ProfitSummary
 from decimal import Decimal
 
 def index_makanan(request):
@@ -174,10 +175,6 @@ def checkout(request):
     else:
         return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu': total_tiap_menu, 'harga_tiap_menu': harga_tiap_menu})
 
-
-
-
-
 def get_cart_items(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user).select_related('menu', 'size')
@@ -207,4 +204,58 @@ def remove_from_cart(request, menu_id, size_id):
     CartItem.objects.filter(user=user, menu=menu, size=size).delete()
     
     return JsonResponse({'message': 'Item removed from the cart.'})
+
+
+def add_bahan_menu(request, menu_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+    sizes = JenisSize.objects.all()  # Get available sizes, adjust query as needed
+
+    if request.method == 'POST':
+        form = BahanMenuForm(request.POST)
+        if form.is_valid():
+            bahan = form.save(commit=False)
+            bahan.menu = menu
+            bahan.save()
+            return redirect(add_bahan_menu, menu_id=menu_id)  # Redirect to menu detail or desired page
+    else:
+        form = BahanMenuForm()
+
+    return render(request, 'admin/bahanMenu.html', {'form': form, 'menu': menu, 'sizes': sizes})
+
+def menu_detail(request, menu_id,size_id):
+    menu = DataMenu.objects.get(pk=menu_id)
+    menu_prices = HargaMenu.objects.filter(menu=menu)
+    ingredients_with_prices = BahanMenu.objects.filter(menu=menu)
+
+    penjualan_details = PenjualanDetail.objects.filter(kode_menu=menu)
+    total_bersih = 0
+
+    for detail in penjualan_details:
+        bahan_details = BahanMenu.objects.filter(menu=menu,size=size_id)
+        total_bersih += sum(
+            bahan.price * detail.qty_menu for bahan in bahan_details
+        )
+
+    # Calculate pendapatan_kotor for the menu
+    total_kotor = sum(detail.jumlah_harga for detail in penjualan_details)
+
+    # Calculate profit for the menu
+    total_profit = total_bersih - total_kotor
+
+    # Create and save ProfitSummary for the menu
+    profit_summary, created = ProfitSummary.objects.get_or_create(
+        menu=menu,
+        defaults={
+            'pendapatan_bersih': total_bersih,
+            'pendapatan_kotor': total_kotor,
+            'profit': total_profit
+        }
+    )
+
+    return render(request, 'admin/menu_detail.html', {
+        'menu': menu,
+        'menu_prices': menu_prices,
+        'ingredients_with_prices': ingredients_with_prices,
+        'profit_summary': profit_summary
+    })
 

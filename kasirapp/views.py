@@ -4,7 +4,10 @@ from django.http import FileResponse
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.pdfgen import canvas
-from menuapp.models import PenjualanDetail,PenjualanFaktur,HargaMenu,DataMenu
+from django.db.models import ExpressionWrapper, DecimalField, Sum, F
+from menuapp.models import PenjualanDetail,PenjualanFaktur,HargaMenu,DataMenu,ProfitSummary,BahanMenu
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from django.contrib.auth.decorators import login_required
 import requests
 from decimal import Decimal
@@ -112,17 +115,12 @@ def pesanan(request):
             harga_menu = HargaMenu.objects.get(menu=item.kode_menu, harga_menu=item.harga_menu)
             # Access the size through the harga_menu relationship
             item.size = harga_menu.size.nama_size
-
-
-
+            
     context = {
         'completed_orders': completed_orders,
         'pending_orders': pending_orders,
     }
     return render(request, 'kasir/pesanan.html', context)
-
-
-
 
 @login_required
 def tabelKasir(request):
@@ -135,30 +133,24 @@ def update_order(request, order_id):
     if request.user.userprofile.role != 'kasir':
         return redirect('login_view')
 
-    # Get the PenjualanFaktur instance to update
     order = get_object_or_404(PenjualanFaktur, id=order_id)
 
     if request.method == 'POST':
-        # Get the data from the form
         pembayaran = Decimal(request.POST.get('pembayaran', 0))
-        
-        # Calculate kembalian (ensure it's positive)
-        kembalian = order.total_penjualan - pembayaran
-        order.kembalian = abs(kembalian)  # Use abs() to make it positive
-        
-        # Update the order data
-        order.pembayaran = pembayaran
-        order.status_lunas = 1
-        
-        # Save the changes
-        order.save()
+        status_lunas = int(request.POST.get('status_lunas', 0))
 
-        # Redirect back to the "pesanan" page or any other desired page
+        kembalian = order.total_penjualan - pembayaran
+        order.kembalian = abs(kembalian)
+
+        order.pembayaran = pembayaran
+        order.status_lunas = 1  # Update the status based on the form input
+
+        order.save()
         return redirect('pesanan')
 
-    # Handle GET request or any other logic if needed
     return render(request, 'kasir/pesanan.html', {'order': order})
 
+# 
 
 
 @login_required
@@ -173,7 +165,6 @@ def cancel_order(request, order_id):
         order.status_lunas = 0
 
         order.save()
-
         return redirect('pesanan')
      return render(request, 'kasir/pesanan.html', {'order': order})
 

@@ -14,9 +14,9 @@ urlpatterns = [
     path('checkout_success', views.checkout_success, name='checkout_success'),
     path('get_cart_items/', views.get_cart_items, name='get_cart_items'),
     path('remove_from_cart/<int:menu_id>/<int:size_id>/', views.remove_from_cart, name='remove_from_cart'),
-
-    # Tambahkan URL untuk halaman checkout
     path('checkout/', views.checkout, name='checkout'),
+    path('add_bahan_menu/<int:menu_id>/', views.add_bahan_menu, name='add_bahan_menu'),
+    path('menu_detail/<int:menu_id>/<int:size_id>/', views.menu_detail, name='menu_detail'),
 ]
 
 if settings.DEBUG:
