@@ -30,35 +30,12 @@ def logout_view(request):
     logout(request)
     return redirect('login_view')
 
-#admin
-
+#Admin
 @login_required
 def indexAdmin(request):
         if request.user.userprofile.role != 'admin':
              return redirect('login_view')
         return render(request, 'Admin/index.html')
-
-def tambahMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/tambahMenu.html')
-
-def editMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/editMenu.html')
-
-def hapusMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/hapusMenu.html')
-
-@login_required
-def laporanAdmin(request):
-        if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-        return render(request, 'Admin/laporanAdmin.html')
-
 
 #Kasir
 @login_required
@@ -66,8 +43,6 @@ def indexKasir(request):
         if request.user.userprofile.role != 'kasir':
             return redirect('login_view')
         return render(request, 'Kasir/index.html')
-
-
 
 #User
 @login_required
