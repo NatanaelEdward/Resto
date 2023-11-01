@@ -66,6 +66,16 @@ def hapus_menu(request, id):
         return redirect('menu_view')  # Redirect to the menu list page
     return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
 
+def delete_price(request, menu_id, price_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+    price = get_object_or_404(HargaMenu, pk=price_id)
+
+    if request.method == 'POST':
+        price.delete()
+        return redirect(menu_view)  # Replace 'menu_view' with your intended redirect view
+
+    # Add context data as needed and render a template or return a response
+    return render(request, menu_view, {'menu': menu})
 def update_price(request, id):
     menu = get_object_or_404(DataMenu, pk=id)
     harga_menus = menu.hargamenu_set.all()
@@ -131,42 +141,44 @@ def laporanAdmin(request):
     })
 
 #bahan menu
-def add_ingredient(request, menu_id):
-    menu = get_object_or_404(DataMenu, pk=menu_id)
 
+def bahan_menu_list(request):
+    all_bahanmenu = BahanMenu.objects.all()
+    return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
+def add_ingredient(request):
     if request.method == 'POST':
         form = BahanMenuForm(request.POST)
         if form.is_valid():
             bahan_menu = form.save(commit=False)
-            bahan_menu.menu = menu
+            bahan_menu.menu_id = request.POST.get('menu')  # Change menu_id to menu
+            bahan_menu.size_id = request.POST.get('size')  # Change size_id to size
             bahan_menu.save()
-            return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+            return redirect('bahan_menu_list')  # Redirect to the bahan menu list view
     else:
         form = BahanMenuForm()
 
-    return render(request, 'add_ingredient.html', {'form': form, 'menu': menu})
+    return render(request, 'bahan/tambahBahan.html', {'form': form})
 
-def edit_ingredient(request, menu_id, ingredient_id):
-    menu = get_object_or_404(DataMenu, pk=menu_id)
+def edit_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
 
     if request.method == 'POST':
         form = BahanMenuForm(request.POST, instance=ingredient)
         if form.is_valid():
             form.save()
-            return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+            return redirect(bahan_menu_list)  # Redirect to menu detail view
     else:
         form = BahanMenuForm(instance=ingredient)
 
-    return render(request, 'edit_ingredient.html', {'form': form, 'menu': menu, 'ingredient': ingredient})
+    return render(request, 'bahan/editBahan.html', {'form': form, 'ingredient': ingredient})
 
-def delete_ingredient(request, menu_id, ingredient_id):
-    menu = get_object_or_404(DataMenu, pk=menu_id)
+def delete_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
+    menu_id = ingredient.menu.id
     
     if request.method == 'POST':
         ingredient.delete()
-        return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+        return redirect(bahan_menu_list)  # Redirect to menu detail view
 
-    return render(request, 'delete_ingredient.html', {'menu': menu, 'ingredient': ingredient})
+    return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 

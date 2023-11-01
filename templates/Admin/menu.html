@@ -16,7 +16,6 @@
             <th>Jenis Size</th>
             <th>Price</th>
             <th>Aksi </th>
-            <th>Bahan </th>
         </tr>
     </thead>
     <tbody>
@@ -40,7 +39,7 @@
                     <a href="{% url 'hapus_menu' datamenu.id %}">Delete</a>
                     <a href="{% url 'update_price' datamenu.id %}">Edit Price</a>
                 </td>
-                <td><a href="#">Detail Bahan</a></td>
+           
             </tr>
         {% empty %}
             <tr>

@@ -7,7 +7,12 @@
 </form>
 
 {% for harga_menu in harga_menus %}
-    {{ harga_menu.size }} - Rp. {{ harga_menu.harga_menu }} 
-    <!-- Additional logic or forms here for each harga_menu entry -->
+    <div>
+        {{ harga_menu.size }} - Rp. {{ harga_menu.harga_menu }}
+        <form method="post" action="{% url 'delete_price' menu.id harga_menu.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </div>
 {% endfor %}
 {% endblock %}

@@ -133,9 +133,7 @@ class BahanMenu(models.Model):
 
     def __str__(self):
         return self.name
-    
-
-    
+        
 def create_or_update_profit_summary(faktur):
     if faktur.pembayaran != 0:
         for detail in PenjualanDetail.objects.filter(faktur=faktur):
