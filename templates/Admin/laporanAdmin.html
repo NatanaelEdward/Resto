@@ -1,66 +1,78 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
 
+<!-- Date selection form -->
+<form method="GET" action="{% url 'laporanAdmin' %}">
+    <label for="date">Choose a specific date:</label>
+    <input type="date" id="date" name="date" value="{{ request.GET.date }}">
+    <input type="submit" value="Show Profit for Selected Date">
+</form>
 
 <div class="crd-img">
     <div class="crd-food">
         <div class="Headermenu">
-            Most Popular Food <br>
-            Salad Babi
-            <div class="DescMenu">
-                Rp.18.000,-
-            </div>
+            Most Popular Food:
+            {% for menu in most_popular_food %}
+                {{ menu.nama_menu_lengkap }} ({{ menu.total_qty_sold }} sold)
+            {% endfor %}
         </div>
         <div class="card-image-food">
-            <img
-                src="https://www.feastingathome.com/wp-content/uploads/2023/05/Cobb-Salad-5.jpg"
-                alt="{{ menu.nama_menu_lengkap }}"
-                
-            />
+            <!-- Add the image if needed -->
         </div>
     </div>
-    
+    <div class="total-profit">
+        {% if total_profit_today %}
+            <h2>Total Profit for the Selected Date: {{ total_profit_today.total_profit }}</h2>
+        {% else %}
+            <p>No profit data available for the selected date.</p>
+        {% endif %}
+    </div>
+
+    <div class="monthly-profit">
+        <h2>Monthly Profits</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Total Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profit in monthly_profits %}
+                    <tr>
+                        <td>{{ profit.created_at__date }}</td>
+                        <td>{{ profit.total_profit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div class="table">
-    <table>
-        <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Keterangan</th>
-                <th>Kortor</th>
-                <th>Modal</th>
-                <th>Profit</th>
-            </tr>
-        </thead>
-        <div class="tabbody">
+        <h2>All Profit Summaries</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Menu</th>
+                    <th>Kotor</th>
+                    <th>Bersih</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
             <tbody>
-                <tr>
-                    <td>01/01/2023</td>
-                    <td>Penjualan Produk A</td>
-                    <td>10,000</td>
-                    <td>2,000</td>
-                    <td>8,000</td>
-                </tr>
-                <tr>
-                    <td>01/02/2023</td>
-                    <td>Penjualan Produk B</td>
-                    <td>8,000</td>
-                    <td>3,000</td>
-                    <td>5,000</td>
-                </tr>
-                <tr>
-                    <td>01/03/2023</td>
-                    <td>Penjualan Produk C</td>
-                    <td>12,000</td>
-                    <td>4,000</td>
-                    <td>8,000</td>
-                </tr>
+                {% for summary in profit_summaries %}
+                    <tr>
+                        <td>{{ summary.created_at }}</td>
+                        <td>{{ summary.menu.nama_menu_lengkap }}</td>
+                        <td>{{ summary.pendapatan_kotor }}</td>
+                        <td>{{ summary.pendapatan_bersih }}</td>
+                        <td>{{ summary.profit }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
-        </div>
+        </table>
     </div>
-        </div>
-    </table>
 </div>
-
 
 {% endblock %}

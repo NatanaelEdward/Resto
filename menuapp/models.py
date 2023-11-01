@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.db.models import F, Sum, ExpressionWrapper, DecimalField
 from django.dispatch import receiver
+from django.utils import timezone
 
 class KelompokMenu(models.Model):
     kode_kelompok = models.CharField(max_length=10, unique=True)
@@ -92,9 +93,10 @@ class ProfitSummary(models.Model):
     pendapatan_bersih = models.DecimalField(max_digits=10, decimal_places=2)
     pendapatan_kotor = models.DecimalField(max_digits=10, decimal_places=2)
     profit = models.DecimalField(max_digits=10, decimal_places=2)
-
+    created_at = models.DateTimeField(default=timezone.now)  
     def __str__(self):
         return f"Profit Summary for {self.menu}"
+    
 class PenjualanDetail(models.Model):
     nomor_nota_penjualan = models.CharField(max_length=20)
     kode_menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
