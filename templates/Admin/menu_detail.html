@@ -1,0 +1,23 @@
+<!-- menu_detail.html -->
+<h1>{{ menu.nama_menu_lengkap }}</h1>
+
+<h2>Menu Prices</h2>
+<ul>
+    {% for price in menu_prices %}
+        <li>Price for {{ price.size.nama_size }}: ${{ price.harga_menu }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Ingredient Prices</h2>
+<ul>
+    {% for bahan in ingredients_with_prices %}
+        <li>{{ bahan.name }} ({{ bahan.size.nama_size }}): ${{ bahan.price }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Profit Summary for {{ menu.nama_menu_lengkap }}</h2>
+<ul>
+    <li>Pendapatan Bersih: ${{ profit_summary.pendapatan_bersih }}</li>
+    <li>Pendapatan Kotor: ${{ profit_summary.pendapatan_kotor }}</li>
+    <li>Profit: ${{ profit_summary.profit }}</li>
+</ul>

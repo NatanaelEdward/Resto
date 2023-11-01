@@ -1,6 +1,6 @@
 # menuapp/forms.py
 from django import forms
-from .models import DataMenu,PenjualanFaktur
+from .models import DataMenu,PenjualanFaktur,BahanMenu,JenisSize
 
 class DataMenuForm(forms.ModelForm):
     class Meta:
@@ -19,3 +19,8 @@ class UpdateOrderForm(forms.ModelForm):
         if pembayaran < total_penjualan:
             raise forms.ValidationError("Pembayaran harus lebih besar atau sama dengan total penjualan.")
         return pembayaran
+
+class BahanMenuForm(forms.ModelForm):
+    class Meta:
+        model = BahanMenu
+        fields = ['name', 'price', 'qty', 'menu', 'size']

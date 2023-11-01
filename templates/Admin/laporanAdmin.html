@@ -1,5 +1,80 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
-<h1>Laporan </h1>
+
+
+
+<div class="crd-img">
+    <div class="crd-food">
+        <div class="Headermenu">
+            Most Popular Food:
+            {% for menu in most_popular_food %}
+                {{ menu.nama_menu_lengkap }} ({{ menu.total_qty_sold }} sold)
+            {% endfor %}
+        </div>
+        <div class="card-image-food">
+            <!-- Add the image if needed -->
+        </div>
+    </div>
+    <br>
+    <div class="total-profit">
+        <form method="GET" action="{% url 'laporanAdmin' %}">
+            <label for="day">Tanggal :</label>
+            <input type="date" id="day" name="day" value="{{ request.GET.day }}">
+            <input type="submit" value="Filter">
+        </form>
+        {% if total_profit_today %}
+            <h2>Profit pada tanggal {{ specific_date|date:"j F Y" }} : Rp. {{ total_profit_today.total_profit|default_if_none:"0" }}</h2>
+        {% else %}
+            <p>Tidak ada profit pada tanggal tersebut.</p>
+        {% endif %}
+    </div>
+
+    <div class="monthly-profits">
+        <h2>Monthly Profits</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Profit</th>
+                    <th>Summary </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profit in monthly_profits %}
+                    <tr>
+                        <td>{{ profit.month|date:"F Y" }}</td>
+                        <td>{{ profit.total_profit }}</td>
+                        <td>Aksi </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <h2>All Profit Summaries</h2>
+    <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Menu</th>
+                    <th>Kotor</th>
+                    <th>Bersih</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for summary in profit_summaries %}
+                    <tr>
+                        <td>{{ summary.created_at }}</td>
+                        <td>{{ summary.menu.nama_menu_lengkap }}</td>
+                        <td>{{ summary.pendapatan_kotor }}</td>
+                        <td>{{ summary.pendapatan_bersih }}</td>
+                        <td>{{ summary.profit }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

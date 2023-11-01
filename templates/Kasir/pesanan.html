@@ -80,6 +80,10 @@
                             <!-- Add more fields for other data you want to change -->
                             <button type="submit">Update Order</button>
                         </form>
+                        <form method="post" action="{% url 'delete_order' order.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete Order</button>
+                        </form>
                     </div>
                 </div>
             </div>

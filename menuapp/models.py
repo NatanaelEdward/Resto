@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save, post_delete
+from django.db.models import F, Sum, ExpressionWrapper, DecimalField
+from django.dispatch import receiver
+from django.utils import timezone
 
 class KelompokMenu(models.Model):
     kode_kelompok = models.CharField(max_length=10, unique=True)
@@ -32,8 +36,25 @@ class DataMenu(models.Model):
     keterangan_menu = models.TextField()
     status_aktif_menu = models.BooleanField(default=True)
 
+    def calculate_profit(self):
+        penjualan_details = PenjualanDetail.objects.filter(kode_menu=self)
+        total_profit = 0
+
+        for detail in penjualan_details:
+            harga_total = detail.jumlah_harga
+            bahan_details = BahanMenu.objects.filter(menu=self)
+            bahan_total_cost = sum(bahan.price * detail.qty_menu for bahan in bahan_details)
+            total_profit += harga_total - bahan_total_cost
+
+        return total_profit
+    
+    @property
+    def total_price_with_bahan(self, size):
+        harga_menu = HargaMenu.objects.get(menu=self, size=size).harga_menu
+        return harga_menu - self.calculate_total_bahan_price(size)
+
     def __str__(self):
-        return self.nama_menu_lengkap
+        return self.nama_menu_lengkap  
 
 class HargaMenu(models.Model):
     menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
@@ -43,15 +64,6 @@ class HargaMenu(models.Model):
     def __str__(self):
         return f"{self.menu} - {self.size} - {self.harga_menu}"
 
-class PenjualanDetail(models.Model):
-    nomor_nota_penjualan = models.CharField(max_length=20)
-    kode_menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
-    harga_menu = models.DecimalField(max_digits=10, decimal_places=2)
-    jumlah_harga = models.DecimalField(max_digits=10, decimal_places=2)
-    qty_menu = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.nomor_nota_penjualan
     
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,6 +87,27 @@ class PenjualanFaktur(models.Model):
     
     def __str__(self):
         return self.kode_penjualan_faktur
+    
+class ProfitSummary(models.Model):
+    menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
+    pendapatan_bersih = models.DecimalField(max_digits=10, decimal_places=2)
+    pendapatan_kotor = models.DecimalField(max_digits=10, decimal_places=2)
+    profit = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(default=timezone.now)  
+    def __str__(self):
+        return f"Profit Summary for {self.menu}"
+    
+class PenjualanDetail(models.Model):
+    nomor_nota_penjualan = models.CharField(max_length=20)
+    kode_menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
+    harga_menu = models.DecimalField(max_digits=10, decimal_places=2)
+    jumlah_harga = models.DecimalField(max_digits=10, decimal_places=2)
+    qty_menu = models.PositiveIntegerField()
+    faktur = models.ForeignKey(PenjualanFaktur, on_delete=models.CASCADE, null=True, blank=True)
+    profit_summary = models.ForeignKey(ProfitSummary, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.nomor_nota_penjualan
 
 class DataMeja(models.Model):
     nomor_meja = models.CharField(max_length=10, unique=True)
@@ -90,3 +123,39 @@ class InvoiceSequence(models.Model):
     nomor_meja = models.CharField(max_length=10, unique=True)
     nota_sequence = models.PositiveIntegerField(default=1)
     faktur_sequence = models.PositiveIntegerField(default=1)
+
+class BahanMenu(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    qty = models.PositiveIntegerField()  # Assuming qty is in grams
+    menu = models.ForeignKey(DataMenu, on_delete=models.CASCADE)
+    size = models.ForeignKey(JenisSize, on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return self.name
+    
+
+    
+def create_or_update_profit_summary(faktur):
+    if faktur.pembayaran != 0:
+        for detail in PenjualanDetail.objects.filter(faktur=faktur):
+            menu = detail.kode_menu
+
+            total_bersih = BahanMenu.objects.filter(menu=menu).aggregate(
+                total=ExpressionWrapper(F('price') * F('qty'), output_field=DecimalField())
+            )['total'] or 0
+
+            total_kotor = PenjualanDetail.objects.filter(kode_menu=menu, faktur=faktur).aggregate(
+                total_kotor=Sum('jumlah_harga')
+            )['total_kotor'] or 0
+
+            total_profit = total_kotor - total_bersih
+
+            profit_summary, created = ProfitSummary.objects.update_or_create(
+                menu=menu,
+                defaults={
+                    'pendapatan_bersih': total_bersih,
+                    'pendapatan_kotor': total_kotor,
+                    'profit': total_profit
+                }
+            )
