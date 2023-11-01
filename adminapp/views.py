@@ -8,6 +8,9 @@ from menuapp.models import ProfitSummary,DataMenu,PenjualanDetail
 from django.db.models import Sum,Count
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.db.models.functions import TruncMonth
+from calendar import monthrange
+
 
 
 def tambahMenu(request):
@@ -35,23 +38,21 @@ def laporanAdmin(request):
     total_profit_today = None
     most_popular_food = None
     monthly_profits = None
+    specific_date = None
 
-    # Check if a date is specified in the request
-    specific_date = request.GET.get('date')
-    if specific_date:
-        # Convert the provided date string to a datetime object
-        specific_date = datetime.strptime(specific_date, '%Y-%m-%d').date()
+    day_selected = request.GET.get('day')
 
-        # Filter ProfitSummary objects for the provided date
+    if day_selected:
+        specific_date = datetime.strptime(day_selected, '%Y-%m-%d').date()
         total_profit_today = ProfitSummary.objects.filter(created_at__date=specific_date).aggregate(total_profit=Sum('profit'))
 
-    # Monthly profits calculation
-    current_month_start = datetime.today().replace(day=1).date()
-    monthly_end = current_month_start + timedelta(days=30)
-    monthly_profits = ProfitSummary.objects.filter(created_at__date__range=[current_month_start, monthly_end]) \
-        .values('created_at__date').annotate(total_profit=Sum('profit'))
+    monthly_profits = (
+        ProfitSummary.objects.annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(total_profit=Sum('profit'))
+        .order_by('month')
+    )
 
-    # Calculating most popular food
     total_quantity_per_menu = PenjualanDetail.objects.values('kode_menu').annotate(total_qty=Sum('qty_menu')).order_by('-total_qty')[:1]
     most_popular_food = []
     for item in total_quantity_per_menu:
@@ -64,4 +65,6 @@ def laporanAdmin(request):
         'total_profit_today': total_profit_today,
         'most_popular_food': most_popular_food,
         'monthly_profits': monthly_profits,
+        'specific_date': specific_date,
     })
+

@@ -1,12 +1,7 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
 
-<!-- Date selection form -->
-<form method="GET" action="{% url 'laporanAdmin' %}">
-    <label for="date">Choose a specific date:</label>
-    <input type="date" id="date" name="date" value="{{ request.GET.date }}">
-    <input type="submit" value="Show Profit for Selected Date">
-</form>
+
 
 <div class="crd-img">
     <div class="crd-food">
@@ -20,36 +15,43 @@
             <!-- Add the image if needed -->
         </div>
     </div>
+    <br>
     <div class="total-profit">
+        <form method="GET" action="{% url 'laporanAdmin' %}">
+            <label for="day">Tanggal :</label>
+            <input type="date" id="day" name="day" value="{{ request.GET.day }}">
+            <input type="submit" value="Filter">
+        </form>
         {% if total_profit_today %}
-            <h2>Total Profit for the Selected Date: {{ total_profit_today.total_profit }}</h2>
+            <h2>Profit pada tanggal {{ specific_date|date:"j F Y" }} : Rp. {{ total_profit_today.total_profit|default_if_none:"0" }}</h2>
         {% else %}
-            <p>No profit data available for the selected date.</p>
+            <p>Tidak ada profit pada tanggal tersebut.</p>
         {% endif %}
     </div>
 
-    <div class="monthly-profit">
+    <div class="monthly-profits">
         <h2>Monthly Profits</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Date</th>
+                    <th>Month</th>
                     <th>Total Profit</th>
+                    <th>Summary </th>
                 </tr>
             </thead>
             <tbody>
                 {% for profit in monthly_profits %}
                     <tr>
-                        <td>{{ profit.created_at__date }}</td>
+                        <td>{{ profit.month|date:"F Y" }}</td>
                         <td>{{ profit.total_profit }}</td>
+                        <td>Aksi </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-
+    <h2>All Profit Summaries</h2>
     <div class="table">
-        <h2>All Profit Summaries</h2>
         <table>
             <thead>
                 <tr>
