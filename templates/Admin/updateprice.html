@@ -1,0 +1,13 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Price</button>
+</form>
+
+{% for harga_menu in harga_menus %}
+    {{ harga_menu.size }} - Rp. {{ harga_menu.harga_menu }} 
+    <!-- Additional logic or forms here for each harga_menu entry -->
+{% endfor %}
+{% endblock %}

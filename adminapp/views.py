@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize
-from menuapp.forms import DataMenuForm
+from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
+from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
 
 def menu_view(request):
     all_datamenu = DataMenu.objects.all()
@@ -50,12 +50,12 @@ def add_data_menu(request):
 def edit_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
-        form = DataMenuForm(request.POST, instance=data_menu)
+        form = DataMenuEditForm(request.POST, instance=data_menu)
         if form.is_valid():
             form.save()
             return redirect('menu_view')  # Redirect to the menu list page
     else:
-        form = DataMenuForm(instance=data_menu)
+        form = DataMenuEditForm(instance=data_menu)
     return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
 
 # Delete menu view
@@ -65,6 +65,29 @@ def hapus_menu(request, id):
         data_menu.delete()
         return redirect('menu_view')  # Redirect to the menu list page
     return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
+
+def update_price(request, id):
+    menu = get_object_or_404(DataMenu, pk=id)
+    harga_menus = menu.hargamenu_set.all()
+
+    if request.method == 'POST':
+        form = HargaMenuForm(request.POST)
+        if form.is_valid():
+            harga_menu = form.save(commit=False)
+            existing_harga_menu = harga_menus.filter(size=harga_menu.size).first()
+
+            if existing_harga_menu:
+                existing_harga_menu.harga_menu = harga_menu.harga_menu
+                existing_harga_menu.save()
+            else:
+                harga_menu.menu = menu
+                harga_menu.save()
+                
+            return redirect('menu_view')
+    else:
+        form = HargaMenuForm()
+
+    return render(request, 'admin/updateprice.html', {'form': form, 'menu': menu, 'harga_menus': harga_menus})
 
 
 @login_required
@@ -106,4 +129,44 @@ def laporanAdmin(request):
         'monthly_profits': monthly_profits,
         'specific_date': specific_date,
     })
+
+#bahan menu
+def add_ingredient(request, menu_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+
+    if request.method == 'POST':
+        form = BahanMenuForm(request.POST)
+        if form.is_valid():
+            bahan_menu = form.save(commit=False)
+            bahan_menu.menu = menu
+            bahan_menu.save()
+            return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+    else:
+        form = BahanMenuForm()
+
+    return render(request, 'add_ingredient.html', {'form': form, 'menu': menu})
+
+def edit_ingredient(request, menu_id, ingredient_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+    ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
+
+    if request.method == 'POST':
+        form = BahanMenuForm(request.POST, instance=ingredient)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+    else:
+        form = BahanMenuForm(instance=ingredient)
+
+    return render(request, 'edit_ingredient.html', {'form': form, 'menu': menu, 'ingredient': ingredient})
+
+def delete_ingredient(request, menu_id, ingredient_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+    ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
+    
+    if request.method == 'POST':
+        ingredient.delete()
+        return redirect('menu_detail', menu_id=menu_id)  # Redirect to menu detail view
+
+    return render(request, 'delete_ingredient.html', {'menu': menu, 'ingredient': ingredient})
 
