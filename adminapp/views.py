@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -10,23 +10,62 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
+from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize
+from menuapp.forms import DataMenuForm
 
+def menu_view(request):
+    all_datamenu = DataMenu.objects.all()
+    return render(request, 'admin/menu.html', {'all_datamenu': all_datamenu})
 
+def add_data_menu(request):
+    if request.method == 'POST':
+        form = DataMenuForm(request.POST, request.FILES)
+        if form.is_valid():
+            data_menu = form.save(commit=False)
 
-def tambahMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/tambahMenu.html')
+            kelompok_menu_id = request.POST.get('kelompok_menu')
+            jenis_menu_id = request.POST.get('jenis_menu')  
+            jenis_size_id = request.POST.get('jenis_size')
+            harga_menu_value = request.POST.get('harga_menu')
 
-def editMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/editMenu.html')
+            kelompok_menu = KelompokMenu.objects.get(id=kelompok_menu_id)
+            jenis_menu = JenisMenu.objects.get(id=jenis_menu_id)
+            jenis_size = JenisSize.objects.get(id=jenis_size_id)
 
-def hapusMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/hapusMenu.html')
+            data_menu.kelompok_menu = kelompok_menu
+            data_menu.jenis_menu = jenis_menu
+            data_menu.jenis_size = jenis_size
+            data_menu.save()  # Save the DataMenu first to obtain an ID
+
+            # Create a new HargaMenu instance and link it to the selected DataMenu and JenisSize
+            harga_menu = HargaMenu.objects.create(menu=data_menu, size=jenis_size, harga_menu=harga_menu_value)
+
+            return redirect(add_data_menu)  # Redirect to success page after form submission
+
+    else:
+        form = DataMenuForm()
+
+    return render(request, 'admin/tambahMenu.html', {'form': form})
+
+def edit_menu(request, id):
+    data_menu = get_object_or_404(DataMenu, id=id)
+    if request.method == 'POST':
+        form = DataMenuForm(request.POST, instance=data_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_view')  # Redirect to the menu list page
+    else:
+        form = DataMenuForm(instance=data_menu)
+    return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
+
+# Delete menu view
+def hapus_menu(request, id):
+    data_menu = get_object_or_404(DataMenu, id=id)
+    if request.method == 'POST':
+        data_menu.delete()
+        return redirect('menu_view')  # Redirect to the menu list page
+    return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
+
 
 @login_required
 def laporanAdmin(request):

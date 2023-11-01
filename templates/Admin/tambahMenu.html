@@ -1,6 +1,18 @@
-<!-- menuapp/templates/tambah_menu.html -->
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<head>
+    <title>Add Data Menu</title>
+</head>
+<body>
+
+<h1>Add Data Menu</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Tambahkan Menu</button>
+
+    <button type="submit">Save</button>
 </form>
+
+</body>
+
+{% endblock %}

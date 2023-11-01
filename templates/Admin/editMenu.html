@@ -1,0 +1,14 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<head>
+    <title>Edit Menu</title>
+</head>
+<body>
+    <h1>Edit Menu</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save Changes">
+    </form>
+</body>
+{% endblock %}
