@@ -2,7 +2,7 @@
     display: flex;
     margin-left: 150px;
     overflow: auto;
-    width: fit-content;
+    width: 1230px;
     height: 750px;
 
 }
@@ -82,9 +82,17 @@
     font-size: 16px;
 }
 
+
+
 .crd-img{
     width: fit-content;
     height: fit-content;
+}
+
+.card-headr{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .crd-food {
@@ -115,27 +123,90 @@
     color: white;
     font-weight: 400;
     font-size: 20px;
+    margin-left: 15px;
     padding-top: 3px;
 }
 
 .Headermenu {
     font-weight: 600;
+    margin-left: 10px;
     font-size: 25px;
     color: white;
     padding: 7px;
+}
+
+.crd-profitday{
+    border: 1px solid #ccc;
+    margin-top: 1rem;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+
+.input-box form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input-box input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-box input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.input-box label {
+  display: block;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+
+}
+
+.input-box p {
+    margin-top: 20px;
+    font-size: 1em;
+    color: #777;
+}
+
+
+label {
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+/* Style for the select element */
+select {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 
 .table {
     position: static;
     border-radius: 9px 9px 0px 0px;
-    margin-top: 1rem;
     display: flex;
     overflow: auto;
-    margin-top: 9rem;
     max-height: fit-content;
     width: 1200px;
-    height: 400px;
+    height: fit-content;
     background: rgb(255, 255, 255);
 
 }
@@ -171,7 +242,7 @@ tabbody {
 }
 
 tbody {
-    height: 200px; /* Sesuaikan dengan tinggi yang Anda inginkan */
+    height: 20px; /* Sesuaikan dengan tinggi yang Anda inginkan */
 }
 
 

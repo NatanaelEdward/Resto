@@ -12,7 +12,11 @@
 <body>
     <div class="sidebar">
         <!-- coba add user name di side bar-->
-        <p>{{ user.username }}</p>
+        <label class="logo">
+            <img class="logo-per" src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS_vsrbvaLcY4mC1oYhP-mc3z8EOhdQU3HwoXnl8dVNREbxwD4t" >
+            <p>{{ user.username }}</p>
+        </label>
+
         <a href="{% url 'laporanAdmin' %}" class=""><span>Laporan</span></a>
         <a href="#" class=""><span>Edit Profile</span></a>
         <a href="{% url 'tambahMenu' %}" class=""><span>Tambah Menu</span></a>

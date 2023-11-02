@@ -2,41 +2,49 @@
 {% block content %}
 
 
-
-<div class="crd-img">
-    <div class="crd-food">
-        <div class="Headermenu">
-            Most Popular Food:
-            {% for menu in most_popular_food %}
-                {{ menu.nama_menu_lengkap }} ({{ menu.total_qty_sold }} sold)
+<div class="card-head">
+    <div class="crd-img">
+        <div class="crd-food">
+            <div class="Headermenu">
+                Most Popular Food: <br>
+                {% for menu in most_popular_food %}
+                    {{ menu.nama_menu_lengkap }}
+            </div>
+            <div class="DescMenu">
+                {{ menu.total_qty_sold }} sold
+            </div>
+            <div class="card-image-food">
+                <img src="{{ menu.gambar_menu.url }}"/>
+            </div>
             {% endfor %}
         </div>
-        <div class="card-image-food">
-            <!-- Add the image if needed -->
+    <div>
+    
+    <div class="crd-profitday">
+        <div class="input-box">
+            <form method="GET" action="{% url 'laporanAdmin' %}">
+                <input type="date" id="day" name="day" value="{{ request.GET.day }}">
+                <input type="submit" value="Filter">
+            </form>
+            {% if total_profit_today %}
+                <label>Total Profit Rp. {{ total_profit_today.total_profit|default_if_none:"0" }},-</label>
+            {% else %}
+                <p>Tidak ada profit pada tanggal tersebut.</p>
+            {% endif %}
         </div>
     </div>
-    <br>
-    <div class="total-profit">
-        <form method="GET" action="{% url 'laporanAdmin' %}">
-            <label for="day">Tanggal :</label>
-            <input type="date" id="day" name="day" value="{{ request.GET.day }}">
-            <input type="submit" value="Filter">
-        </form>
-        {% if total_profit_today %}
-            <h2>Profit pada tanggal {{ specific_date|date:"j F Y" }} : Rp. {{ total_profit_today.total_profit|default_if_none:"0" }}</h2>
-        {% else %}
-            <p>Tidak ada profit pada tanggal tersebut.</p>
-        {% endif %}
-    </div>
-
-    <div class="monthly-profits">
-        <h2>Monthly Profits</h2>
+</div>
+    <select id="report" name="report" onchange="showTable()">
+        <option value="monthly">Monthly</option>
+        <option value="summary">Summary</option>
+    </select>
+    
+    <div class="table" id="monthly-profits">
         <table>
             <thead>
                 <tr>
                     <th>Month</th>
                     <th>Total Profit</th>
-                    <th>Summary </th>
                 </tr>
             </thead>
             <tbody>
@@ -44,14 +52,13 @@
                     <tr>
                         <td>{{ profit.month|date:"F Y" }}</td>
                         <td>{{ profit.total_profit }}</td>
-                        <td>Aksi </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <h2>All Profit Summaries</h2>
-    <div class="table">
+
+    <div class="table" id="summary-table">
         <table>
             <thead>
                 <tr>
@@ -76,5 +83,24 @@
         </table>
     </div>
 </div>
+<script>
+    function showTable() {
+        var reportSelect = document.getElementById("report");
+        var monthlyTable = document.getElementById("monthly-profits");
+        var summaryTable = document.getElementById("summary-table");
+
+        if (reportSelect.value === "monthly") {
+            monthlyTable.style.display = "block";
+            summaryTable.style.display = "none";
+        } else if (reportSelect.value === "summary") {
+            monthlyTable.style.display = "none";
+            summaryTable.style.display = "block";
+        }
+    }
+
+    // Initialize the table display based on the default selection
+    showTable();
+</script>
+
 
 {% endblock %}
