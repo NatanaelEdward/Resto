@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -10,23 +10,95 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
+from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
+from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
 
+def menu_view(request):
+    all_datamenu = DataMenu.objects.all()
+    return render(request, 'admin/menu.html', {'all_datamenu': all_datamenu})
 
+def add_data_menu(request):
+    if request.method == 'POST':
+        form = DataMenuForm(request.POST, request.FILES)
+        if form.is_valid():
+            data_menu = form.save(commit=False)
 
-def tambahMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/tambahMenu.html')
+            kelompok_menu_id = request.POST.get('kelompok_menu')
+            jenis_menu_id = request.POST.get('jenis_menu')  
+            jenis_size_id = request.POST.get('jenis_size')
+            harga_menu_value = request.POST.get('harga_menu')
 
-def editMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/editMenu.html')
+            kelompok_menu = KelompokMenu.objects.get(id=kelompok_menu_id)
+            jenis_menu = JenisMenu.objects.get(id=jenis_menu_id)
+            jenis_size = JenisSize.objects.get(id=jenis_size_id)
 
-def hapusMenu(request):
-     if request.user.userprofile.role != 'admin':
-             return redirect('login_view')
-     return render(request, 'Admin/hapusMenu.html')
+            data_menu.kelompok_menu = kelompok_menu
+            data_menu.jenis_menu = jenis_menu
+            data_menu.jenis_size = jenis_size
+            data_menu.save()  # Save the DataMenu first to obtain an ID
+
+            # Create a new HargaMenu instance and link it to the selected DataMenu and JenisSize
+            harga_menu = HargaMenu.objects.create(menu=data_menu, size=jenis_size, harga_menu=harga_menu_value)
+
+            return redirect(add_data_menu)  # Redirect to success page after form submission
+
+    else:
+        form = DataMenuForm()
+
+    return render(request, 'admin/tambahMenu.html', {'form': form})
+
+def edit_menu(request, id):
+    data_menu = get_object_or_404(DataMenu, id=id)
+    if request.method == 'POST':
+        form = DataMenuEditForm(request.POST, instance=data_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('menu_view')  # Redirect to the menu list page
+    else:
+        form = DataMenuEditForm(instance=data_menu)
+    return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
+
+# Delete menu view
+def hapus_menu(request, id):
+    data_menu = get_object_or_404(DataMenu, id=id)
+    if request.method == 'POST':
+        data_menu.delete()
+        return redirect('menu_view')  # Redirect to the menu list page
+    return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
+
+def delete_price(request, menu_id, price_id):
+    menu = get_object_or_404(DataMenu, pk=menu_id)
+    price = get_object_or_404(HargaMenu, pk=price_id)
+
+    if request.method == 'POST':
+        price.delete()
+        return redirect(menu_view)  # Replace 'menu_view' with your intended redirect view
+
+    # Add context data as needed and render a template or return a response
+    return render(request, menu_view, {'menu': menu})
+def update_price(request, id):
+    menu = get_object_or_404(DataMenu, pk=id)
+    harga_menus = menu.hargamenu_set.all()
+
+    if request.method == 'POST':
+        form = HargaMenuForm(request.POST)
+        if form.is_valid():
+            harga_menu = form.save(commit=False)
+            existing_harga_menu = harga_menus.filter(size=harga_menu.size).first()
+
+            if existing_harga_menu:
+                existing_harga_menu.harga_menu = harga_menu.harga_menu
+                existing_harga_menu.save()
+            else:
+                harga_menu.menu = menu
+                harga_menu.save()
+                
+            return redirect('menu_view')
+    else:
+        form = HargaMenuForm()
+
+    return render(request, 'admin/updateprice.html', {'form': form, 'menu': menu, 'harga_menus': harga_menus})
+
 
 @login_required
 def laporanAdmin(request):
@@ -67,4 +139,46 @@ def laporanAdmin(request):
         'monthly_profits': monthly_profits,
         'specific_date': specific_date,
     })
+
+#bahan menu
+
+def bahan_menu_list(request):
+    all_bahanmenu = BahanMenu.objects.all()
+    return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
+def add_ingredient(request):
+    if request.method == 'POST':
+        form = BahanMenuForm(request.POST)
+        if form.is_valid():
+            bahan_menu = form.save(commit=False)
+            bahan_menu.menu_id = request.POST.get('menu')  # Change menu_id to menu
+            bahan_menu.size_id = request.POST.get('size')  # Change size_id to size
+            bahan_menu.save()
+            return redirect('bahan_menu_list')  # Redirect to the bahan menu list view
+    else:
+        form = BahanMenuForm()
+
+    return render(request, 'bahan/tambahBahan.html', {'form': form})
+
+def edit_ingredient(request, ingredient_id):
+    ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
+
+    if request.method == 'POST':
+        form = BahanMenuForm(request.POST, instance=ingredient)
+        if form.is_valid():
+            form.save()
+            return redirect(bahan_menu_list)  # Redirect to menu detail view
+    else:
+        form = BahanMenuForm(instance=ingredient)
+
+    return render(request, 'bahan/editBahan.html', {'form': form, 'ingredient': ingredient})
+
+def delete_ingredient(request, ingredient_id):
+    ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
+    menu_id = ingredient.menu.id
+    
+    if request.method == 'POST':
+        ingredient.delete()
+        return redirect(bahan_menu_list)  # Redirect to menu detail view
+
+    return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 

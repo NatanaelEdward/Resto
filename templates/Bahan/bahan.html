@@ -1,0 +1,46 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+
+<head>
+    <title>Bahan Menu List</title>
+</head>
+<body>
+    <h1>Bahan Menu List</h1>
+ 
+    <div class="table">
+        <a href="{% url 'add_ingredient' %}">Tambah Bahan</a>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Bahan Name</th>
+                    <th>Price</th>
+                    <th>Quantity (grams)</th>
+                    <th>Menu</th>
+                    <th>Size</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bahan in all_bahanmenu %}
+                    <tr>
+                        <td>{{ bahan.name }}</td>
+                        <td>Rp. {{ bahan.price }}</td>
+                        <td>{{ bahan.qty }}</td>
+                        <td>{{ bahan.menu.nama_menu_lengkap }}</td>
+                        <td>{{ bahan.size.nama_size }}</td>
+                        <td>
+                            <a href="{% url 'edit_ingredient' bahan.id %}">Edit Bahan</a>
+                            <a href="{% url 'delete_ingredient' bahan.id %}">Hapus Bahan</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No bahan menus available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+
+{% endblock %}

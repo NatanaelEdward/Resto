@@ -1,11 +1,35 @@
 # menuapp/forms.py
 from django import forms
-from .models import DataMenu,PenjualanFaktur,BahanMenu,JenisSize
+from .models import DataMenu,PenjualanFaktur,BahanMenu,JenisSize,KelompokMenu,JenisMenu,HargaMenu
 
 class DataMenuForm(forms.ModelForm):
     class Meta:
         model = DataMenu
-        fields = '__all__'  # Atau tentukan bidang apa saja yang ingin Anda tampilkan dalam form.
+        fields = ['kode_menu', 'nama_menu_lengkap', 'nama_menu_singkat', 'jenis_menu', 'gambar_menu', 'keterangan_menu', 'status_aktif_menu']
+
+    kelompok_menu = forms.ModelChoiceField(queryset=KelompokMenu.objects.all())
+    jenis_menu = forms.ModelChoiceField(queryset=JenisMenu.objects.all())
+    jenis_size = forms.ModelChoiceField(queryset=JenisSize.objects.all())
+    harga_menu = forms.DecimalField(max_digits=10, decimal_places=2)
+
+    def __init__(self, *args, **kwargs):
+        super(DataMenuForm, self).__init__(*args, **kwargs)
+        if 'instance' in kwargs:
+            jenis_size = kwargs['instance'].jenis_size
+            if jenis_size:
+                self.fields['jenis_size'].queryset = JenisSize.objects.filter(size=jenis_size)
+            else:
+                self.fields['jenis_size'].queryset = JenisSize.objects.none()
+
+class DataMenuEditForm(forms.ModelForm):
+    class Meta:
+        model = DataMenu
+        fields = ['kode_menu', 'nama_menu_lengkap', 'nama_menu_singkat', 'jenis_menu', 'gambar_menu', 'keterangan_menu', 'status_aktif_menu']
+
+class HargaMenuForm(forms.ModelForm):
+    class Meta:
+        model = HargaMenu
+        fields = ['size', 'harga_menu']
 
 # forms.py (create a new forms.py file if you don't have one already)
 class UpdateOrderForm(forms.ModelForm):

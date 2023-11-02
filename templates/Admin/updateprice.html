@@ -1,0 +1,18 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Price</button>
+</form>
+
+{% for harga_menu in harga_menus %}
+    <div>
+        {{ harga_menu.size }} - Rp. {{ harga_menu.harga_menu }}
+        <form method="post" action="{% url 'delete_price' menu.id harga_menu.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+{% endfor %}
+{% endblock %}

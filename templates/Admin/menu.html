@@ -1,0 +1,54 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+
+<head>
+    <title>Menu Data</title>
+</head>
+<body>
+    <a href="{% url 'tambahMenu' %}">Tambah Menu</a>
+    <div class="table">
+        <table border="1">
+    <thead>
+        <tr>
+            <th>Menu Name</th>
+            <th>Jenis Menu</th>
+            <th>Kelompok Menu</th>
+            <th>Jenis Size</th>
+            <th>Price</th>
+            <th>Aksi </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for datamenu in all_datamenu %}
+            <tr>
+                <td>{{ datamenu.nama_menu_lengkap }}</td>
+                <td>{{ datamenu.jenis_menu.nama_jenis }}</td>
+                <td>{{ datamenu.jenis_menu.kelompok_menu.nama_kelompok }}</td>
+                <td>
+                    {% for harga_menu in datamenu.hargamenu_set.all %}
+                        {{ harga_menu.size.nama_size }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for harga_menu in datamenu.hargamenu_set.all %}
+                        Rp. {{ harga_menu.harga_menu }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'edit_menu' datamenu.id %}">Edit</a>
+                    <a href="{% url 'hapus_menu' datamenu.id %}">Delete</a>
+                    <a href="{% url 'update_price' datamenu.id %}">Edit Price</a>
+                </td>
+           
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5">No data menus available.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</body>
+
+{% endblock %}
