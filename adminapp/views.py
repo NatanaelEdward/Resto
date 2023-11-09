@@ -35,13 +35,11 @@ def add_data_menu(request):
             data_menu.kelompok_menu = kelompok_menu
             data_menu.jenis_menu = jenis_menu
             data_menu.jenis_size = jenis_size
-            data_menu.save()  # Save the DataMenu first to obtain an ID
+            data_menu.save()  
 
-            # Create a new HargaMenu instance and link it to the selected DataMenu and JenisSize
             harga_menu = HargaMenu.objects.create(menu=data_menu, size=jenis_size, harga_menu=harga_menu_value)
 
-            return redirect(add_data_menu)  # Redirect to success page after form submission
-
+            return redirect(add_data_menu) 
     else:
         form = DataMenuForm()
 
@@ -53,17 +51,16 @@ def edit_menu(request, id):
         form = DataMenuEditForm(request.POST, instance=data_menu)
         if form.is_valid():
             form.save()
-            return redirect('menu_view')  # Redirect to the menu list page
+            return redirect('menu_view') 
     else:
         form = DataMenuEditForm(instance=data_menu)
     return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
 
-# Delete menu view
 def hapus_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
         data_menu.delete()
-        return redirect('menu_view')  # Redirect to the menu list page
+        return redirect('menu_view')  
     return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
 
 def delete_price(request, menu_id, price_id):
@@ -72,10 +69,9 @@ def delete_price(request, menu_id, price_id):
 
     if request.method == 'POST':
         price.delete()
-        return redirect(menu_view)  # Replace 'menu_view' with your intended redirect view
-
-    # Add context data as needed and render a template or return a response
+        return redirect(menu_view)
     return render(request, menu_view, {'menu': menu})
+
 def update_price(request, id):
     menu = get_object_or_404(DataMenu, pk=id)
     harga_menus = menu.hargamenu_set.all()
@@ -140,6 +136,21 @@ def laporanAdmin(request):
         'specific_date': specific_date,
     })
 
+def profit_summary_of_month(request, year, month):
+    # Convert year and month to integers
+    year = int(year)
+    month = int(month)
+    
+    # Fetch the profit summary for the given year and month
+    profit_summary = ProfitSummary.objects.filter(
+        created_at__year=year,
+        created_at__month=month
+    )
+    
+    # Use the profit_summary in your HTML to display the details
+    return render(request, 'admin/profitsummary.html', {'profit_summary': profit_summary})
+
+
 #bahan menu
 
 def bahan_menu_list(request):
@@ -150,10 +161,10 @@ def add_ingredient(request):
         form = BahanMenuForm(request.POST)
         if form.is_valid():
             bahan_menu = form.save(commit=False)
-            bahan_menu.menu_id = request.POST.get('menu')  # Change menu_id to menu
-            bahan_menu.size_id = request.POST.get('size')  # Change size_id to size
+            bahan_menu.menu_id = request.POST.get('menu') 
+            bahan_menu.size_id = request.POST.get('size')  
             bahan_menu.save()
-            return redirect('bahan_menu_list')  # Redirect to the bahan menu list view
+            return redirect('bahan_menu_list')  
     else:
         form = BahanMenuForm()
 
@@ -166,7 +177,7 @@ def edit_ingredient(request, ingredient_id):
         form = BahanMenuForm(request.POST, instance=ingredient)
         if form.is_valid():
             form.save()
-            return redirect(bahan_menu_list)  # Redirect to menu detail view
+            return redirect(bahan_menu_list)  
     else:
         form = BahanMenuForm(instance=ingredient)
 
@@ -178,7 +189,7 @@ def delete_ingredient(request, ingredient_id):
     
     if request.method == 'POST':
         ingredient.delete()
-        return redirect(bahan_menu_list)  # Redirect to menu detail view
+        return redirect(bahan_menu_list)
 
     return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 

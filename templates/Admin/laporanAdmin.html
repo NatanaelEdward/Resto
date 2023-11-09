@@ -45,6 +45,7 @@
                 <tr>
                     <th>Month</th>
                     <th>Total Profit</th>
+                    <th>Aksi </th>
                 </tr>
             </thead>
             <tbody>
@@ -52,6 +53,7 @@
                     <tr>
                         <td>{{ profit.month|date:"F Y" }}</td>
                         <td>{{ profit.total_profit }}</td>
+                        <td> <a href="{% url 'profit_summary_of_month' year=profit.month|date:'Y' month=profit.month|date:'m' %}">Aksi</a> </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -99,8 +101,7 @@
     }
 
     // Initialize the table display based on the default selection
+
     showTable();
 </script>
-
-
 {% endblock %}

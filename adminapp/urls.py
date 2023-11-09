@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price
+from .views import laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price,profit_summary_of_month
 
 urlpatterns =[
     path('menuAdmin/',menu_view,name='menu_view'),    
@@ -8,6 +8,9 @@ urlpatterns =[
     path('laporanAdmin/', laporanAdmin,name='laporanAdmin'),
     path('tambahMenu/', add_data_menu, name='tambahMenu'),
     path('menu/edit/<int:id>/', edit_menu, name='edit_menu'),
+    
+    path('profit_summary_of_month/<int:year>/<int:month>/', profit_summary_of_month, name='profit_summary_of_month'),
+
     path('menu/delete/<int:id>/', hapus_menu, name='hapus_menu'),
     path('menu/editprice/<int:id>/', update_price, name='update_price'),
     path('menu/add_ingredient/', add_ingredient, name='add_ingredient'),
