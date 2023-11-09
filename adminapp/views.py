@@ -71,6 +71,53 @@ def generate_monthly_pdf(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="profit_summary_{year}_{month}.pdf"'
     return response
 
+def generate_monthly_totals_pdf(request):
+    months = ProfitSummary.objects.dates('created_at', 'month', order='DESC')
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    p.drawString(50, 750, "Total Bulanan")
+    y = 720  # Initial Y-coordinate
+
+    headers = ["Month", "Total Bersih", "Total Kotor", "Total Profit"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)  # Reduce the x-coordinate multiplier
+
+    y -= 15  # Reduce the space between header and data
+
+    for month in months:
+        month_data = ProfitSummary.objects.filter(
+            created_at__year=month.year,
+            created_at__month=month.month
+        ).aggregate(
+            total_pendapatan_bersih=Sum('pendapatan_bersih'),
+            total_pendapatan_kotor=Sum('pendapatan_kotor'),
+            total_profit=Sum('profit')
+        )
+
+        month_name = timezone.datetime(month.year, month.month, 1).strftime("%B %Y")
+        total_pendapatan_bersih = f"Rp {month_data['total_pendapatan_bersih'] or 0}"
+        total_pendapatan_kotor = f"Rp {month_data['total_pendapatan_kotor'] or 0}"
+        total_profit = f"Rp {month_data['total_profit'] or 0}"
+
+        data = [month_name, total_pendapatan_bersih, total_pendapatan_kotor, total_profit]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))  # Adjust the x-coordinate
+
+        y -= 15  # Reduce the space between data for each month
+
+    p.save()
+
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="monthly_totals.pdf"'
+    return response
+
+
 
 
 def generate_all_summaries_pdf(request):
