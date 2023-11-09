@@ -4,14 +4,124 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 import requests
 from django.http import JsonResponse
-from menuapp.models import ProfitSummary,DataMenu,PenjualanDetail
+from menuapp.models import ProfitSummary,DataMenu,PenjualanDetail,KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
 from django.db.models import Sum,Count
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
 from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+
+def generate_monthly_pdf(request, year, month):
+    profit_summary = ProfitSummary.objects.filter(
+        created_at__year=year,
+        created_at__month=month
+    )
+
+    # Create a BytesIO buffer to receive the PDF data
+    buffer = BytesIO()
+
+    # Create the PDF object using the BytesIO buffer
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    # Define the PDF content
+    p.drawString(50, 750, f"Profit Summary for {month}/{year}")
+    y = 720  # Initial Y-coordinate
+
+    # Set headers
+    headers = ["Menu", "Pendapatan Bersih", "Pendapatan Kotor", "Profit", "Tanggal"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)
+
+    y -= 20  # Move to the next line
+
+    # Loop through profit summaries and add content to the PDF
+    for summary in profit_summary:
+        menu = summary.menu.nama_menu_lengkap
+        pendapatan_bersih = summary.pendapatan_bersih
+        pendapatan_kotor = summary.pendapatan_kotor
+        profit = summary.profit
+        created_at = summary.created_at.strftime("%d-%m-%Y")  # Format date as per your need
+
+        data = [menu, pendapatan_bersih, pendapatan_kotor, profit, created_at]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))
+
+        y -= 20  # Move to the next line
+
+    # Get the total profit for the month
+    total_profit = sum(summary.profit for summary in profit_summary)
+
+    # Add the total profit at the end of the document
+    p.drawString(50, y, f"Total Profit for {month}/{year}: {total_profit}")
+
+    # Save and close the PDF
+    p.save()
+
+    # Generate the response to send the PDF
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="profit_summary_{year}_{month}.pdf"'
+    return response
+
+
+
+def generate_all_summaries_pdf(request):
+    all_profit_summaries = ProfitSummary.objects.all()
+
+    # Create a BytesIO buffer to receive the PDF data
+    buffer = BytesIO()
+
+    # Create the PDF object using the BytesIO buffer
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    # Define the PDF content
+    p.drawString(50, 750, "All Profit Summaries")
+    y = 720  # Initial Y-coordinate
+
+    # Set headers
+    headers = ["Menu", "Pendapatan Bersih", "Pendapatan Kotor", "Profit", "Tanggal"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)
+
+    y -= 20  # Move to the next line
+
+    # Loop through all profit summaries and add content to the PDF
+    for summary in all_profit_summaries:
+        menu = summary.menu.nama_menu_lengkap
+        pendapatan_bersih = summary.pendapatan_bersih
+        pendapatan_kotor = summary.pendapatan_kotor
+        profit = summary.profit
+        tanggal = summary.created_at.strftime("%d-%m-%Y")  # Format the date
+
+        data = [menu, pendapatan_bersih, pendapatan_kotor, profit, tanggal]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))
+
+        y -= 20  # Move to the next line
+
+    # Save and close the PDF
+    p.save()
+
+    # Generate the response to send the PDF
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="all_profit_summaries.pdf"'
+    return response
+
+
+
+
 
 def menu_view(request):
     all_datamenu = DataMenu.objects.all()

@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>
-    
+<a href="{% url 'generate_all_summaries_pdf' %}">Print to PDF</a>
     <div class="table" id="monthly-profits">
         <table>
             <thead>
@@ -52,6 +52,7 @@
                         <td>{{ profit.total_profit }}</td>
                         <td>
                             <a href="{% url 'profit_summary_of_month' year=profit.month|date:'Y' month=profit.month|date:'m' %}">View Details</a>
+                            <a href="{% url 'generate_monthly_pdf' year=profit.month|date:'Y' month=profit.month|date:'m' %}">print detail</a>
                         </td>
                     </tr>
                 {% endfor %}
