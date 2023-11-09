@@ -146,9 +146,12 @@ def profit_summary_of_month(request, year, month):
         created_at__year=year,
         created_at__month=month
     )
-    
-    # Use the profit_summary in your HTML to display the details
-    return render(request, 'admin/profitsummary.html', {'profit_summary': profit_summary})
+
+    return render(request, 'Admin/profit_summary_of_month.html', {
+        'profit_summary': profit_summary,
+        'year': year,
+        'month': month,
+    })
 
 
 #bahan menu

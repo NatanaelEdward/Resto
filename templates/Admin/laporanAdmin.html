@@ -34,10 +34,6 @@
         </div>
     </div>
 </div>
-    <select id="report" name="report" onchange="showTable()">
-        <option value="monthly">Monthly</option>
-        <option value="summary">Summary</option>
-    </select>
     
     <div class="table" id="monthly-profits">
         <table>
@@ -48,60 +44,22 @@
                     <th>Aksi </th>
                 </tr>
             </thead>
+
             <tbody>
                 {% for profit in monthly_profits %}
                     <tr>
                         <td>{{ profit.month|date:"F Y" }}</td>
                         <td>{{ profit.total_profit }}</td>
-                        <td> <a href="{% url 'profit_summary_of_month' year=profit.month|date:'Y' month=profit.month|date:'m' %}">Aksi</a> </td>
+                        <td>
+                            <a href="{% url 'profit_summary_of_month' year=profit.month|date:'Y' month=profit.month|date:'m' %}">View Details</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <div class="table" id="summary-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Menu</th>
-                    <th>Kotor</th>
-                    <th>Bersih</th>
-                    <th>Profit</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for summary in profit_summaries %}
-                    <tr>
-                        <td>{{ summary.created_at }}</td>
-                        <td>{{ summary.menu.nama_menu_lengkap }}</td>
-                        <td>{{ summary.pendapatan_kotor }}</td>
-                        <td>{{ summary.pendapatan_bersih }}</td>
-                        <td>{{ summary.profit }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
 <script>
-    function showTable() {
-        var reportSelect = document.getElementById("report");
-        var monthlyTable = document.getElementById("monthly-profits");
-        var summaryTable = document.getElementById("summary-table");
 
-        if (reportSelect.value === "monthly") {
-            monthlyTable.style.display = "block";
-            summaryTable.style.display = "none";
-        } else if (reportSelect.value === "summary") {
-            monthlyTable.style.display = "none";
-            summaryTable.style.display = "block";
-        }
-    }
-
-    // Initialize the table display based on the default selection
-
-    showTable();
 </script>
 {% endblock %}
