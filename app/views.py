@@ -31,6 +31,15 @@ def logout_view(request):
     logout(request)
     return redirect('login_view')
 
+def err404(request, exception):
+    return redirect('login_view')
+
+def err500(request):
+    return redirect('login_view')
+
+def err403(request,exception):
+    return redirect('login_view')
+
 #Admin
 @login_required
 @role_required(allowed_roles=('manajer', 'admin'))

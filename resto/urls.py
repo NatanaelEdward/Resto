@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.conf.urls import handler404,handler500,handler403
+from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +26,20 @@ urlpatterns = [
     path('',include('kasirapp.urls')),
     path('',include('menuapp.urls')),
 ]
+
+handler404 = views.err404
+handler500 = views.err500
+handler403 = views.err403
+
+handler404 = 'app.views.err404'
+handler500 = 'app.views.err500'
+handler403 = 'app.views.err403'
+
+def err404(request, exception):
+    return views.login_view(request)
+
+def err500(request):
+    return views.login_view(request)
+
+def err403(request):
+    return views.login_view(request)

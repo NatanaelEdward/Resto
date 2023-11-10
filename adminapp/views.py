@@ -15,7 +15,11 @@ from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from app.decorators import role_required
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def generate_monthly_pdf(request, year, month):
     profit_summary = ProfitSummary.objects.filter(
         created_at__year=year,
@@ -71,6 +75,8 @@ def generate_monthly_pdf(request, year, month):
     response['Content-Disposition'] = f'attachment; filename="profit_summary_{year}_{month}.pdf"'
     return response
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def generate_monthly_totals_pdf(request):
     months = ProfitSummary.objects.dates('created_at', 'month', order='DESC')
 
@@ -117,9 +123,8 @@ def generate_monthly_totals_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="monthly_totals.pdf"'
     return response
 
-
-
-
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def generate_all_summaries_pdf(request):
     all_profit_summaries = ProfitSummary.objects.all()
 
@@ -166,14 +171,14 @@ def generate_all_summaries_pdf(request):
     response['Content-Disposition'] = 'attachment; filename="all_profit_summaries.pdf"'
     return response
 
-
-
-
-
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def menu_view(request):
     all_datamenu = DataMenu.objects.all()
     return render(request, 'admin/menu.html', {'all_datamenu': all_datamenu})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def add_data_menu(request):
     if request.method == 'POST':
         form = DataMenuForm(request.POST, request.FILES)
@@ -202,6 +207,9 @@ def add_data_menu(request):
 
     return render(request, 'admin/tambahMenu.html', {'form': form})
 
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def edit_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
@@ -213,7 +221,8 @@ def edit_menu(request, id):
         form = DataMenuEditForm(instance=data_menu)
     return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
 
-
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def hapus_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
@@ -221,6 +230,8 @@ def hapus_menu(request, id):
         return redirect('menu_view')  
     return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def delete_price(request, menu_id, price_id):
     menu = get_object_or_404(DataMenu, pk=menu_id)
     price = get_object_or_404(HargaMenu, pk=price_id)
@@ -230,6 +241,8 @@ def delete_price(request, menu_id, price_id):
         return redirect(menu_view)
     return render(request, menu_view, {'menu': menu})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def update_price(request, id):
     menu = get_object_or_404(DataMenu, pk=id)
     harga_menus = menu.hargamenu_set.all()
@@ -255,6 +268,7 @@ def update_price(request, id):
 
 
 @login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def laporanAdmin(request):
     if request.user.userprofile.role != 'admin':
         return redirect('login_view')
@@ -294,6 +308,8 @@ def laporanAdmin(request):
         'specific_date': specific_date,
     })
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def profit_summary_of_month(request, year, month):
     # Convert year and month to integers
     year = int(year)
@@ -313,7 +329,8 @@ def profit_summary_of_month(request, year, month):
 
 
 #bahan menu
-
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def bahan_menu_list(request):
     all_bahanmenu = BahanMenu.objects.all()
     return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
@@ -331,6 +348,8 @@ def add_ingredient(request):
 
     return render(request, 'bahan/tambahBahan.html', {'form': form})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def edit_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
 
@@ -344,6 +363,8 @@ def edit_ingredient(request, ingredient_id):
 
     return render(request, 'bahan/editBahan.html', {'form': form, 'ingredient': ingredient})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def delete_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
     menu_id = ingredient.menu.id

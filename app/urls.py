@@ -11,7 +11,6 @@ urlpatterns =[
     path('indexAdmin', indexAdmin,name='indexAdmin'),
     path('indexKasir', indexKasir,name='indexKasir'),
     path('indexUser', indexUser, name='indexUser'),
-    
     ]
 
     

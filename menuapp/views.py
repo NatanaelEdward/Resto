@@ -4,15 +4,15 @@ import random, string
 from django.shortcuts import render, redirect,get_object_or_404
 from .forms import DataMenuForm,BahanMenuForm  
 from django.db.models import F,ExpressionWrapper, DecimalField
-
-
 from django.utils import timezone
 from django.http import JsonResponse
 from django.db.models import Sum
 from django.db import transaction
 from .models import DataMenu, JenisMenu,PenjualanDetail,HargaMenu,JenisSize,CartItem,PenjualanFaktur,InvoiceSequence,KelompokMenu,BahanMenu,ProfitSummary
 from decimal import Decimal
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index_makanan(request):
     kelompok_makanan = KelompokMenu.objects.get(nama_kelompok="makanan")
     
@@ -27,7 +27,7 @@ def index_makanan(request):
     
     return render(request, 'user/indexMakanan.html', {'menus': menus, 'kategori': 'makanan'})
 
-
+@login_required
 def index_minuman(request):
     kelompok_minuman = KelompokMenu.objects.get(nama_kelompok="minuman")
     
@@ -42,6 +42,7 @@ def index_minuman(request):
     
     return render(request, 'user/indexminuman.html', {'menus': menus, 'kategori': 'makanan'})
 
+@login_required
 def index_dessert(request):
     kelompok_dessert = KelompokMenu.objects.get(nama_kelompok="dessert")
     
@@ -56,6 +57,7 @@ def index_dessert(request):
     
     return render(request, 'user/indexdessert.html', {'menus': menus, 'kategori': 'makanan'})
 
+@login_required
 def index_snack(request):
     kelompok_snack= KelompokMenu.objects.get(nama_kelompok="snack")
     
@@ -70,11 +72,12 @@ def index_snack(request):
     
     return render(request, 'user/indexsnack.html', {'menus': menus, 'kategori': 'makanan'})
 
-
+@login_required
 def checkout_success(request):
 
     return render(request, 'user/checkout_success.html')
 
+@login_required
 def tambah_menu(request):
     if request.method == 'POST':
         form = DataMenuForm(request.POST, request.FILES)
@@ -85,6 +88,7 @@ def tambah_menu(request):
         form = DataMenuForm()
     return render(request, 'Admin/tambahMenu.html', {'form': form})
 
+@login_required
 def add_to_cart(request, menu_id, size_id, qty):
     menu = DataMenu.objects.get(pk=menu_id)
     size = JenisSize.objects.get(pk=size_id)
@@ -102,7 +106,7 @@ def add_to_cart(request, menu_id, size_id, qty):
     
     return redirect('index_makanan')
 
-
+@login_required
 def generate_invoice_number(prefix, nomor_meja):
     today = timezone.now()
     date_part = today.strftime("%Y%m%d")  # Get today's date as "YYYYMMDD"
@@ -119,7 +123,7 @@ def generate_invoice_number(prefix, nomor_meja):
 
     return invoice_number
 
-
+@login_required
 def checkout(request):
     user = request.user
     user_profile = request.user.userprofile
@@ -174,6 +178,7 @@ def checkout(request):
     else:
         return render(request, 'user/checkout_page.html', {'cart_items': cart_items, 'total_amount': total_amount, 'total_tiap_menu': total_tiap_menu, 'harga_tiap_menu': harga_tiap_menu})
 
+@login_required
 def get_cart_items(request):
     user = request.user
     cart_items = CartItem.objects.filter(user=user).select_related('menu', 'size')
@@ -194,6 +199,7 @@ def get_cart_items(request):
 
     return JsonResponse({'cart_items': cart_data})
 
+@login_required
 def remove_from_cart(request, menu_id, size_id):
     menu = DataMenu.objects.get(pk=menu_id)
     size = JenisSize.objects.get(pk=size_id)
@@ -204,7 +210,7 @@ def remove_from_cart(request, menu_id, size_id):
     
     return JsonResponse({'message': 'Item removed from the cart.'})
 
-
+@login_required
 def add_bahan_menu(request, menu_id):
     menu = get_object_or_404(DataMenu, pk=menu_id)
     sizes = JenisSize.objects.all()  # Get available sizes, adjust query as needed
@@ -221,6 +227,7 @@ def add_bahan_menu(request, menu_id):
 
     return render(request, 'admin/bahanMenu.html', {'form': form, 'menu': menu, 'sizes': sizes})
 
+@login_required
 def menu_detail(request, menu_id,size_id):
     menu = DataMenu.objects.get(pk=menu_id)
     menu_prices = HargaMenu.objects.filter(menu=menu)

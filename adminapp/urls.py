@@ -22,3 +22,5 @@ urlpatterns =[
     path('menu/edit_ingredient/<int:ingredient_id>/', edit_ingredient, name='edit_ingredient'),
     path('menu/delete_ingredient/<int:ingredient_id>/', delete_ingredient, name='delete_ingredient'),
     ]
+
+
