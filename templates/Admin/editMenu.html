@@ -5,11 +5,40 @@
 </head>
 <body>
     <h1>Edit Menu</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+    <div class="table">
         <table>
-            {{ form.as_table }}
+            <tr>
+                <td><label for="id_kode_menu">Kode Menu:</label></td>
+                <td>{{ form.kode_menu }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_nama_menu_lengkap">Nama Menu Lengkap:</label></td>
+                <td>{{ form.nama_menu_lengkap }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_nama_menu_singkat">Nama Menu Singkat:</label></td>
+                <td>{{ form.nama_menu_singkat }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_jenis_menu">Jenis Menu:</label></td>
+                <td>{{ form.jenis_menu }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_gambar_menu">Gambar Menu:</label></td>
+                <td>{{ form.gambar_menu }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_keterangan_menu">Keterangan Menu:</label></td>
+                <td>{{ form.keterangan_menu }}</td>
+            </tr>
+            <tr>
+                <td><label for="id_status_aktif_menu">Status Aktif Menu:</label></td>
+                <td>{{ form.status_aktif_menu }}</td>
+            </tr>
         </table>
+    </div>
         <input type="submit" value="Save Changes">
     </form>
 </body>

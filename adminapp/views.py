@@ -205,13 +205,14 @@ def add_data_menu(request):
 def edit_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
-        form = DataMenuEditForm(request.POST, instance=data_menu)
+        form = DataMenuEditForm(request.POST, request.FILES, instance=data_menu)
         if form.is_valid():
             form.save()
             return redirect('menu_view') 
     else:
         form = DataMenuEditForm(instance=data_menu)
     return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
+
 
 def hapus_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)

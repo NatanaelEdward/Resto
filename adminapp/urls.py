@@ -13,7 +13,6 @@ urlpatterns =[
     path('generate_all_summaries_pdf/', generate_all_summaries_pdf, name='generate_all_summaries_pdf'),
     path('generate_all_monthly_total_pdf/', generate_monthly_totals_pdf, name='generate_monthly_totals_pdf'),
 
-    
     path('profit_summary_of_month/<int:year>/<int:month>/', profit_summary_of_month, name='profit_summary_of_month'),
 
     path('menu/delete/<int:id>/', hapus_menu, name='hapus_menu'),
