@@ -120,7 +120,6 @@ def generate_invoice_number(prefix, nomor_meja):
     return invoice_number
 
 
-
 def checkout(request):
     user = request.user
     user_profile = request.user.userprofile
