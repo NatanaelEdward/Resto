@@ -1,45 +1,45 @@
-{% extends 'main/baseadmin.html' %}
-{% block content %}
+{% extends 'main/baseadmin.html' %} {% block content %}
+
 <head>
-    <title>Edit Menu</title>
+  <title>Edit Menu</title>
 </head>
 <body>
-    <h1>Edit Menu</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-    <div class="table">
-        <table>
-            <tr>
-                <td><label for="id_kode_menu">Kode Menu:</label></td>
-                <td>{{ form.kode_menu }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_nama_menu_lengkap">Nama Menu Lengkap:</label></td>
-                <td>{{ form.nama_menu_lengkap }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_nama_menu_singkat">Nama Menu Singkat:</label></td>
-                <td>{{ form.nama_menu_singkat }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_jenis_menu">Jenis Menu:</label></td>
-                <td>{{ form.jenis_menu }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_gambar_menu">Gambar Menu:</label></td>
-                <td>{{ form.gambar_menu }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_keterangan_menu">Keterangan Menu:</label></td>
-                <td>{{ form.keterangan_menu }}</td>
-            </tr>
-            <tr>
-                <td><label for="id_status_aktif_menu">Status Aktif Menu:</label></td>
-                <td>{{ form.status_aktif_menu }}</td>
-            </tr>
-        </table>
-    </div>
-        <input type="submit" value="Save Changes">
+  <div class="form-container">
+    <p>Edit Menu</p>
+    <form method="post" enctype="multipart/form-data" class="form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_kode_menu">Kode Menu:</label>
+        {{ form.kode_menu }}
+      </div>
+      <div class="form-group">
+        <label for="id_nama_menu_lengkap">Nama Menu Lengkap:</label>
+        {{ form.nama_menu_lengkap }}
+      </div>
+      <div class="form-group">
+        <label for="id_nama_menu_singkat">Nama Menu Singkat:</label>
+        {{ form.nama_menu_singkat }}
+      </div>
+      <div class="form-group">
+        <label for="id_jenis_menu">Jenis Menu:</label>
+        {{ form.jenis_menu }}
+      </div>
+      <div class="form-group">
+        <label for="id_gambar_menu">Gambar Menu:</label>
+        {{ form.gambar_menu }}
+      </div>
+      <div class="form-group">
+        <label for="id_keterangan_menu">Keterangan Menu:</label>
+        {{ form.keterangan_menu }}
+      </div>
+      <div class="form-group">
+        <label for="id_status_aktif_menu">Status Aktif Menu:</label>
+        {{ form.status_aktif_menu }}
+      </div>
+      <button type="submit">Save Changes</button>
     </form>
+  </div>
 </body>
+
 {% endblock %}
+

@@ -1,5 +1,6 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
+<div class="card-head">
     <h2>Add or Edit Price</h2>
     <form method="post">
         {% csrf_token %}
@@ -36,4 +37,5 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
 {% endblock %}
