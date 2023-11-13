@@ -1,11 +1,11 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
-
-<head>
-    <title>Menu Data</title>
-</head>
+<div class="card-head">
 <body>
-    <a href="{% url 'tambahMenu' %}">Tambah Menu</a>
+    <h1>List Menu</h1>
+
+    <button class="btn-tambah" onclick="window.location.href='{% url 'tambahMenu' %}'">Tambah Menu</button>
+    
     <div class="table">
         <table border="1">
     <thead>
@@ -35,9 +35,14 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <a href="{% url 'edit_menu' datamenu.id %}">Edit</a>
-                    <a href="{% url 'hapus_menu' datamenu.id %}">Delete</a>
-                    <a href="{% url 'update_price' datamenu.id %}">Edit Price</a>
+                    <!-- Edit -->
+                    <button class="btn-edit" onclick="window.location.href='{% url 'edit_menu' datamenu.id %}'">Edit</button>
+
+                    <!-- Delete -->
+                    <button class="btn-delete" onclick="window.location.href='{% url 'hapus_menu' datamenu.id %}'">Delete</button>
+
+                    <!-- Edit Price -->
+                    <button class="btn-updprice" onclick="window.location.href='{% url 'update_price' datamenu.id %}'">Edit Price</button>
                 </td>
            
             </tr>
@@ -50,5 +55,6 @@
 </table>
 </div>
 </body>
+</div>
 
 {% endblock %}
