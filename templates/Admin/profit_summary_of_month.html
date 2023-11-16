@@ -1,0 +1,30 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+
+<div class="profit-summary">
+    <h2>Profit Summary for {{ month }}/{{ year }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Menu</th>
+                <th>Pendapatan Bersih</th>
+                <th>Pendapatan Kotor</th>
+                <th>Profit</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for summary in profit_summary %}
+                <tr>
+                    <td>{{ summary.menu.nama_menu_lengkap }}</td>
+                    <td>{{ summary.pendapatan_bersih }}</td>
+                    <td>{{ summary.pendapatan_kotor }}</td>
+                    <td>{{ summary.profit }}</td>
+                    <td>{{ summary.created_at }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'laporanAdmin' %}">BACK</a>
+</div>
+{% endblock %}

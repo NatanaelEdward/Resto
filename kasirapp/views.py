@@ -9,12 +9,15 @@ from menuapp.models import PenjualanDetail,PenjualanFaktur,HargaMenu,DataMenu,Pr
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.decorators import login_required
+from app.decorators import role_required
 import requests
 from decimal import Decimal
 from django.http import HttpResponse
 from django.http import JsonResponse
 
 # Create your views here.
+@login_required
+@role_required(allowed_roles=('kasir','admin'))
 def generate_pdf(request, order_id):
     # Get the PenjualanFaktur instance
     order = get_object_or_404(PenjualanFaktur, id=order_id)
@@ -84,6 +87,7 @@ def generate_pdf(request, order_id):
 
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def kasiran(request):
      if request.user.userprofile.role != 'kasir':
             
@@ -91,6 +95,7 @@ def kasiran(request):
      return render(request, 'Kasir/kasiran.html')
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def pesanan(request):
     if request.user.userprofile.role != 'kasir':
         return redirect('login_view')
@@ -123,12 +128,14 @@ def pesanan(request):
     return render(request, 'kasir/pesanan.html', context)
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def tabelKasir(request):
      if request.user.userprofile.role != 'kasir':
             return redirect('login_view')
      return render(request, 'kasir/tabelKasir.html')
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def update_order(request, order_id):
     if request.user.userprofile.role != 'kasir':
         return redirect('login_view')
@@ -154,6 +161,7 @@ def update_order(request, order_id):
 
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def cancel_order(request, order_id):
      if request.user.userprofile.role != 'kasir':
         return redirect('login_view')
@@ -169,6 +177,7 @@ def cancel_order(request, order_id):
      return render(request, 'kasir/pesanan.html', {'order': order})
 
 @login_required
+@role_required(allowed_roles=('kasir','admin'))
 def delete_order(request, order_id):
     if request.user.userprofile.role != 'kasir':
         return redirect('login_view')

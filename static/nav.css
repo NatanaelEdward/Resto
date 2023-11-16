@@ -28,6 +28,35 @@
   margin-bottom: 10px;
 }
 
+
+.sidebar .logo{
+  align-items: center;
+  justify-content: center;
+  margin-left: 60px;
+}
+
+.sidebar .profile_info h4{
+  color: #ccc;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.sidebar .logo .logo-per {
+  width: 60px;
+  height: 60px;
+  clip-path: circle(50% at 50% 50%);
+}
+
+.sidebar .logo p{
+  font-family: Arial, sans-serif;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  margin-left: 52px;
+  padding-left: 20px;
+}
+
 .sidebar .profile_info h4{
   color: #ccc;
   margin-top: 0;

@@ -4,19 +4,181 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 import requests
 from django.http import JsonResponse
-from menuapp.models import ProfitSummary,DataMenu,PenjualanDetail
+from menuapp.models import ProfitSummary,DataMenu,PenjualanDetail,KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
 from django.db.models import Sum,Count
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.models import KelompokMenu,JenisMenu,HargaMenu,JenisSize,BahanMenu
 from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from app.decorators import role_required
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def generate_monthly_pdf(request, year, month):
+    profit_summary = ProfitSummary.objects.filter(
+        created_at__year=year,
+        created_at__month=month
+    )
+
+    # Create a BytesIO buffer to receive the PDF data
+    buffer = BytesIO()
+
+    # Create the PDF object using the BytesIO buffer
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    # Define the PDF content
+    p.drawString(50, 750, f"Profit Summary for {month}/{year}")
+    y = 720  # Initial Y-coordinate
+
+    # Set headers
+    headers = ["Menu", "Pendapatan Bersih", "Pendapatan Kotor", "Profit", "Tanggal"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)
+
+    y -= 20  # Move to the next line
+
+    # Loop through profit summaries and add content to the PDF
+    for summary in profit_summary:
+        menu = summary.menu.nama_menu_lengkap
+        pendapatan_bersih = summary.pendapatan_bersih
+        pendapatan_kotor = summary.pendapatan_kotor
+        profit = summary.profit
+        created_at = summary.created_at.strftime("%d-%m-%Y")  # Format date as per your need
+
+        data = [menu, pendapatan_bersih, pendapatan_kotor, profit, created_at]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))
+
+        y -= 20  # Move to the next line
+
+    # Get the total profit for the month
+    total_profit = sum(summary.profit for summary in profit_summary)
+
+    # Add the total profit at the end of the document
+    p.drawString(50, y, f"Total Profit for {month}/{year}: {total_profit}")
+
+    # Save and close the PDF
+    p.save()
+
+    # Generate the response to send the PDF
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="profit_summary_{year}_{month}.pdf"'
+    return response
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def generate_monthly_totals_pdf(request):
+    months = ProfitSummary.objects.dates('created_at', 'month', order='DESC')
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    p.drawString(50, 750, "Total Bulanan")
+    y = 720  # Initial Y-coordinate
+
+    headers = ["Month", "Total Bersih", "Total Kotor", "Total Profit"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)  # Reduce the x-coordinate multiplier
+
+    y -= 15  # Reduce the space between header and data
+
+    for month in months:
+        month_data = ProfitSummary.objects.filter(
+            created_at__year=month.year,
+            created_at__month=month.month
+        ).aggregate(
+            total_pendapatan_bersih=Sum('pendapatan_bersih'),
+            total_pendapatan_kotor=Sum('pendapatan_kotor'),
+            total_profit=Sum('profit')
+        )
+
+        month_name = timezone.datetime(month.year, month.month, 1).strftime("%B %Y")
+        total_pendapatan_bersih = f"Rp {month_data['total_pendapatan_bersih'] or 0}"
+        total_pendapatan_kotor = f"Rp {month_data['total_pendapatan_kotor'] or 0}"
+        total_profit = f"Rp {month_data['total_profit'] or 0}"
+
+        data = [month_name, total_pendapatan_bersih, total_pendapatan_kotor, total_profit]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))  # Adjust the x-coordinate
+
+        y -= 15  # Reduce the space between data for each month
+
+    p.save()
+
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="monthly_totals.pdf"'
+    return response
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def generate_all_summaries_pdf(request):
+    all_profit_summaries = ProfitSummary.objects.all()
+
+    # Create a BytesIO buffer to receive the PDF data
+    buffer = BytesIO()
+
+    # Create the PDF object using the BytesIO buffer
+    p = canvas.Canvas(buffer, pagesize=letter)
+
+    # Define the PDF content
+    p.drawString(50, 750, "All Profit Summaries")
+    y = 720  # Initial Y-coordinate
+
+    # Set headers
+    headers = ["Menu", "Pendapatan Bersih", "Pendapatan Kotor", "Profit", "Tanggal"]
+    for i, header in enumerate(headers):
+        p.drawString(50 + i * 120, y, header)
+
+    y -= 20  # Move to the next line
+
+    # Loop through all profit summaries and add content to the PDF
+    for summary in all_profit_summaries:
+        menu = summary.menu.nama_menu_lengkap
+        pendapatan_bersih = summary.pendapatan_bersih
+        pendapatan_kotor = summary.pendapatan_kotor
+        profit = summary.profit
+        tanggal = summary.created_at.strftime("%d-%m-%Y")  # Format the date
+
+        data = [menu, pendapatan_bersih, pendapatan_kotor, profit, tanggal]
+
+        for i, value in enumerate(data):
+            p.drawString(50 + i * 120, y, str(value))
+
+        y -= 20  # Move to the next line
+
+    # Save and close the PDF
+    p.save()
+
+    # Generate the response to send the PDF
+    pdf_data = buffer.getvalue()
+    buffer.close()
+
+    response = HttpResponse(pdf_data, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="all_profit_summaries.pdf"'
+    return response
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def menu_view(request):
     all_datamenu = DataMenu.objects.all()
     return render(request, 'admin/menu.html', {'all_datamenu': all_datamenu})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def add_data_menu(request):
     if request.method == 'POST':
         form = DataMenuForm(request.POST, request.FILES)
@@ -35,47 +197,52 @@ def add_data_menu(request):
             data_menu.kelompok_menu = kelompok_menu
             data_menu.jenis_menu = jenis_menu
             data_menu.jenis_size = jenis_size
-            data_menu.save()  # Save the DataMenu first to obtain an ID
+            data_menu.save()  
 
-            # Create a new HargaMenu instance and link it to the selected DataMenu and JenisSize
             harga_menu = HargaMenu.objects.create(menu=data_menu, size=jenis_size, harga_menu=harga_menu_value)
 
-            return redirect(add_data_menu)  # Redirect to success page after form submission
-
+            return redirect(add_data_menu) 
     else:
         form = DataMenuForm()
 
     return render(request, 'admin/tambahMenu.html', {'form': form})
 
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def edit_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
-        form = DataMenuEditForm(request.POST, instance=data_menu)
+        form = DataMenuEditForm(request.POST, request.FILES, instance=data_menu)
         if form.is_valid():
             form.save()
-            return redirect('menu_view')  # Redirect to the menu list page
+            return redirect('menu_view') 
     else:
         form = DataMenuEditForm(instance=data_menu)
     return render(request, 'admin/editMenu.html', {'form': form, 'data_menu': data_menu})
 
-# Delete menu view
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def hapus_menu(request, id):
     data_menu = get_object_or_404(DataMenu, id=id)
     if request.method == 'POST':
         data_menu.delete()
-        return redirect('menu_view')  # Redirect to the menu list page
+        return redirect('menu_view')  
     return render(request, 'admin/hapusMenu.html', {'data_menu': data_menu})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def delete_price(request, menu_id, price_id):
     menu = get_object_or_404(DataMenu, pk=menu_id)
     price = get_object_or_404(HargaMenu, pk=price_id)
 
     if request.method == 'POST':
         price.delete()
-        return redirect(menu_view)  # Replace 'menu_view' with your intended redirect view
-
-    # Add context data as needed and render a template or return a response
+        return redirect(menu_view)
     return render(request, menu_view, {'menu': menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def update_price(request, id):
     menu = get_object_or_404(DataMenu, pk=id)
     harga_menus = menu.hargamenu_set.all()
@@ -101,6 +268,7 @@ def update_price(request, id):
 
 
 @login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def laporanAdmin(request):
     if request.user.userprofile.role != 'admin':
         return redirect('login_view')
@@ -140,8 +308,29 @@ def laporanAdmin(request):
         'specific_date': specific_date,
     })
 
-#bahan menu
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def profit_summary_of_month(request, year, month):
+    # Convert year and month to integers
+    year = int(year)
+    month = int(month)
+    
+    # Fetch the profit summary for the given year and month
+    profit_summary = ProfitSummary.objects.filter(
+        created_at__year=year,
+        created_at__month=month
+    )
 
+    return render(request, 'Admin/profit_summary_of_month.html', {
+        'profit_summary': profit_summary,
+        'year': year,
+        'month': month,
+    })
+
+
+#bahan menu
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def bahan_menu_list(request):
     all_bahanmenu = BahanMenu.objects.all()
     return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
@@ -150,15 +339,17 @@ def add_ingredient(request):
         form = BahanMenuForm(request.POST)
         if form.is_valid():
             bahan_menu = form.save(commit=False)
-            bahan_menu.menu_id = request.POST.get('menu')  # Change menu_id to menu
-            bahan_menu.size_id = request.POST.get('size')  # Change size_id to size
+            bahan_menu.menu_id = request.POST.get('menu') 
+            bahan_menu.size_id = request.POST.get('size')  
             bahan_menu.save()
-            return redirect('bahan_menu_list')  # Redirect to the bahan menu list view
+            return redirect('bahan_menu_list')  
     else:
         form = BahanMenuForm()
 
     return render(request, 'bahan/tambahBahan.html', {'form': form})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def edit_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
 
@@ -166,19 +357,21 @@ def edit_ingredient(request, ingredient_id):
         form = BahanMenuForm(request.POST, instance=ingredient)
         if form.is_valid():
             form.save()
-            return redirect(bahan_menu_list)  # Redirect to menu detail view
+            return redirect(bahan_menu_list)  
     else:
         form = BahanMenuForm(instance=ingredient)
 
     return render(request, 'bahan/editBahan.html', {'form': form, 'ingredient': ingredient})
 
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
 def delete_ingredient(request, ingredient_id):
     ingredient = get_object_or_404(BahanMenu, pk=ingredient_id)
     menu_id = ingredient.menu.id
     
     if request.method == 'POST':
         ingredient.delete()
-        return redirect(bahan_menu_list)  # Redirect to menu detail view
+        return redirect(bahan_menu_list)
 
     return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 

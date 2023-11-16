@@ -1,14 +1,24 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
+<div class="card-head">
 <head>
     <title>Delete Menu</title>
 </head>
 <body>
     <h1>Delete Menu</h1>
-    <p>Are you sure you want to delete "{{ data_menu.nama_menu_lengkap }}"?</p>
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Confirm Delete">
+        <table>
+            <tr>
+                <td>Are you sure you want to delete:</td>
+                <td>{{ data_menu.nama_menu_lengkap }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Confirm Delete"></td>
+            </tr>
+        </table>
     </form>
 </body>
+</div>
 {% endblock %}

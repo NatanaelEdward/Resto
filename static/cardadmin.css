@@ -18,9 +18,9 @@
 }
 
 .content .card .form-container {
-    width: 1200px;
+    width: 900px;
     background: linear-gradient(180deg, rgb(0, 0, 0) 25%, rgb(255, 255, 255) 20%);
-    height: 630px;
+    height: 730px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -211,6 +211,106 @@ select {
 
 }
 
+.btn-updprice {
+    padding: 7px 12px;
+    border: 1px solid #bbb;
+    color: #222;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all .3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .btn-updprice:hover {
+    background-color: #b3a700;
+    color: #ffffff;
+    box-shadow: -20px 50px 50px rgba(0,0,0,0.2);
+    border: none;
+    padding: 7px 16px;
+  }
+  
+  .btn-updprice:hover .hover-underline-animation:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+.btn-delete {
+    padding: 7px 12px;
+    border: 1px solid #bbb;
+    color: #222;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all .3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .btn-delete:hover {
+    background-color: #fe0000;
+    color: #ffffff;
+    box-shadow: -20px 50px 50px rgba(0,0,0,0.2);
+    border: none;
+    padding: 7px 16px;
+  }
+  
+  .btn-delete:hover .hover-underline-animation:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+.btn-edit {
+    padding: 7px 12px;
+    border: 1px solid #bbb;
+    color: #222;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all .3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .btn-edit:hover {
+    background-color: #002afe;
+    color: #ffffff;
+    box-shadow: -20px 50px 50px rgba(0,0,0,0.2);
+    border: none;
+    padding: 7px 16px;
+  }
+  
+  .btn-edit:hover .hover-underline-animation:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
+.btn-tambah {
+    padding: 7px 12px;
+    border: 1px solid #bbb;
+    color: #222;
+    font-weight: 600;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: all .3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .btn-tambah:hover {
+    background-color: #00fe0d;
+    color: #ffffff;
+    box-shadow: -20px 50px 50px rgba(0,0,0,0.2);
+    border: none;
+    padding: 7px 16px;
+  }
+  
+  .btn-tambah:hover .hover-underline-animation:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
 
 /* table */
 
@@ -253,4 +353,6 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #95a5a6;
 }
+
+
 
