@@ -23,6 +23,14 @@
     </div>
 
     <div class="content">
+        <label for="menuSelection">Pilih Menu:</label>
+        <select class="filter-food" id="menuSelection" onchange="redirectToSelected()">
+            <option value="" disabled selected>Filter</option>
+            <option value="index_makanan">Makanan</option>
+            <option value="index_minuman">Minuman</option>
+            <option value="index_dessert">Dessert</option>
+            <option value="index_snack">Snack</option>
+        </select>
         {% block content %}
         {% endblock %}
     </div>
@@ -42,4 +50,30 @@
             });
         });
     });
+
+    function redirectToSelected() {
+        var selectedValue = document.getElementById("menuSelection").value;
+        var path;
+
+        switch (selectedValue) {
+            case "index_makanan":
+                path = '{% url "index_makanan" %}';
+                break;
+            case "index_minuman":
+                path = '{% url "index_minuman" %}';
+                break;
+            case "index_dessert":
+                path = '{% url "index_dessert" %}';
+                break;
+            case "index_snack":
+                path = '{% url "index_snack" %}';
+                break;
+            default:
+                path = '/';
+                break;
+        }
+
+        window.location.href = path;
+    }
+
 </script>
