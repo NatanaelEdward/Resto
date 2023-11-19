@@ -9,7 +9,7 @@ from .decorators import role_required
 role_to_view = {
     'manajer': 'indexAdmin',
     'kasir': 'indexKasir',
-    'user': 'indexUser',
+    'user': 'indexMakanan/',
     'admin': 'indexAdmin',
 }
 
@@ -56,7 +56,7 @@ def indexKasir(request):
 @login_required
 @role_required(allowed_roles=('user',))
 def indexUser(request):
-    return render(request, 'User/index.html')
+    return render(request, 'User/indexMakanan.html')
 
 
 
