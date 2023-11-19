@@ -106,7 +106,6 @@ def add_to_cart(request, menu_id, size_id, qty):
     
     return redirect('index_makanan')
 
-@login_required
 def generate_invoice_number(prefix, nomor_meja):
     today = timezone.now()
     date_part = today.strftime("%Y%m%d")  # Get today's date as "YYYYMMDD"
