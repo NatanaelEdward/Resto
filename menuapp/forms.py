@@ -26,6 +26,21 @@ class DataMenuEditForm(forms.ModelForm):
         model = DataMenu
         fields = ['kode_menu', 'nama_menu_lengkap', 'nama_menu_singkat', 'jenis_menu', 'gambar_menu', 'keterangan_menu', 'status_aktif_menu']
 
+class KelompokMenuForm(forms.ModelForm):
+    class Meta:
+        model = KelompokMenu
+        fields = ['kode_kelompok','nama_kelompok']
+
+class JenisMenuForm(forms.ModelForm):
+    class Meta:
+        model = JenisMenu
+        fields = ['kode_jenis','nama_jenis','kelompok_menu']
+
+class JenisSizeForm(forms.ModelForm):
+    class Meta:
+        model = JenisSize
+        fields = ['kode_size','nama_size']
+
 class HargaMenuForm(forms.ModelForm):
     class Meta:
         model = HargaMenu

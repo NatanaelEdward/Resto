@@ -1,0 +1,46 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<head>
+    <title>Tambah Jenis Size</title>
+</head>
+<body>
+
+<h1>Tambah Jenis Size</h1>
+<!-- List existing Kelompok Menu -->
+<div class="table">
+
+    <table class="kelompok-table">
+        <thead>
+            <tr>
+                <th>Kode Size</th>
+                <th>Nama Size</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jenis in jenis_size_list %}
+            <tr>
+                <td>{{ jenis.kode_size }}</td>
+                <td>{{ jenis.nama_size }}</td>
+                <td>
+                    <a href="{% url 'editJenisSize' jenis.id %}">Edit</a>
+                    <a href="{% url 'hapusJenisSize' jenis.id %}">Hapus</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+    
+<!-- Form for adding a new Kelompok Menu -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <button type="submit">Save</button>
+    <a href="{% url 'menu_view' %}">Cancel</a>
+</form>
+
+</body>
+{% endblock %}

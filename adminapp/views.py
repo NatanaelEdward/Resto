@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
+from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm,KelompokMenuForm,JenisMenuForm,JenisSizeForm
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -334,6 +334,7 @@ def profit_summary_of_month(request, year, month):
 def bahan_menu_list(request):
     all_bahanmenu = BahanMenu.objects.all()
     return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
+
 def add_ingredient(request):
     if request.method == 'POST':
         form = BahanMenuForm(request.POST)
@@ -375,3 +376,131 @@ def delete_ingredient(request, ingredient_id):
 
     return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 
+
+#kelompok menu
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_kelompok_menu(request):
+    if request.method == 'POST':
+        form = KelompokMenuForm(request.POST)
+        if form.is_valid():
+            kelompok_menu = form.save()
+            return redirect('laporanAdmin')
+    else:
+        form = KelompokMenuForm()
+
+    kelompok_list = KelompokMenu.objects.all()  # Fetch the list of kelompok_menu
+
+    return render(request, 'admin/menu/tambahKelompok.html', {'form': form, 'kelompok_list': kelompok_list})
+
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_kelompok_menu(request, kelompok_menu_id):
+    kelompok_menu = get_object_or_404(KelompokMenu, pk=kelompok_menu_id)
+
+    if request.method == 'POST':
+        form = KelompokMenuForm(request.POST, instance=kelompok_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahKelompok')
+    else:
+        form = KelompokMenuForm(instance=kelompok_menu)
+
+    return render(request, 'admin/menu/editKelompok.html', {'form': form, 'kelompok_menu': kelompok_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_kelompok_menu(request, kelompok_menu_id):
+    kelompok_menu = get_object_or_404(KelompokMenu, pk=kelompok_menu_id)
+
+    if request.method == 'POST':
+        kelompok_menu.delete()
+        return redirect('tambahKelompok')
+
+    return render(request, 'admin/menu/hapusKelompok.html', {'kelompok_menu': kelompok_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_jenis_menu(request):
+    if request.method == 'POST':
+        form = JenisMenuForm(request.POST)
+        if form.is_valid():
+            jenis_menu = form.save()
+            return redirect('tambahJenis')
+    else:
+        form = JenisMenuForm()
+
+    jenis_menu_list = JenisMenu.objects.all()
+
+    return render(request, 'admin/menu/tambahJenisSize.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_jenis_menu(request, jenis_menu_id):
+    jenis_menu = get_object_or_404(JenisMenu, pk=jenis_menu_id)
+
+    if request.method == 'POST':
+        form = JenisMenuForm(request.POST, instance=jenis_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahJenis')
+    else:
+        form = JenisMenuForm(instance=jenis_menu)
+
+    return render(request, 'admin/menu/editJenis.html', {'form': form, 'jenis_menu': jenis_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_jenis_menu(request, jenis_menu_id):
+    jenis_menu = get_object_or_404(JenisMenu, pk=jenis_menu_id)
+
+    if request.method == 'POST':
+        jenis_menu.delete()
+        return redirect('tambahJenis')
+
+    return render(request, 'admin/menu/hapusJenis.html', {'jenis_menu': jenis_menu})
+
+#jenis size
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_jenis_size(request):
+    if request.method == 'POST':
+        form = JenisSizeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahJenisSize')
+    else:
+        form = JenisSizeForm()
+    
+    jenis_size_list = JenisSize.objects.all()
+
+    return render(request, 'admin/menu/tambahJenisSize.html', {'form': form, 'jenis_size_list' : jenis_size_list})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_jenis_size(request, jenis_size_id):
+    jenis_size = get_object_or_404(JenisSize, pk=jenis_size_id)
+
+    if request.method == 'POST':
+        form = JenisSizeForm(request.POST, instance=jenis_size)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahJenisSize')
+    else:
+        form = JenisSizeForm(instance=jenis_size)
+
+    return render(request, 'admin/menu/editJenisSize.html', {'form': form, 'jenis_size': jenis_size})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_jenis_size(request, jenis_size_id):
+    jenis_size = get_object_or_404(JenisSize, pk=jenis_size_id)
+
+    if request.method == 'POST':
+        jenis_size.delete()
+        return redirect('tambahJenisSize')
+
+    return render(request, 'admin/menu/hapusJenisSize.html', {'jenis_size': jenis_size})

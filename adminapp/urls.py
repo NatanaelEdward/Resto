@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import generate_monthly_totals_pdf,generate_all_summaries_pdf,generate_monthly_pdf,laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price,profit_summary_of_month
+from .views import generate_monthly_totals_pdf,generate_all_summaries_pdf,generate_monthly_pdf,laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price,profit_summary_of_month,add_jenis_menu,add_kelompok_menu,edit_jenis_menu,edit_kelompok_menu,delete_jenis_menu,delete_kelompok_menu,add_jenis_size,edit_jenis_size,delete_jenis_size
 
 urlpatterns =[
     path('menuAdmin/',menu_view,name='menu_view'),    
@@ -21,6 +21,22 @@ urlpatterns =[
     path('menu/<int:menu_id>/price/<int:price_id>/delete/', delete_price, name='delete_price'),
     path('menu/edit_ingredient/<int:ingredient_id>/', edit_ingredient, name='edit_ingredient'),
     path('menu/delete_ingredient/<int:ingredient_id>/', delete_ingredient, name='delete_ingredient'),
+
+    path('add_jenis_menu/', add_jenis_menu, name='tambahJenis'),
+    path('edit_jenis_menu/<int:jenis_menu_id>/', edit_jenis_menu, name='editJenis'),
+    path('delete_jenis_menu/<int:jenis_menu_id>/', delete_jenis_menu, name='hapusJenis'),
+
+    path('menu/add_kelompok_menu/', add_kelompok_menu, name='tambahKelompok'),
+    path('menu/edit_kelompok_menu/<int:kelompok_menu_id>/', edit_kelompok_menu, name='editKelompok'),
+    path('menu/delete_kelompok_menu/<int:kelompok_menu_id>/', delete_kelompok_menu, name='hapusKelompok'),
+
+    path('menu/add_jenis_menu/',add_jenis_menu, name='tambahJenis'),
+    path('menu/edit_jenis_menu/<int:jenis_menu_id>/', edit_jenis_menu, name='editJenis'),
+    path('menu/delete_jenis_menu/<int:jenis_menu_id>/',delete_jenis_menu,name='hapusJenis'),
+
+    path('jenis_size/add/', add_jenis_size, name='tambahJenisSize'),
+    path('jenis_size/edit/<int:jenis_size_id>/', edit_jenis_size, name='editJenisSize'),
+    path('jenis_size/delete/<int:jenis_size_id>/', delete_jenis_size, name='hapusJenisSize'),
     ]
 
 
