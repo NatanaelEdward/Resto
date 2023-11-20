@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm
+from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm,KelompokMenuForm,JenisMenuForm
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -334,6 +334,7 @@ def profit_summary_of_month(request, year, month):
 def bahan_menu_list(request):
     all_bahanmenu = BahanMenu.objects.all()
     return render(request, 'bahan/bahan.html', {'all_bahanmenu': all_bahanmenu})
+
 def add_ingredient(request):
     if request.method == 'POST':
         form = BahanMenuForm(request.POST)
@@ -375,3 +376,83 @@ def delete_ingredient(request, ingredient_id):
 
     return render(request, 'bahan/hapusBahan.html', {'ingredient': ingredient})
 
+
+#kelompok menu
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_kelompok_menu(request):
+    if request.method == 'POST':
+        form = KelompokMenuForm(request.POST)
+        if form.is_valid():
+            kelompok_menu = form.save()
+            return redirect('laporanAdmin')
+    else:
+        form = KelompokMenuForm()
+
+    return render(request, 'admin/menu/tambahKelompok.html', {'form': form})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_kelompok_menu(request, kelompok_menu_id):
+    kelompok_menu = get_object_or_404(KelompokMenu, pk=kelompok_menu_id)
+
+    if request.method == 'POST':
+        form = KelompokMenuForm(request.POST, instance=kelompok_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('laporanAdmin')
+    else:
+        form = KelompokMenuForm(instance=kelompok_menu)
+
+    return render(request, 'admin/menu/editKelompok.html', {'form': form, 'kelompok_menu': kelompok_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_kelompok_menu(request, kelompok_menu_id):
+    kelompok_menu = get_object_or_404(KelompokMenu, pk=kelompok_menu_id)
+
+    if request.method == 'POST':
+        kelompok_menu.delete()
+        return redirect('laporanAdmin')
+
+    return render(request, 'admin/menu/hapusKelompok.html', {'kelompok_menu': kelompok_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_jenis_menu(request):
+    if request.method == 'POST':
+        form = JenisMenuForm(request.POST)
+        if form.is_valid():
+            jenis_menu = form.save()
+            return redirect('laporanAdmin')
+    else:
+        form = JenisMenuForm()
+
+    return render(request, 'admin/menu/tambahJenis.html', {'form': form})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_jenis_menu(request, jenis_menu_id):
+    jenis_menu = get_object_or_404(JenisMenu, pk=jenis_menu_id)
+
+    if request.method == 'POST':
+        form = JenisMenuForm(request.POST, instance=jenis_menu)
+        if form.is_valid():
+            form.save()
+            return redirect('laporanAdmin')
+    else:
+        form = JenisMenuForm(instance=jenis_menu)
+
+    return render(request, 'admin/menu/editJenis.html', {'form': form, 'jenis_menu': jenis_menu})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_jenis_menu(request, jenis_menu_id):
+    jenis_menu = get_object_or_404(JenisMenu, pk=jenis_menu_id)
+
+    if request.method == 'POST':
+        jenis_menu.delete()
+        return redirect('laporanAdmin')
+
+    return render(request, 'admin/menu/hapusJenis.html', {'jenis_menu': jenis_menu})
