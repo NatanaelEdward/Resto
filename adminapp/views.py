@@ -434,7 +434,7 @@ def add_jenis_menu(request):
 
     jenis_menu_list = JenisMenu.objects.all()
 
-    return render(request, 'admin/menu/tambahJenisSize.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
+    return render(request, 'admin/menu/tambahJenis.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
 
 @login_required
 @role_required(allowed_roles=('manajer', 'admin'))
