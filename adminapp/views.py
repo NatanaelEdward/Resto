@@ -428,11 +428,13 @@ def add_jenis_menu(request):
         form = JenisMenuForm(request.POST)
         if form.is_valid():
             jenis_menu = form.save()
-            return redirect('laporanAdmin')
+            return redirect('tambahJenis')
     else:
         form = JenisMenuForm()
 
-    return render(request, 'admin/menu/tambahJenis.html', {'form': form})
+    jenis_menu_list = JenisMenu.objects.all()
+
+    return render(request, 'admin/menu/tambahJenis.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
 
 @login_required
 @role_required(allowed_roles=('manajer', 'admin'))
@@ -443,7 +445,7 @@ def edit_jenis_menu(request, jenis_menu_id):
         form = JenisMenuForm(request.POST, instance=jenis_menu)
         if form.is_valid():
             form.save()
-            return redirect('laporanAdmin')
+            return redirect('tambahJenis')
     else:
         form = JenisMenuForm(instance=jenis_menu)
 
@@ -456,6 +458,6 @@ def delete_jenis_menu(request, jenis_menu_id):
 
     if request.method == 'POST':
         jenis_menu.delete()
-        return redirect('laporanAdmin')
+        return redirect('tambahJenis')
 
     return render(request, 'admin/menu/hapusJenis.html', {'jenis_menu': jenis_menu})

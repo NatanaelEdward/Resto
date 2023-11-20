@@ -1,0 +1,25 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<div class="card-head">
+<head>
+    <title>Hapus Jenis</title>
+</head>
+<body>
+    <h1>Hapus Jenis</h1>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Are you sure you want to delete:</td>
+                <td>{{ jenis_menu.nama_jenis }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Confirm Delete"></td>
+            </tr>
+        </table>
+        <a href="{% url 'tambahJenis' %}">Cancel</a>
+    </form>
+</body>
+</div>
+{% endblock %}

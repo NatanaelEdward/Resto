@@ -29,6 +29,10 @@ urlpatterns =[
     path('menu/add_kelompok_menu/', add_kelompok_menu, name='tambahKelompok'),
     path('menu/edit_kelompok_menu/<int:kelompok_menu_id>/', edit_kelompok_menu, name='editKelompok'),
     path('menu/delete_kelompok_menu/<int:kelompok_menu_id>/', delete_kelompok_menu, name='hapusKelompok'),
+
+    path('menu/add_jenis_menu/',add_jenis_menu, name='tambahJenis'),
+    path('menu/edit_jenis_menu/<int:jenis_menu_id>/', edit_jenis_menu, name='editJenis'),
+    path('menu/delete_jenis_menu/<int:jenis_menu_id>/',delete_jenis_menu,name='hapusJenis')
     ]
 
 

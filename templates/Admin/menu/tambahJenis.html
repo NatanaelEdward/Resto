@@ -1,18 +1,47 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
 <head>
-    <title>Tambah Jenis Menu</title>
+    <title>Tambah Kelompok Menu</title>
 </head>
 <body>
 
-<h1>Tambah Jenis Menu</h1>
+<h1>Tambah Kelompok Menu</h1>
+<!-- List existing Kelompok Menu -->
+<div class="table">
+
+    <table class="jenis-table">
+        <thead>
+            <tr>
+                <th>Nama jenis</th>
+                <th>Nama Kelompok</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jenis in jenis_menu_list %}
+            <tr>
+                <td>{{ jenis.nama_jenis }}</td>
+                <td>{{ jenis.kelompok_menu.nama_kelompok }}</td>
+
+                <td>
+                    <a href="{% url 'editJenis' jenis.id %}">Edit</a>
+                    <a href="{% url 'hapusJenis' jenis.id %}">Hapus</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+    
+<!-- Form for adding a new Kelompok Menu -->
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-
+    
     <button type="submit">Save</button>
+    <a href="{% url 'menu_view' %}">Cancel</a>
 </form>
 
 </body>
-
 {% endblock %}
