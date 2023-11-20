@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import generate_monthly_totals_pdf,generate_all_summaries_pdf,generate_monthly_pdf,laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price,profit_summary_of_month,add_jenis_menu,add_kelompok_menu,edit_jenis_menu,edit_kelompok_menu,delete_jenis_menu,delete_kelompok_menu
+from .views import generate_monthly_totals_pdf,generate_all_summaries_pdf,generate_monthly_pdf,laporanAdmin,add_data_menu,menu_view,edit_menu,hapus_menu,update_price,add_ingredient,edit_ingredient,delete_ingredient,bahan_menu_list,delete_price,profit_summary_of_month,add_jenis_menu,add_kelompok_menu,edit_jenis_menu,edit_kelompok_menu,delete_jenis_menu,delete_kelompok_menu,add_jenis_size,edit_jenis_size,delete_jenis_size
 
 urlpatterns =[
     path('menuAdmin/',menu_view,name='menu_view'),    
@@ -32,7 +32,11 @@ urlpatterns =[
 
     path('menu/add_jenis_menu/',add_jenis_menu, name='tambahJenis'),
     path('menu/edit_jenis_menu/<int:jenis_menu_id>/', edit_jenis_menu, name='editJenis'),
-    path('menu/delete_jenis_menu/<int:jenis_menu_id>/',delete_jenis_menu,name='hapusJenis')
+    path('menu/delete_jenis_menu/<int:jenis_menu_id>/',delete_jenis_menu,name='hapusJenis'),
+
+    path('jenis_size/add/', add_jenis_size, name='tambahJenisSize'),
+    path('jenis_size/edit/<int:jenis_size_id>/', edit_jenis_size, name='editJenisSize'),
+    path('jenis_size/delete/<int:jenis_size_id>/', delete_jenis_size, name='hapusJenisSize'),
     ]
 
 

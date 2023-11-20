@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
 from calendar import monthrange
-from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm,KelompokMenuForm,JenisMenuForm
+from menuapp.forms import DataMenuForm,HargaMenuForm,BahanMenuForm,DataMenuEditForm,KelompokMenuForm,JenisMenuForm,JenisSizeForm
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -434,7 +434,7 @@ def add_jenis_menu(request):
 
     jenis_menu_list = JenisMenu.objects.all()
 
-    return render(request, 'admin/menu/tambahJenis.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
+    return render(request, 'admin/menu/tambahJenisSize.html', {'form': form, 'jenis_menu_list' : jenis_menu_list})
 
 @login_required
 @role_required(allowed_roles=('manajer', 'admin'))
@@ -461,3 +461,46 @@ def delete_jenis_menu(request, jenis_menu_id):
         return redirect('tambahJenis')
 
     return render(request, 'admin/menu/hapusJenis.html', {'jenis_menu': jenis_menu})
+
+#jenis size
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def add_jenis_size(request):
+    if request.method == 'POST':
+        form = JenisSizeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahJenisSize')
+    else:
+        form = JenisSizeForm()
+    
+    jenis_size_list = JenisSize.objects.all()
+
+    return render(request, 'admin/menu/tambahJenisSize.html', {'form': form, 'jenis_size_list' : jenis_size_list})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def edit_jenis_size(request, jenis_size_id):
+    jenis_size = get_object_or_404(JenisSize, pk=jenis_size_id)
+
+    if request.method == 'POST':
+        form = JenisSizeForm(request.POST, instance=jenis_size)
+        if form.is_valid():
+            form.save()
+            return redirect('tambahJenisSize')
+    else:
+        form = JenisSizeForm(instance=jenis_size)
+
+    return render(request, 'admin/menu/editJenisSize.html', {'form': form, 'jenis_size': jenis_size})
+
+@login_required
+@role_required(allowed_roles=('manajer', 'admin'))
+def delete_jenis_size(request, jenis_size_id):
+    jenis_size = get_object_or_404(JenisSize, pk=jenis_size_id)
+
+    if request.method == 'POST':
+        jenis_size.delete()
+        return redirect('tambahJenisSize')
+
+    return render(request, 'admin/menu/hapusJenisSize.html', {'jenis_size': jenis_size})

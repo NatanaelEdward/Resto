@@ -36,6 +36,11 @@ class JenisMenuForm(forms.ModelForm):
         model = JenisMenu
         fields = ['kode_jenis','nama_jenis','kelompok_menu']
 
+class JenisSizeForm(forms.ModelForm):
+    class Meta:
+        model = JenisSize
+        fields = ['kode_size','nama_size']
+
 class HargaMenuForm(forms.ModelForm):
     class Meta:
         model = HargaMenu
