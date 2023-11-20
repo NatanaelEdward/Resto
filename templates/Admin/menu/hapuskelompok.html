@@ -1,0 +1,25 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<div class="card-head">
+<head>
+    <title>Delete Menu</title>
+</head>
+<body>
+    <h1>Delete Menu</h1>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Are you sure you want to delete:</td>
+                <td>{{ kelompok_menu.nama_kelompok }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Confirm Delete"></td>
+            </tr>
+        </table>
+        <a href="{% url 'tambahKelompok' %}">Cancel</a>
+    </form>
+</body>
+</div>
+{% endblock %}

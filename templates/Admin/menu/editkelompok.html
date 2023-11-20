@@ -1,0 +1,20 @@
+{% extends 'main/baseadmin.html' %}
+{% block content %}
+<head>
+    <title>Edit Kelompok Menu</title>
+</head>
+<body>
+
+<h1>Edit Kelompok Menu</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<!-- Cancel button to go back to the list view -->
+<a href="{% url 'tambahKelompok' %}">Cancel</a>
+
+</body>
+{% endblock %}

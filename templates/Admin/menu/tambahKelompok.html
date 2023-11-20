@@ -6,13 +6,39 @@
 <body>
 
 <h1>Tambah Kelompok Menu</h1>
+<!-- List existing Kelompok Menu -->
+<div class="table">
+
+    <table class="kelompok-table">
+        <thead>
+            <tr>
+                <th>Nama Kelompok</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kelompok in kelompok_list %}
+            <tr>
+                <td>{{ kelompok.nama_kelompok }}</td>
+                <td>
+                    <a href="{% url 'editKelompok' kelompok.id %}">Edit</a>
+                    <a href="{% url 'hapusKelompok' kelompok.id %}">Hapus</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+    
+<!-- Form for adding a new Kelompok Menu -->
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-
+    
     <button type="submit">Save</button>
+    <a href="{% url 'menu_view' %}">Cancel</a>
 </form>
 
 </body>
-
 {% endblock %}

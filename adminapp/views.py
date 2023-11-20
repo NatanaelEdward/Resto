@@ -390,7 +390,10 @@ def add_kelompok_menu(request):
     else:
         form = KelompokMenuForm()
 
-    return render(request, 'admin/menu/tambahKelompok.html', {'form': form})
+    kelompok_list = KelompokMenu.objects.all()  # Fetch the list of kelompok_menu
+
+    return render(request, 'admin/menu/tambahKelompok.html', {'form': form, 'kelompok_list': kelompok_list})
+
 
 @login_required
 @role_required(allowed_roles=('manajer', 'admin'))
@@ -401,7 +404,7 @@ def edit_kelompok_menu(request, kelompok_menu_id):
         form = KelompokMenuForm(request.POST, instance=kelompok_menu)
         if form.is_valid():
             form.save()
-            return redirect('laporanAdmin')
+            return redirect('tambahKelompok')
     else:
         form = KelompokMenuForm(instance=kelompok_menu)
 
@@ -414,7 +417,7 @@ def delete_kelompok_menu(request, kelompok_menu_id):
 
     if request.method == 'POST':
         kelompok_menu.delete()
-        return redirect('laporanAdmin')
+        return redirect('tambahKelompok')
 
     return render(request, 'admin/menu/hapusKelompok.html', {'kelompok_menu': kelompok_menu})
 
