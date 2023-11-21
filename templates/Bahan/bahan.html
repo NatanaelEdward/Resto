@@ -1,14 +1,11 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
 
-<head>
-    <title>Bahan Menu List</title>
-</head>
+<div class="card-head">
 <body>
     <h1>Bahan Menu List</h1>
- 
+    <a href="{% url 'add_ingredient' %}">Tambah Bahan</a>
     <div class="table">
-        <a href="{% url 'add_ingredient' %}">Tambah Bahan</a>
         <table border="1">
             <thead>
                 <tr>
@@ -42,5 +39,5 @@
         </table>
     </div>
 </body>
-
+</div>
 {% endblock %}

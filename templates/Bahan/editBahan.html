@@ -1,5 +1,6 @@
 {% extends 'main/baseadmin.html' %}
 {% block content %}
+<div class="card-head">
     <h1>Edit Ingredient</h1>
     <form method="post">
         {% csrf_token %}
@@ -8,4 +9,5 @@
         </table>
         <input type="submit" value="Save Changes">
     </form>
+</div>
 {% endblock %}
