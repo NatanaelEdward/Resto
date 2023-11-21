@@ -13,9 +13,9 @@
     <div class="sidebar">
         <!-- coba add user name di side bar-->
         <p>{{ user.username }}</p>
-        <a href="{% url 'kasiran' %}" class=""><span>Offline Order</span></a>
+        {% comment %} <a href="{% url 'kasiran' %}" class=""><span>Offline Order</span></a> {% endcomment %}
         <a href="{% url 'pesanan' %}"class=""><span>Pesanan</span></a>
-        <a href="{% url 'tabelKasir' %}" class=""><span>Table</span></a>
+        {% comment %} <a href="{% url 'tabelKasir' %}" class=""><span>Table</span></a> {% endcomment %}
         <a href="{% url 'logout_view' %}">Logout >></a>
     </div>
 
