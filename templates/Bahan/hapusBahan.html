@@ -9,7 +9,7 @@
     <p><strong>Quantity:</strong><br>{{ ingredient.qty }}</p>
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Delete">
+        <input class="btn-delete" type="submit" value="Delete">
     </form>
 </div>
 {% endblock %}
