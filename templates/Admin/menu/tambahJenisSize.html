@@ -21,8 +21,8 @@
                 <td>{{ jenis.kode_size }}</td>
                 <td>{{ jenis.nama_size }}</td>
                 <td>
-                    <a href="{% url 'editJenisSize' jenis.id %}">Edit</a>
-                    <a href="{% url 'hapusJenisSize' jenis.id %}">Hapus</a>
+                    <button class="btn-edit" onclick="window.location.href='{% url 'editJenisSize' jenis.id %}'">Edit</button>
+                    <button class="btn-delete" onclick="window.location.href='{% url 'hapusJenisSize' jenis.id %}'">Hapus</button>
                 </td>
             </tr>
             {% endfor %}

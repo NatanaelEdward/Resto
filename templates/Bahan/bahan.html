@@ -4,7 +4,7 @@
 <div class="card-head">
 <body>
     <h1>Bahan Menu List</h1>
-    <a href="{% url 'add_ingredient' %}">Tambah Bahan</a>
+    <button class="btn-updprice" onclick="window.location.href='{% url 'add_ingredient' %}'">Tambah Bahan</button>
     <div class="table">
         <table border="1">
             <thead>
@@ -26,8 +26,8 @@
                         <td>{{ bahan.menu.nama_menu_lengkap }}</td>
                         <td>{{ bahan.size.nama_size }}</td>
                         <td>
-                            <a href="{% url 'edit_ingredient' bahan.id %}">Edit Bahan</a>
-                            <a href="{% url 'delete_ingredient' bahan.id %}">Hapus Bahan</a>
+                            <button class="btn-edit" onclick="window.location.href='{% url 'edit_ingredient' bahan.id %}'">Edit</button>
+                            <button class="btn-delete" onclick="window.location.href='{% url 'delete_ingredient' bahan.id %}'">Hapus</button>
                         </td>
                     </tr>
                 {% empty %}

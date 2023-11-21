@@ -19,8 +19,8 @@
             <tr>
                 <td>{{ kelompok.nama_kelompok }}</td>
                 <td>
-                    <a href="{% url 'editKelompok' kelompok.id %}">Edit</a>
-                    <a href="{% url 'hapusKelompok' kelompok.id %}">Hapus</a>
+                    <button class="btn-edit" onclick="window.location.href='{% url 'editKelompok' kelompok.id %}'">Edit</button>
+                    <button class="btn-delete" onclick="window.location.href='{% url 'hapusKelompok' kelompok.id %}'">Hapus</button>
                 </td>
             </tr>
             {% endfor %}
